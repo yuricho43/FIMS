@@ -1,0 +1,56 @@
+﻿@using System.Net
+@using System.Net.Http
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@using Microsoft.JSInterop
+
+@using Microsoft.Extensions.Localization
+@using Telerik.DataSource
+@using Telerik.Blazor
+@using Telerik.Blazor.Components
+@using Telerik.Blazor.Services
+
+
+@*@using Blazored.LocalStorage*@
+@using Blazored.Toast
+@using Blazored.Toast.Services
+
+@using Fims.Common
+@using Fims.Data.Models
+@using Fims.Data.Models.TSheetSpecs;
+
+
+@using Fims.Client.Shared
+@using Fims.Client.Shared.Infrastructure              @*for ApiAuthenticationStateProvider, LocalStorageInterop*@
+@using Fims.Client.Shared.Infrastructure.Extensions
+@using Fims.Client.Shared.ClientServices
+@using Fims.Client.Shared.ClientServices.Authentication
+@using Fims.Client.Shared.ClientServices.TSheets
+@using Fims.Client.Shared.ClientServices.TSheetSpecs
+@using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
+
+@using Fims.Client.Shared.Pages
+@using Fims.Client.Shared.Pages.Account
+
+@using Fims.Client.Shared.Shared
+@using Fims.Client.Shared.Shared.Common
+
+@using Fims.Client.Shared.Shared.Layouts
+
+@inject ITelerikStringLocalizer Localizer
+@inject MainLayoutState Layout
+
+@inject ApiAuthenticationStateProvider AuthState
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+@inject IToastService ToastService
+@inject IAuthClientService AuthClientService
+@inject ITSheetsClientService TSheetsClientService
+@inject ITSheetSpecsClientService TSheetSpecsClientService
+@inject ITSheetSpecsInProgressClientService TSheetSpecsInProgressClientService

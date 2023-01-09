@@ -1,0 +1,69 @@
+﻿@using Microsoft.JSInterop
+
+<section class="zxing-container">
+    @if (!string.IsNullOrWhiteSpace(Title))
+    {
+        <h3 class="zxing-title">@Title</h3>
+    }
+    @if (!string.IsNullOrWhiteSpace(ErrorMessage))
+    {
+        <div class="alert alert-danger" role="alert" >
+            @ErrorMessage
+        </div>
+    }
+
+    @if (ShowStart || ShowReset || ShowToggleTorch)
+    {
+        <div>
+            @if (ShowStart)
+            {
+                <button class="zxing-button start" @onclick="StartDecoding">Start</button>
+            }
+            @if (ShowReset)
+            {
+                <button class="zxing-button stop" @onclick="StopDecoding">Stop</button>
+            }
+            @if (ShowToggleTorch)
+            {
+                <button class="zxing-button torch" @onclick="ToggleTorch">Toggle Torch</button>
+            }
+        </div>
+    }
+
+    <div class="zxing-video-container">
+        <video @ref="_video" width="@VideoWidth" height="@VideoHeight"></video>
+    </div>
+    <canvas @ref="_canvas" style="display:none;"/>
+
+    @if (ShowVideoDeviceList)
+    {
+        @if (_videoInputDevices == null)
+        {
+            <p>looking for devices</p>
+        }
+        else
+        {
+            <div class="zxing-source-select-container">
+                <label>
+                    Change video source:
+                    <select class="zxing-video-select" @onchange="OnVideoInputSourceChanged">
+                        @foreach (var videoInputDevice in _videoInputDevices)
+                        {
+                            <option value="@videoInputDevice.DeviceId">@videoInputDevice.Label</option>
+                        }
+                    </select>
+                </label>
+            </div>
+
+        }
+    }
+
+    @if (ShowResult)
+    {
+        <div class="zxing-result-container">
+            <b>Result:</b>
+            <div class="zxing-result" style="word-break: break-all;">@BarcodeText</div>
+        </div>
+    }
+    
+</section>

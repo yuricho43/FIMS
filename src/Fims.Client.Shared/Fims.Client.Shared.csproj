@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <!--<Nullable>enable</Nullable>-->
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Shared\MainLayout.razor-ORG" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Shared\MainLayout.razor-ORG" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <SupportedPlatform Include="browser" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Blazored.Toast" Version="4.0.0" />
+    <PackageReference Include="Markdig" Version="0.30.4" />
+    <PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="7.0.1" />
+	<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="7.0.1" />
+	<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="2.2.0" />
+	<PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
+	<PackageReference Include="Microsoft.Extensions.Localization.Abstractions" Version="7.0.1" />
+    <PackageReference Include="System.Net.Http.Json" Version="7.0.0" />
+    <PackageReference Include="Telerik.UI.for.Blazor" Version="3.7.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BlazorBarcodeScanner.ZXing.JS\BlazorBarcodeScanner.ZXing.JS.csproj" />
+    <ProjectReference Include="..\Fims.Common\Fims.Common.csproj" />
+    <ProjectReference Include="..\Fims.Data\Fims.Data.csproj" />
+  </ItemGroup>
+
+</Project>

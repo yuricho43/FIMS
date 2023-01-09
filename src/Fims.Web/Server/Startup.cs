@@ -1,0 +1,78 @@
+using System.Reflection;
+
+using AutoMapper;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+
+using Fims.Web.Server.Infrastructure.Extensions;
+using Fims.Web.Server.Middleware;
+using Microsoft.Extensions.Hosting;
+using Fims.Data.Models.TSheets;
+using Fims.Services.TSheets;
+using Fims.Services.TSheetSpecs;
+using Fims.Services.TSheetSpecsInProgress;
+
+namespace Fims.Web.Server
+{
+    public class Startup
+    {
+        public Startup(IConfiguration configuration)
+            => this.Configuration = configuration;
+
+        public IConfiguration Configuration { get; }
+
+        public void ConfigureServices(IServiceCollection services)
+        {
+            //JBH: Instantiate and AddSingleton TSheetSpecsService here,
+            //     so that BuildTSheetSpecsFromFiles() @ TSheetSpecsService will run immediately upon the server startup.
+            ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService();
+            services.AddSingleton(tSheetSpecsService);
+
+            ITSheetSpecsInProgressService tSheetSpecsInProgressService = new TSheetSpecsInProgressService();
+            services.AddSingleton(tSheetSpecsInProgressService);
+
+            services
+                .AddDatabase(this.Configuration) //add/register a DbContext (FimsDbContext) and initial db datas (CategoriesData, ProductsData) and db initializer (FimsDbInitializer) to the DI container (IServiceCollection)
+                .AddIdentity()
+                .AddJwtAuthentication(services.GetApplicationSettings(this.Configuration))
+                .AddAutoMapper(Assembly.GetExecutingAssembly())
+                .AddApplicationServices()   //add/register all my application services (under the directory "Fims.Services") to the DI container.
+                .AddApiControllers()        //call AddControllers() and  AddRazorPages()
+                // JBH:
+                // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+                .AddEndpointsApiExplorer()
+                .AddSwaggerGen();
+            /*
+             * this.Configuration.Providers	Count = 4
+             *     [0]	{Microsoft.Extensions.Configuration.ChainedConfigurationProvider}
+             *     [1]	{JsonConfigurationProvider for 'appsettings.json' (Optional)}
+             *     [2]	{JsonConfigurationProvider for 'appsettings.Development.json' (Optional)}
+             *     [3]	{EnvironmentVariablesConfigurationProvider Prefix: ''}
+             */
+        }
+
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        {
+            // Configure the HTTP request pipeline.
+ 
+            if (env.IsDevelopment()) //JBH
+            {
+                app.UseSwagger();
+                app.UseSwaggerUI();
+            }
+
+            app.UseExceptionHandling(env);
+            app.UseValidationExceptionHandler();
+            app.UseHttpsRedirection();
+            app.UseBlazorFrameworkFiles();
+            app.UseStaticFiles();
+            app.UseRouting();
+            app.UseAuthentication();
+            app.UseAuthorization();
+            app.UseEndpoints();
+            app.Initialize();  //call FimsDbInitializer which initializes/fills my db with initial db datas (CategoriesData, ProductsData)
+        }
+    }
+}

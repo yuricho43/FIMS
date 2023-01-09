@@ -1,0 +1,84 @@
+﻿@using System.Collections.ObjectModel;
+
+
+<div class="toolbar-row">
+<TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%">
+    <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Left" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%">
+        <div class="toolbar-block">제품SN:&nbsp;<strong>@MyTSheetSpec.ProductSerial</strong></div>
+        <div class="toolbar-block">모델:&nbsp;<strong>@MyTSheetSpec.ProductModel</strong></div>
+        <div class="toolbar-block">고객:&nbsp;<strong>@MyTSheetSpec.Customer</strong></div>
+        <div class="toolbar-block">EndUser:&nbsp;<strong>@MyTSheetSpec.EndUser</strong></div>
+        <div class="toolbar-block">검사자:&nbsp;<strong>@MyTSheetSpec.InspectorName</strong></div>
+    </TelerikStackLayout>
+    <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%">
+        <TelerikButton Enabled="@IsSaveEnabled" Icon="save" OnClick="@SaveAllChanges" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)"><strong>입력완료/저장</strong></TelerikButton>
+    </TelerikStackLayout>
+</TelerikStackLayout>
+</div>
+
+<div style="background:white;height: 10px;"></div>
+
+<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">
+    @foreach (var TCategory in MyTSheetSpec.TCategories)
+    {
+        <TabStripTab>
+            <HeaderTemplate>
+                @*                <span class="k-icon flag italy-flag"></span>*@
+                @*                <span class="fa fa-car" style="font-size:20px;color:red;"></span>*@
+                @*                  <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>*@
+                @*                    <div style="background-color:orange;color:@SelectedColor;padding:20px;"><span class="fa fa-temperature-high"></span><strong>@TCategory</strong></div>*@
+                <div>
+                    <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>
+                    @*&nbsp;*@
+                    <span class="badge badge-warning" style="width: 30px">@MyTSheetSpec.CategoryTItemsCountDict[TCategory]</span>
+                </div>
+            </HeaderTemplate>
+            <Content>
+                <TSheetCategoryComponent MyCategoryTItemSpecs="MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory]"></TSheetCategoryComponent>
+            </Content>
+        </TabStripTab>
+    }
+</TelerikTabStrip>
+
+<TelerikNotification @ref="@TSheetComponentNotificationComponent"
+                     Class="demo-notification"
+                     VerticalPosition="NotificationVerticalPosition.Bottom"
+                     HorizontalPosition="NotificationHorizontalPosition.Right">
+</TelerikNotification>
+
+
+<style>
+    .toolbar-row {
+        //margin-left: 50px;
+        //margin-right: 50px;
+        padding-left: 50px;
+        padding-right: 50px;
+        background-color: slategray;
+    }
+
+    .toolbar-block {
+        width: 200px;
+        //margin: 50px;
+        padding: 10px;
+        //background-color:cadetblue;
+    }
+</style>
+
+<style>
+    .tab-parent{
+        color: green;
+        background: white;
+    }
+
+    .tab-parent .k-tabstrip-items li {
+        margin-left: 5px;
+        margin-right: 5px;
+        color: white;
+        background: cornflowerblue;
+    }
+
+    .tab-parent .k-tabstrip-items li.k-active {
+        color: black;
+        background: orange;
+    }
+</style>

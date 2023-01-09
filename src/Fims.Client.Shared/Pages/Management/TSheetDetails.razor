@@ -1,0 +1,227 @@
+﻿@page "/Management/TSheetDetails/{TSheetIdString}"
+@using Fims.Data.Entities;
+
+@if (TSheetWithTItems != null)
+{
+    <div class="flex-center">
+        <TelerikCard>
+            <CardHeader>
+                <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>성적서 상세보기</strong></h2></CardTitle>
+                <div class="toolbar-row">
+                    <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="10px" Width="100%">
+                        <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Left" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="5px" Width="100%">
+                            <div class="toolbar-block">제품SN:&nbsp;<strong>@TSheetWithTItems.ProductSerial</strong></div>
+                            <div class="toolbar-block">모델:&nbsp;<strong>@TSheetWithTItems.ProductModel</strong></div>
+                            <div class="toolbar-block">고객:&nbsp;<strong>@TSheetWithTItems.Customer</strong></div>
+                            <div class="toolbar-block">EndUser:&nbsp;<strong>@TSheetWithTItems.EndUser</strong></div>
+                            <div class="toolbar-block">검사자:&nbsp;<strong>@TSheetWithTItems.InspectorName</strong></div>
+                            <div class="toolbar-block">완료시간:&nbsp;<strong>@TSheetWithTItems.InspectionEndDateTime</strong></div>
+                            <div class="toolbar-block">검사번호:&nbsp;<strong>@TSheetWithTItems.Id</strong></div>
+                        </TelerikStackLayout>
+                        <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="5px" Width="100%">
+                            <TelerikButton Icon="arrow-up" OnClick="@OnBackToTSheetManagement" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"><strong>성적서관리</strong></TelerikButton>
+                        </TelerikStackLayout>
+                    </TelerikStackLayout>
+                </div>
+            </CardHeader>
+
+            <CardBody>
+                <CardSeparator></CardSeparator>
+
+                @*<TelerikGrid Data=@TSheetWithDetails.TItems
+                        EditMode="@GridEditMode.Incell"
+                        SelectionMode="GridSelectionMode.Multiple"
+                        @ref="@TItemGrid"
+                        OnUpdate="@UpdateHandler" OnEdit="@EditHandler" OnDelete="@DeleteHandler" OnCreate="@CreateHandler"
+                        OnRowRender="@OnRowRenderHandler"
+                        Height="480px"
+                        Pageable="true"
+                        Resizable="true"
+                        Page="@Page"
+                        Class="batch-grid">
+                *@
+
+                <TelerikGrid Data=@TSheetWithTItems.TItems
+                            @ref="@TItemGrid"
+                            Height="540px"
+                            Pageable="true"
+                            Resizable="true"
+                            @bind-PageSize="@PageSize"
+                            @bind-Page="@CurrentPage">
+
+                    @*<GridToolBar>
+                        <GridSearchBox Width="150px"></GridSearchBox>
+                        <span class="k-toolbar-spacer"></span>
+                        <GridCommandButton Command="ExcelExport" Icon="file-excel">@Localizer["Grid_ExcelExport"]</GridCommandButton>
+                        <GridCommandButton Command="CsvExport" Icon="file-csv">@Localizer["Grid_CsvExport"]</GridCommandButton>
+                    </GridToolBar>*@
+
+                    <GridColumns>
+                        <GridColumn Field="@nameof(TItem.TestNo)" Width="100px" Title="TestNo" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+                            <HeaderTemplate><strong>Test No</strong></HeaderTemplate>
+                            <Template>
+                                <span class="k-badge k-badge-lg k-badge-solid k-badge-solid-success k-rounded-lg">@((context as TItem).TestNo)</span>
+                            </Template>
+                        </GridColumn>
+                        <GridColumn Field="@nameof(TItem.Title)" Width="200px" Title="항목" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Title"))" HeaderClass="align-right right-padding">
+                            <HeaderTemplate><strong>시험항목</strong></HeaderTemplate>
+                            <Template>
+                                <span>@((context as TItem).Title)</span>
+                                <TelerikTooltip TargetSelector=".tooltip-target" />
+                                @*<span title="@((context as TItem).RangeToolTip)" class="tooltip-target" style="float:right"><TelerikIcon Icon="question-circle" /></span>*@
+                            </Template>
+                        </GridColumn>
+
+                        @if (MaxChannels > 0)
+                        {
+                            <GridColumn Field="@nameof(TItem.Ch1Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch1Data"))" Title="CH1" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+                                <HeaderTemplate><strong>CH1</strong></HeaderTemplate>
+                            </GridColumn>
+                        }
+
+                        @if (MaxChannels > 1)
+                        {
+                            <GridColumn Field="@nameof(TItem.Ch2Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch2Data"))" Title="CH2" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+                                <HeaderTemplate><strong>CH2</strong></HeaderTemplate>
+                            </GridColumn>
+                        }
+
+                        @if (MaxChannels > 2)
+                        {
+                            <GridColumn Field="@nameof(TItem.Ch3Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch3Data"))" Title="CH3" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+                                <HeaderTemplate><strong>CH3</strong></HeaderTemplate>
+                            </GridColumn>
+                        }
+
+                        @if (MaxChannels > 3)
+                        {
+                            <GridColumn Field="@nameof(TItem.Ch4Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch4Data"))" Title="CH4" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+                                <HeaderTemplate><strong>CH4</strong></HeaderTemplate>
+                            </GridColumn>
+                        }
+                    </GridColumns>
+                </TelerikGrid>
+            </CardBody>
+
+            <CardFooter Class="k-hbox justify-space-between">
+                <span>© 2022-2023 FST (http://www.fstc.co.kr), All Rights Reserved.</span>
+            </CardFooter>
+        </TelerikCard>
+    </div>
+}
+
+<style>
+    .k-grid td {
+        background-color: #E0E0E0;
+        color: black;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    .k-grid-header-wrap th {
+        background-color: teal;
+        color: white;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    /*    .k-grid-header {
+                        color: whitesmoke;
+                        background-color: teal;
+                    }
+                */
+    .k-grid .k-focused-cell {
+        background-color: cornflowerblue;
+    }
+
+    .k-grid .k-disabled-cell {
+        background-color: #CACACA;
+    }
+
+    .k-grid .userinput-empty {
+        //color: dodgerblue;
+        background-color: #E0FAFA;
+        //font-weight: bold;
+    }
+
+    .k-grid .userinput-valid {
+        color: dodgerblue;
+        background-color: #C0D8DA;
+        font-weight: bold;
+    }
+
+    .k-grid .userinput-invalid {
+        color: red !important;
+        background-color: sandybrown;
+        font-weight: bold !important;
+        //opacity: 0.7;
+    }
+
+    /* CENTER */
+    /* non-sortable headers */
+    .k-grid th.center-me {
+        text-align: center;
+    }
+
+    /* sortable headers */
+    th.center-me .k-cell-inner > .k-link {
+        justify-content: center;
+    }
+
+    /* RIGHT */
+    /* non-sortable headers */
+    .k-grid th.align-right {
+        text-align: right;
+    }
+
+    /* sortable headers */
+    th.align-right .k-cell-inner > .k-link {
+        justify-content: right;
+    }
+
+    /* unbound and non-filterable columns */
+    .k-grid-header th.align-right.right-padding {
+        padding-right: 12px;
+    }
+
+        /* filterable grid, sortable non-filterable columns */
+        .k-grid-header th.align-right.right-padding > .k-cell-inner {
+            margin-right: 0;
+        }
+</style>
+
+<style>
+    .toolbar-row {
+        //margin-left: 50px;
+        //margin-right: 50px;
+        padding-left: 50px;
+        padding-right: 50px;
+        background-color: slategray;
+    }
+
+    .toolbar-block {
+        width: 200px;
+        //margin: 50px;
+        padding: 10px;
+        //background-color:cadetblue;
+    }
+</style>
+
+<style>
+    .tab-parent {
+        color: green;
+        background: white;
+    }
+
+        .tab-parent .k-tabstrip-items li {
+            margin-left: 5px;
+            margin-right: 5px;
+            color: white;
+            background: cornflowerblue;
+        }
+
+            .tab-parent .k-tabstrip-items li.k-active {
+                color: black;
+                background: orange;
+            }
+</style>

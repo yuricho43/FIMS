@@ -1,0 +1,43 @@
+﻿@using System.Net
+@using System.Net.Http
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Forms
+@using Microsoft.AspNetCore.Components.Routing
+@using Microsoft.AspNetCore.Components.Web
+@*@using Microsoft.AspNetCore.Components.WebAssembly.Http*@
+@using Microsoft.JSInterop
+
+@*@using Blazored.LocalStorage*@
+@using Blazored.Toast
+@using Blazored.Toast.Services
+
+@using Fims.Client.MauiBlazor
+@*@using Fims.Web.Client.Infrastructure.Extensions*@  @*for WebAssemblyHostBuilderExtensions*@
+
+@using Fims.Common
+
+@using Fims.Data.Models
+@using Fims.Data.Models.Identity
+
+@using Fims.Client.Shared.Infrastructure              @*for ApiAuthenticationStateProvider, LocalStorageInterop*@
+@using Fims.Client.Shared.ClientServices
+@using Fims.Client.Shared.ClientServices.Authentication
+@using Fims.Client.Shared.ClientServices.TSheets
+
+@using Fims.Client.Shared.Pages
+@using Fims.Client.Shared.Pages.Account
+
+@using Fims.Client.Shared.Shared
+@using Fims.Client.Shared.Shared.Common
+
+@inject ApiAuthenticationStateProvider AuthState
+@inject NavigationManager NavigationManager
+@inject HttpClient Http
+
+@inject IToastService ToastService
+@inject IAuthClientService AuthService
+@inject ITSheetsClientService TSheetsClientService

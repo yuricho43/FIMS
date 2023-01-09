@@ -1,0 +1,357 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="Sales" xml:space="preserve">
+    <value>Vertrieb</value>
+  </data>
+  <data name="HumanCapital" xml:space="preserve">
+    <value>Humankapital</value>
+  </data>
+  <data name="Index_ProductsCard_Description" xml:space="preserve">
+    <value>Verwalten Sie Produkte und Nährwertangaben.</value>
+  </data>
+  <data name="Index_SalesCard_Description" xml:space="preserve">
+    <value>Umsatzbericht.</value>
+  </data>
+  <data name="ManageProducts" xml:space="preserve">
+    <value>Produkte verwalten</value>
+  </data>
+  <data name="ToolTip_LoginRequired" xml:space="preserve">
+    <value>Anmeldung erforderlich</value>
+  </data>
+  <data name="Index_EmployeesCard_Description" xml:space="preserve">
+    <value>Verwalten Sie Mitarbeiter und Teams.</value>
+  </data>
+  <data name="Toggle_Id" xml:space="preserve">
+    <value>Toggle ID</value>
+  </data>
+  <data name="Product" xml:space="preserve">
+    <value>Produktname</value>
+  </data>
+  <data name="Id" xml:space="preserve">
+    <value>ID</value>
+  </data>
+  <data name="Group" xml:space="preserve">
+    <value>Gruppe</value>
+  </data>
+  <data name="Nutrition Info." xml:space="preserve">
+    <value>Ernährungs-Info</value>
+  </data>
+  <data name="Cost" xml:space="preserve">
+    <value>AnschWert</value>
+  </data>
+  <data name="NotAvailable" xml:space="preserve">
+    <value>Nicht verfügbar</value>
+  </data>
+  <data name="View" xml:space="preserve">
+    <value>Ansicht</value>
+  </data>
+  <data name="Product_Upload_SaveDialog" xml:space="preserve">
+    <value>Speichern und dann bearbeiten, um Nährwertinformationen hinzuzufügen.</value>
+  </data>
+  <data name="ManageProducts_AddProduct" xml:space="preserve">
+    <value>Produkt hinzufügen</value>
+  </data>
+  <data name="Documentation" xml:space="preserve">
+    <value>Dokumentation</value>
+  </data>
+  <data name="Support" xml:space="preserve">
+    <value>Support</value>
+  </data>
+  <data name="Home" xml:space="preserve">
+    <value>Privat</value>
+  </data>
+  <data name="LanguageChooser_SelectLanguage" xml:space="preserve">
+    <value>Sprache auswählen</value>
+  </data>
+  <data name="SelectTheme" xml:space="preserve">
+    <value>Design auswählen</value>
+  </data>
+  <data name="Settings" xml:space="preserve">
+    <value>Einstellungen</value>
+  </data>
+  <data name="MoreInfo" xml:space="preserve">
+    <value>Weitere Informationen ...</value>
+  </data>
+  <data name="Employees" xml:space="preserve">
+    <value>Mitarbeiter</value>
+  </data>
+  <data name="Employee_Grid_Title_FullName" xml:space="preserve">
+    <value>Name</value>
+  </data>
+  <data name="Employee_Grid_Title_Address" xml:space="preserve">
+    <value>Adresse</value>
+  </data>
+  <data name="Employee_Grid_Title_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Employee_Grid_Title_TeamName" xml:space="preserve">
+    <value>Teamname</value>
+  </data>
+  <data name="Employee_Grid_Title_Rating" xml:space="preserve">
+    <value>Bewertung</value>
+  </data>
+  <data name="Employee_Grid_Title_Budget" xml:space="preserve">
+    <value>Budget</value>
+  </data>
+  <data name="Sales_Grid_Title_Sku" xml:space="preserve">
+    <value>Produkt</value>
+  </data>
+  <data name="Sales_Grid_Title_Amount" xml:space="preserve">
+    <value>Betrag</value>
+  </data>
+  <data name="Sales_Grid_Title_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Sales_Grid_Title_StoreId" xml:space="preserve">
+    <value>Store</value>
+  </data>
+  <data name="Sales_Grid_Title_TransactionDate" xml:space="preserve">
+    <value>Transaktionsdatum</value>
+  </data>
+  <data name="Sales_Grid_Title_Region" xml:space="preserve">
+    <value>Region</value>
+  </data>
+  <data name="Sales_Grid_Toolbar_ReportRange" xml:space="preserve">
+    <value>Berichtsbereich</value>
+  </data>
+  <data name="Reporting" xml:space="preserve">
+    <value>Berichterstellung</value>
+  </data>
+  <data name="ChartTitle_SalesAndRevenueTotal" xml:space="preserve">
+    <value>Umsatz und Umsatz insgesamt</value>
+  </data>
+  <data name="Nav_MoreInfo" xml:space="preserve">
+    <value>Weitere Informationen ...</value>
+  </data>
+  <data name="ChartValueAxisTitle_TotalSales" xml:space="preserve">
+    <value>Gesamtumsatz</value>
+  </data>
+  <data name="MainLayout_Documentation" xml:space="preserve">
+    <value>Dokumentation</value>
+  </data>
+  <data name="ManageProducts_Create_Success" xml:space="preserve">
+    <value>Das Produkt {0} wurde hinzugefügt.</value>
+  </data>
+  <data name="ManageProducts_Delete_Success" xml:space="preserve">
+    <value>Das Produkt {0} wurde gelöscht.</value>
+  </data>
+  <data name="DatabaseConnectionError" xml:space="preserve">
+    <value>Beim Herstellen einer Verbindung zur Datenbank ist ein Fehler aufgetreten.!</value>
+  </data>
+  <data name="ConfirmDialog_AreYouSure" xml:space="preserve">
+    <value>Sind Sie sicher?</value>
+  </data>
+  <data name="ManageProducts_ConfirmDelete" xml:space="preserve">
+    <value>Sie werden {0} dauerhaft löschen.!</value>
+  </data>
+  <data name="ManageProducts_Update_Success" xml:space="preserve">
+    <value>Das Produkt {0} wurde aktualisiert.!</value>
+  </data>
+  <data name="ButtonGroup_AllTeams" xml:space="preserve">
+    <value>Meine Mannschaften</value>
+  </data>
+  <data name="ButtonGroup_MyTeam" xml:space="preserve">
+    <value>Mein Mannschaft</value>
+  </data>
+  <data name="ButtonGroup_Trend" xml:space="preserve">
+    <value>Trend</value>
+  </data>
+  <data name="ButtonGroup_Volume" xml:space="preserve">
+    <value>Volumen</value>
+  </data>
+  <data name="Drawer_Settings" xml:space="preserve">
+    <value>Armaturenbrett</value>
+  </data>
+  <data name="Drawer_Info" xml:space="preserve">
+    <value>Information</value>
+  </data>
+  <data name="Drawer_Profile" xml:space="preserve">
+    <value>Profil</value>
+  </data>
+  <data name="Drawer_Home" xml:space="preserve">
+    <value>Mannschaft</value>
+  </data>
+  <data name="Employee_Grid_Title_Contacts" xml:space="preserve">
+    <value>Kontakte</value>
+  </data>
+  <data name="Employee_Grid_Title_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Employee_Grid_Title_Engagement" xml:space="preserve">
+    <value>Verlobung</value>
+  </data>
+  <data name="Employee_Grid_Title_JobTitle" xml:space="preserve">
+    <value>Berufsbezeichnung</value>
+  </data>
+  <data name="Employee_Grid_Title_Performance" xml:space="preserve">
+    <value>Leistung</value>
+  </data>
+  <data name="Employee_Grid_Title_Personal_Information" xml:space="preserve">
+    <value>Angestellter</value>
+  </data>
+  <data name="Employee_Grid_Title_Status" xml:space="preserve">
+    <value>Status</value>
+  </data>
+  <data name="Grid_CsvExport" xml:space="preserve">
+    <value>In CSV Exportieren</value>
+  </data>
+  <data name="Grid_ExcelExport" xml:space="preserve">
+    <value>In Excel Exportieren</value>
+  </data>
+  <data name="Profile_Bio" xml:space="preserve">
+    <value>Kurze Biographie</value>
+  </data>
+  <data name="Profile_Cancel" xml:space="preserve">
+    <value>Absagen</value>
+  </data>
+  <data name="Profile_Country" xml:space="preserve">
+    <value>Land</value>
+  </data>
+  <data name="Profile_Email" xml:space="preserve">
+    <value>E-Mail-Addresse</value>
+  </data>
+  <data name="Profile_FirstName" xml:space="preserve">
+    <value>Vorname</value>
+  </data>
+  <data name="Profile_IsDeleted" xml:space="preserve">
+    <value>Konto deaktiviert</value>
+  </data>
+  <data name="Profile_LastName" xml:space="preserve">
+    <value>Nachname</value>
+  </data>
+  <data name="Profile_Phone" xml:space="preserve">
+    <value>Telefon</value>
+  </data>
+  <data name="Profile_SaveChanges" xml:space="preserve">
+    <value>Änderungen speichern</value>
+  </data>
+  <data name="Profile_Team" xml:space="preserve">
+    <value>Mannschaft</value>
+  </data>
+  <data name="Fims_Title" xml:space="preserve">
+    <value>FST Inspection Management System (FIMS)</value>
+  </data>
+  <data name="Form_Submit_Success" xml:space="preserve">
+    <value>Formular absenden erfolgreich!</value>
+  </data>
+  <data name="Revenue_For" xml:space="preserve">
+    <value>Einnahmen für</value>
+  </data>
+</root>

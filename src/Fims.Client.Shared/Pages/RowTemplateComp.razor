@@ -1,0 +1,90 @@
+﻿<TelerikGrid Data=@GridData Pageable="true"
+             SelectedItems="@SelectedItems"
+             SelectionMode="GridSelectionMode.Multiple">
+    <RowTemplate Context="employee">
+        <td>
+            <TelerikCheckBox Value="@employee.IsSelected" ValueChanged="@((bool value) => ChangeHandler(value, employee.EmployeeId))" />
+        </td>
+        <td>
+            <img class="rounded-circle" src="@($"images/{employee.EmployeeId}.jpg")" alt="Alternate Text" />
+            @employee.Name
+        </td>
+        <td>
+            @employee.Team
+        </td>
+    </RowTemplate>
+    <GridColumns>
+        <GridColumn Title="Select" />
+        <GridColumn Field=@nameof(Employee.Name) />
+        <GridColumn Field=@nameof(Employee.Team) Title="Team" />
+    </GridColumns>
+</TelerikGrid>
+
+@if (SelectedItems != null)
+{
+    <ul>
+        @foreach (Employee employee in SelectedItems)
+        {
+            <li>
+                @employee.Name
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    public List<Employee> GridData { get; set; }
+    public IEnumerable<Employee> SelectedItems { get; set; } = Enumerable.Empty<Employee>();
+
+    protected override void OnInitialized()
+    {
+        GridData = new List<Employee>();
+        for (int i = 0; i < 15; i++)
+        {
+            GridData.Add(new Employee()
+                {
+                    EmployeeId = i,
+                    Name = "Employee " + i.ToString(),
+                    Team = "Team " + i % 3
+                });
+        }
+
+        // select Employee with 3 through 5. Not required
+        SelectedItems = GridData.Skip(2).Take(3).ToList();
+        foreach (var item in SelectedItems)
+        {
+            item.IsSelected = true;
+        }
+    }
+
+    void ChangeHandler(bool isSelected, int employeeId)
+    {
+        Employee currEmployee = GridData.Where(empl => empl.EmployeeId == employeeId).First();
+        if (currEmployee != null)
+        {
+            //update the model first
+            currEmployee.IsSelected = isSelected;
+
+            //handle selected items collection
+            var itemsToSelect = SelectedItems.ToList();
+            if (isSelected)
+            {
+                itemsToSelect.Add(currEmployee);
+            }
+            else
+            {
+                itemsToSelect.Remove(currEmployee);
+            }
+            SelectedItems = new List<Employee>(itemsToSelect);
+        }
+    }
+
+    public class Employee
+    {
+        public int EmployeeId { get; set; }
+        public string Name { get; set; }
+        public string Team { get; set; }
+        // for row selection with a row template
+        public bool IsSelected { get; set; }
+    }
+}

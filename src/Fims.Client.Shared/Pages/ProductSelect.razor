@@ -1,0 +1,114 @@
+﻿@page "/ProductSelect"
+
+@*@using TelerikBlazorDemos.Models
+*@
+
+<section class="section-conten padding-y bg">
+
+    <div class="card mx-auto" style="max-width: 1000px; margin-top:2px;">
+        <div class="card-body">
+            <h2 class="card-title mb-4" style="align-self:center"><strong>측정설비 선택</strong></h2>
+
+            <div class="grid-layout-container">
+                <TelerikGridLayout RowSpacing="20px" ColumnSpacing="20px" Class="grid-layout" HorizontalAlign="GridLayoutHorizontalAlign.Center" VerticalAlign="GridLayoutVerticalAlign.Center">
+                    <GridLayoutRows>
+                        <GridLayoutRow Height="40px"></GridLayoutRow>
+                        <GridLayoutRow Height="40px"></GridLayoutRow>
+                        <GridLayoutRow Height="40px"></GridLayoutRow>
+                        <GridLayoutRow Height="40px"></GridLayoutRow>
+                        <GridLayoutRow Height="40px"></GridLayoutRow>
+                        <GridLayoutRow Height="40px"></GridLayoutRow>
+                    </GridLayoutRows>
+                    <GridLayoutColumns>
+                        <GridLayoutColumn Width="200px"></GridLayoutColumn>
+                        <GridLayoutColumn Width="200px"></GridLayoutColumn>
+                    </GridLayoutColumns>
+                    <GridLayoutItems>
+                        <GridLayoutItem Row="1" Column="1" ColumnSpan="1">
+                            <TelerikIcon Icon="gears" />
+                            <span >거래처</span>
+                        </GridLayoutItem>
+                        <GridLayoutItem Row="1" Column="2" ColumnSpan="1">
+                            <TelerikTextBox PlaceHolder="SEC"></TelerikTextBox>
+                        </GridLayoutItem>
+
+                        <GridLayoutItem Row="2" Column="1" ColumnSpan="1">
+                            <TelerikIcon Icon="gears" />
+                            <span >End User</span>
+                        </GridLayoutItem>
+                        <GridLayoutItem Row="2" Column="2" ColumnSpan="1">
+                            <TelerikTextBox PlaceHolder="P2"></TelerikTextBox>
+                        </GridLayoutItem>
+
+                        <GridLayoutItem Row="3" Column="1" ColumnSpan="1">
+                            <TelerikIcon Icon="gears" />
+                            <span >Model</span>
+                        </GridLayoutItem>
+                        <GridLayoutItem Row="3" Column="2" ColumnSpan="1">
+                            <TelerikTextBox PlaceHolder="CS30LT"></TelerikTextBox>
+                        </GridLayoutItem>
+
+                        <GridLayoutItem Row="4" Column="1" ColumnSpan="1">
+                            <TelerikIcon Icon="gears" />
+                            <span >Serial</span>
+                        </GridLayoutItem>
+                        <GridLayoutItem Row="4" Column="2" ColumnSpan="1">
+                            <TelerikTextBox PlaceHolder="2023010177"></TelerikTextBox>
+                        </GridLayoutItem>
+
+                        <GridLayoutItem Row="5" Column="1" ColumnSpan="2">
+                            <div ></div>
+                        </GridLayoutItem>
+
+                        <GridLayoutItem Row="6" Column="1" ColumnSpan="1" Class="ok-button">
+                            <TelerikButton Icon="barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
+                        </GridLayoutItem>
+                        <GridLayoutItem Row="6" Column="2" ColumnSpan="1" Class="ok-button">
+                            <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" Class="my-button">OK</TelerikButton>
+                        </GridLayoutItem>
+
+                    </GridLayoutItems>
+                </TelerikGridLayout>
+            </div>
+
+        </div>
+    </div>
+
+</section>
+
+
+
+
+<style>
+    .my-button {
+        align-content: center;
+        color: black;
+        margin: 0px;
+        border-color: cornflowerblue;
+    }
+
+    .ok-button {
+        width: 200px;
+        align-content: center;
+        color: black;
+        margin: 0px;
+        border-color: cornflowerblue;
+    }
+</style>
+
+@code {
+    List<string> ProdTypes = new List<string> { "신규", "수리" };
+}
+
+
+@code {
+    protected List<string> NewOrOldTypes = new List<string>() { "신규", "수리" };
+
+    protected string NewOrOldType { get; set; }
+
+    //Define a preselected value when the component initializes
+    protected override void OnInitialized()
+    {
+        NewOrOldType = "신규";
+    }
+}

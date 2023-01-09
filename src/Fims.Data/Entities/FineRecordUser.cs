@@ -1,0 +1,33 @@
+﻿using System;
+using System.Collections.Generic;
+
+using Microsoft.AspNetCore.Identity;
+
+using Fims.Data.Contracts;
+
+
+namespace Fims.Data.Entities
+{
+    public class FimsUser : IdentityUser, IAuditInfo, IDeletableEntity
+    {
+        public FimsUser() => this.Id = Guid.NewGuid().ToString();
+
+        public string FirstName { get; set; }
+
+        public string LastName { get; set; }
+
+        //for IAuditInfo
+        public DateTime CreatedOn { get; set; }
+        public DateTime? ModifiedOn { get; set; }
+
+        //For IDeletableEntity
+        public bool IsDeleted { get; set; }
+        public DateTime? DeletedOn { get; set; }
+
+
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        // Navigation Properties
+        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        public ICollection<TSheet> TSheets { get; } = new HashSet<TSheet>();
+    }
+}

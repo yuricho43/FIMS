@@ -1,0 +1,164 @@
+﻿@page "/Management/TSheetManagement"
+
+@using Fims.Data.Entities;
+
+<div class="flex-center">
+    <TelerikCard>
+        <CardHeader>
+            <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>성적서 관리</strong></h2></CardTitle>
+            <CardSubTitle>조회/삭제/출력</CardSubTitle>
+        </CardHeader>
+
+        <CardBody>
+            <CardSeparator></CardSeparator>
+            <TelerikGrid @ref="@TSheetManagementGridRef"
+                         Data=@TSheets
+                         SelectionMode="GridSelectionMode.Multiple" @bind-SelectedItems="@SelectedTSheets"
+                         Sortable="true" SortMode="@SortMode.Single"
+                         FilterMode="@GridFilterMode.FilterRow" FilterRowDebounceDelay="filterDebounceDelay"
+                         Height="600px"
+                         Pageable=true PageSize=@PageSize>
+
+                <GridToolBar>
+                    <GridCommandButton Command="ExcelExport" Icon="file-excel">보고서 출력</GridCommandButton>
+                </GridToolBar>
+                <GridExport>
+                    <GridExcelExport FileName="FIMS-Report" AllPages="true" />
+                </GridExport>
+
+                <GridColumns>
+                    @*<GridCheckboxColumn Width="10px"></GridCheckboxColumn>*@
+                    <GridColumn Field=@nameof(TSheet.ProductModel)
+                                Title="Model"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.Contains" />
+                    <GridColumn Field=@nameof(TSheet.ProductSerial)
+                                Title="S/N"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.Contains" />
+                    <GridColumn Field=@nameof(TSheet.Customer)
+                                Title="Customer"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.Contains" />
+                    <GridColumn Field=@nameof(TSheet.EndUser)
+                                Title="End User"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.Contains" />
+                    <GridColumn Field=@nameof(TSheet.InspectorName)
+                                Title="검사자"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.Contains" />
+                    <GridColumn Field=@nameof(TSheet.InspectionStartDateTime)
+                                Title="시작시간"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
+                    <GridColumn Field=@nameof(TSheet.InspectionEndDateTime)
+                                Title="완료시간"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
+                    <GridColumn Field=@nameof(TSheet.Id)
+                                Title="검사번호"
+                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                ShowFilterCellButtons="@true"
+                                DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
+                    <GridCommandColumn Width="100px">
+                        <GridCommandButton OnClick="@ShowDetailsHandler" Icon="zoom-in">상세보기</GridCommandButton>
+                        <GridCommandButton Command="Delete" Icon="delete">Delete</GridCommandButton>
+                    </GridCommandColumn>
+                </GridColumns>
+            </TelerikGrid>
+        </CardBody>
+
+        <CardFooter Class="k-hbox justify-space-between">
+            <span>© 2022-2023 FST (http://www.fstc.co.kr), All Rights Reserved.</span>
+        </CardFooter>
+    </TelerikCard>
+</div>
+
+
+<style>
+    .k-grid td {
+        background-color: #E0E0E0;
+        color: black;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    .k-grid-header-wrap th {
+        background-color: teal;
+        color: white;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    /*    .k-grid-header {
+            color: whitesmoke;
+            background-color: teal;
+        }
+    */
+    .k-grid .k-focused-cell {
+        background-color: cornflowerblue;
+    }
+
+    .k-grid .k-disabled-cell {
+        background-color: #CACACA;
+    }
+
+    .k-grid .userinput-empty {
+        //color: dodgerblue;
+        background-color: #E0FAFA;
+        //font-weight: bold;
+    }
+
+    .k-grid .userinput-valid {
+        color: dodgerblue;
+        background-color: #C0D8DA;
+        font-weight: bold;
+    }
+
+    .k-grid .userinput-invalid {
+        color: red !important;
+        background-color: sandybrown;
+        font-weight: bold !important;
+        //opacity: 0.7;
+    }
+
+    /* CENTER */
+    /* non-sortable headers */
+    .k-grid th.center-me {
+        text-align: center;
+    }
+
+    /* sortable headers */
+    th.center-me .k-cell-inner > .k-link {
+        justify-content: center;
+    }
+
+    /* RIGHT */
+    /* non-sortable headers */
+    .k-grid th.align-right {
+        text-align: right;
+    }
+
+    /* sortable headers */
+    th.align-right .k-cell-inner > .k-link {
+        justify-content: right;
+    }
+
+    /* unbound and non-filterable columns */
+    .k-grid-header th.align-right.right-padding {
+        padding-right: 12px;
+    }
+
+        /* filterable grid, sortable non-filterable columns */
+        .k-grid-header th.align-right.right-padding > .k-cell-inner {
+            margin-right: 0;
+        }
+</style>

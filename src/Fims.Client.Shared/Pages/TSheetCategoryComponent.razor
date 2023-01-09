@@ -1,0 +1,340 @@
+﻿<TelerikGrid Data=@MyCategoryTItemSpecs
+             EditMode="@GridEditMode.Incell"
+             SelectionMode="GridSelectionMode.Multiple"
+             @ref="@TItemSpecGrid"
+             OnUpdate="@UpdateHandler" OnEdit="@EditHandler" OnDelete="@DeleteHandler" OnCreate="@CreateHandler"
+             OnRowRender="@OnRowRenderHandler"
+             Pageable="true"
+             Resizable="true"
+             @bind-PageSize="@PageSize"
+             @bind-Page="@CurrentPage">
+
+@*    <GridToolBar>
+        <GridSearchBox Width="150px"></GridSearchBox>
+        <span class="k-toolbar-spacer"></span>
+        <GridCommandButton Command="ExcelExport" Icon="file-excel">@Localizer["Grid_ExcelExport"]</GridCommandButton>
+        <GridCommandButton Command="CsvExport" Icon="file-csv">@Localizer["Grid_CsvExport"]</GridCommandButton>
+    </GridToolBar>
+*@
+    <GridColumns>
+        <GridColumn Field="@nameof(TItemSpec.TestNo)" Width="50px" Title="TestNo" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+            <HeaderTemplate><strong>Test No</strong></HeaderTemplate>
+            <Template>
+                <span class="k-badge k-badge-lg k-badge-solid k-badge-solid-success k-rounded-lg">@((context as TItemSpec).TestNo)</span>
+            </Template>
+        </GridColumn>
+
+        @*<GridColumn Field="@nameof(TItemSpec.Title)" Width="200px" Title="항목" OnCellRender="@OnCellRenderHandler" HeaderClass="align-right right-padding" TextAlign="@ColumnTextAlign.Right">*@                            
+        <GridColumn Field="@nameof(TItemSpec.Title)" Width="150px" Title="항목" Editable="false" HeaderClass="align-right right-padding">
+            <HeaderTemplate><strong>시험항목</strong></HeaderTemplate>
+            <Template>
+                <span>@((context as TItemSpec).Title)</span>
+                <TelerikTooltip TargetSelector=".tooltip-target" />
+                <span title="@((context as TItemSpec).RangeToolTip)" class="tooltip-target" style="float:right"><TelerikIcon Icon="question-circle" /></span>
+            </Template>
+        </GridColumn>
+
+        <GridColumn Field="@nameof(TItemSpec.Ch1Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch1Data"))" Title="CH1" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+            <HeaderTemplate><strong>CH1</strong></HeaderTemplate>
+            <EditorTemplate>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    //<TelerikTextBox @bind-Value=tItemSpec.Ch1Data Enabled=tItemSpec.IsCh1DataEnabled></TelerikTextBox>
+                    if (tItemSpec.IsCh1DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Combo")
+                        {
+                            <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch1Data" Class="k-focused-cell" />
+                        }
+                        else
+                        {
+                            <TelerikTextBox @bind-Value=tItemSpec.Ch1Data Class="k-grid k-focused-cell"></TelerikTextBox>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </EditorTemplate>
+        </GridColumn>
+
+        <GridColumn Field="@nameof(TItemSpec.Ch2Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch2Data"))" Title="CH2" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+            <HeaderTemplate><strong>CH2</strong></HeaderTemplate>
+            <EditorTemplate>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    //<TelerikTextBox @bind-Value=tItemSpec.Ch2Data Enabled=tItemSpec.IsCh2DataEnabled></TelerikTextBox>
+                    if (tItemSpec.IsCh2DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Combo")
+                        {
+                            <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch2Data" Class="k-focused-cell" />
+                        }
+                        else
+                        {
+                            <TelerikTextBox @bind-Value=tItemSpec.Ch2Data Class="k-grid k-focused-cell"></TelerikTextBox>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </EditorTemplate>
+        </GridColumn>
+ 
+        <GridColumn Field="@nameof(TItemSpec.Ch3Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch3Data"))" Title="CH3" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+            <HeaderTemplate><strong>CH3</strong></HeaderTemplate>
+            <EditorTemplate>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    //<TelerikTextBox @bind-Value=tItemSpec.Ch3Data Enabled=tItemSpec.IsCh3DataEnabled></TelerikTextBox>
+                    if (tItemSpec.IsCh3DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Combo")
+                        {
+                            <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch3Data" Class="k-focused-cell" />
+                        }
+                        else
+                        {
+                            <TelerikTextBox @bind-Value=tItemSpec.Ch3Data Class="k-grid k-focused-cell"></TelerikTextBox>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </EditorTemplate>
+        </GridColumn>
+
+        <GridColumn Field="@nameof(TItemSpec.Ch4Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch4Data"))" Title="CH4" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
+            <HeaderTemplate><strong>CH4</strong></HeaderTemplate>
+            <EditorTemplate>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    //<TelerikTextBox @bind-Value=tItemSpec.Ch4Data Enabled=tItemSpec.IsCh4DataEnabled></TelerikTextBox>
+                    if (tItemSpec.IsCh4DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Combo")
+                        {
+                            <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch4Data" Class="k-focused-cell" />
+                        }
+                        else
+                        {
+                            <TelerikTextBox @bind-Value=tItemSpec.Ch4Data Class="k-grid k-focused-cell"></TelerikTextBox>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </EditorTemplate>
+        </GridColumn>
+    </GridColumns>
+</TelerikGrid>
+
+
+<style>
+    .italy-flag {
+        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/italy-flag.png');
+    }
+
+    .germany-flag {
+        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/germany-flag.png');
+    }
+
+    .france-flag {
+        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/france-flag.png');
+    }
+
+    .flag {
+        background-size: cover;
+        margin-right: 8px;
+    }
+</style>
+
+@*<style>
+    .tab-parent .k-tabstrip-items li {
+        color: yellow;
+    }
+
+    .tab-parent .k-tabstrip-items li.k-state-active,
+    .tab-parent .k-tabstrip-items li.k-state-active ~ li {
+        color: red;
+    }
+</style>
+*@
+
+<style>
+    .k-grid td {
+        background-color: #E0E0E0;
+        color: black;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    .k-grid-header-wrap th {
+        background-color: teal;
+        color: white;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+/*    .k-grid-header {
+        color: whitesmoke;
+        background-color: teal;
+    }
+*/
+    .k-grid .k-focused-cell {
+        background-color: cornflowerblue;
+    }
+
+    .k-grid .k-disabled-cell {
+        background-color: #CACACA;
+    }
+
+    .k-grid .userinput-empty {
+        //color: dodgerblue;
+        background-color: #E0FAFA;
+        //font-weight: bold;
+    }
+
+    .k-grid .userinput-valid {
+        color: dodgerblue;
+        background-color: #C0D8DA;
+        font-weight: bold;
+    }
+
+    .k-grid .userinput-invalid {
+        color: red !important;
+        background-color: sandybrown;
+        font-weight: bold !important;
+        //opacity: 0.7;
+    }
+
+    /* CENTER */
+    /* non-sortable headers */
+    .k-grid th.center-me {
+        text-align: center;
+    }
+
+    /* sortable headers */
+    th.center-me .k-cell-inner > .k-link {
+        justify-content: center;
+    }
+
+    /* RIGHT */
+    /* non-sortable headers */
+    .k-grid th.align-right {
+        text-align: right;
+    }
+
+    /* sortable headers */
+    th.align-right .k-cell-inner > .k-link {
+        justify-content: right;
+    }
+
+    /* unbound and non-filterable columns */
+    .k-grid-header th.align-right.right-padding {
+        padding-right: 12px;
+    }
+
+    /* filterable grid, sortable non-filterable columns */
+    .k-grid-header th.align-right.right-padding > .k-cell-inner {
+        margin-right: 0;
+    }
+</style>
+
+@*<style>
+    .batch-grid td:first-child,
+    .batch-grid th:first-child {
+        text-align: center !important;
+    }
+
+    .batch-grid .k-new-row, .batch-grid .k-changed-cell {
+        //border-color:red;
+        background-color: rgb(94, 194, 50, 0.5) !important;
+    }
+
+    .batch-grid .k-disabled-cell {
+        background-color: rgb(94, 94, 94, 0.5) !important;
+    }
+
+    .batch-grid .k-new-row:hover {
+        background-color: rgb(194, 94, 50, 0.6) !important;
+    }
+
+    .batch-grid .k-deleted-row td:not(:first-child):not(.k-command-cell) {
+        outline: none;
+        cursor: default;
+        opacity: 0.6;
+        filter: grayscale(0.1);
+        pointer-events: none;
+        box-shadow: none;
+    }
+</style>
+*@
+
+@*<style>
+    .userinput-valid {
+        color: green;
+        background-color: cadetblue;
+        font-weight: bold !important;
+    }
+
+    .userinput-invalid {
+        color: red !important;
+        background-color: orange;
+        font-weight: bold;
+        opacity: 0.7;
+    }
+</style>
+*@
+
+@*<style>
+    //table {
+    //    width: 100%;
+    //    margin: 5px;
+    //    border-top: 3px solid #44ee44;
+    //    border-collapse: collapse;
+    //    background-color: yellowgreen;
+    //    margin: 30px;
+    //    border-spacing: 5px;
+    //}
+
+    //th {
+    //    background-color: olive;
+    //}
+
+    //th, td {
+    //    border-bottom: 1px solid #ee2211;
+    //    height: 40px;
+    //    width: 160px;
+    //    text-align: center;
+    //    vertical-align: middle;
+    //    padding-top: 10px;
+    //    padding-bottom: 20px;
+    //    padding-left: 30px;
+    //    padding-right: 40px;
+    //}
+
+    //th:nth-child(even) {
+    //    background-color: rgba(150, 212, 212, 0.4);
+    //}
+
+    //tr:nth-child(even) {
+    //    background-color: rgba(150, 212, 212, 0.4);
+    //}
+
+    //tr:nth-child(odd) {
+    //    background-color: rgba(150, 212, 212, 0.4);
+    //}
+
+    //td:nth-child(even) {
+    //    background-color: rgba(150, 212, 212, 0.4);
+    //}
+</style>
+*@
