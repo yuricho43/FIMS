@@ -15,10 +15,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Models\TSheetSpecsInProgress\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\Fims.Common\Fims.Common.csproj" />
 	</ItemGroup>
 

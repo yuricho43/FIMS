@@ -22,6 +22,7 @@ using Fims.Common;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
+using System.Text;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -365,20 +366,25 @@ namespace Fims.Client.Shared.Pages
 
         public async void OnLoadSessionData()
         {
-            string userId = "coolbix";
-            Stream jsonStream = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(userId);
+            string userIdTx = "coolbix";
+            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(userIdTx);
 
-            Dictionary<string, TSheetSpec> productSerialToTSheetSpecDict = await JsonSerializer.DeserializeAsync<Dictionary<string, TSheetSpec>>(jsonStream);
+            var userIdRx = tSheetSpecsInProgressDto.UserId;
+            var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
 
-            foreach (var productSerialToTSheetSpec in productSerialToTSheetSpecDict)
+            foreach (var serialToTSheetSpecPair in serialToTSheetSpecPairs)
             {
-                if ( !ProductSerialToTSheetSpecDict.ContainsKey(productSerialToTSheetSpec.Key) )
+                var productSerial = serialToTSheetSpecPair.Key;
+                var tSheetSpecJsonString = serialToTSheetSpecPair.Value;
+
+                MemoryStream tSheetSpecJsonStream = new MemoryStream(Encoding.UTF8.GetBytes(tSheetSpecJsonString));
+                var tSheetSpec = await JsonSerializer.DeserializeAsync<TSheetSpec>(tSheetSpecJsonStream);
+
+                if (!ProductSerialToTSheetSpecDict.ContainsKey(productSerial))
                 {
-                    var key = productSerialToTSheetSpec.Key;
-                    var value = productSerialToTSheetSpec.Value;
-                    ProductSerialToTSheetSpecDict?.Add(productSerialToTSheetSpec.Key, productSerialToTSheetSpec.Value);
-                    ProductSerialToSelectionDict?.Add(productSerialToTSheetSpec.Key, false);
-                    ProductSerials?.Add(productSerialToTSheetSpec.Key);
+                    ProductSerialToTSheetSpecDict?.Add(productSerial, tSheetSpec);
+                    ProductSerialToSelectionDict?.Add(productSerial, false);
+                    ProductSerials?.Add(productSerial);
 
                 }
             }
@@ -398,12 +404,20 @@ namespace Fims.Client.Shared.Pages
 
         public async void OnSaveSessionData()
         {
-            var jsonString = JsonUtils.PrettySerialize(ProductSerialToTSheetSpecDict);
-            TSheetSpecsInProgressReqeust tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressReqeust
+            TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressDto
             {
                 UserId = "coolbix",
-                TSheetSpecsJsonString = jsonString
+                SerialToTSheetSpecPairs = new Dictionary<string, string>()
             };
+
+            foreach (var productSerialToTSheetSpec in ProductSerialToTSheetSpecDict)
+            {
+                var serial = productSerialToTSheetSpec.Key;
+                var tSheetSpec = productSerialToTSheetSpec.Value;
+                var jsonString = JsonUtils.PrettySerialize(tSheetSpec);
+                tSheetSpecsInProgressReqeust.SerialToTSheetSpecPairs.Add(serial, jsonString);
+            }
+
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
 
             IndexNotificationComponent.Show(new NotificationModel()
@@ -413,7 +427,6 @@ namespace Fims.Client.Shared.Pages
                 ShowIcon = true,
                 Icon = "caret-double-alt-up"
             });
-
         }
 
 

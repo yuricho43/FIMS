@@ -25,7 +25,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
             this.http = http;
         }
 
-        public async Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressReqeust tSheetSpecsInProgressReqeust)
+        public async Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust)
         {
             var path = $"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}";
             var tSheetSpecsInProgressResponse = await this.http.PostAsJsonAsync($"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}", tSheetSpecsInProgressReqeust);
@@ -33,17 +33,11 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
             return fileName;
         }
 
-        public async Task<Stream> GetTSheetSpecsInProgressByUser(string userId)
+        public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId)
         {
-            //var tSheetSpecsInProgressResponse = await this.http.PostAsJsonAsync($"{TSheetSpecsInProgressPath}", tSheetSpecsInProgressReqeust);
-            //var tSheetSpecsInProgressJsonString = await tSheetSpecsInProgressResponse.Content.ReadAsStringAsync();
-
-            // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
-            //var tSheetSpec = await this.http.GetFromJsonAsync<TSheetSpec>(TSheetSpecsRoute + "/TSheetSpecByModel/" + equipmentModel);
             var tSheetSpecsInProgressResponse = await this.http.GetAsync(TSheetSpecsInProgressPath + "/" + userId);
-            var tSheetSpecsInProgressJsonStream = await tSheetSpecsInProgressResponse.Content.ReadAsStreamAsync();
-
-            return tSheetSpecsInProgressJsonStream;
+            var tSheetSpecsInProgressDto = await tSheetSpecsInProgressResponse.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
+            return tSheetSpecsInProgressDto;
         }
     }
 }

@@ -31,19 +31,18 @@ namespace Fims.Web.Server.Controllers
         [AllowAnonymous] //JBH
         public async Task<ActionResult> GetTSheetSpecsInProgressByUser(string userId)
         {
-            var data = await this.TSheetSpecsInProgressService.GetTSheetSpecsInProgressAsync(this.CurrentUserService.UserId ?? "ANONYMOUS");
-            return Created(nameof(this.GetTSheetSpecsInProgressByUser), data);
+            var tSheetSpecsInProgressDto = await this.TSheetSpecsInProgressService.GetTSheetSpecsInProgressAsync(this.CurrentUserService.UserId ?? "ANONYMOUS");
+            return Created(nameof(this.GetTSheetSpecsInProgressByUser), tSheetSpecsInProgressDto);
         }
+
 
         [HttpPost(nameof(SaveTSheetSpecsInProgressByUser))]
         [AllowAnonymous] //JBH
-        public async Task<ActionResult> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressReqeust tSheetSpecsInProgressReqeust)
+        public async Task<ActionResult> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
-            var userId = tSheetSpecsInProgressReqeust.UserId;
-            var tSheetSpecsJsonString = tSheetSpecsInProgressReqeust.TSheetSpecsJsonString;
-
-            var fileName = await this.TSheetSpecsInProgressService.SaveTSheetSpecsInProgressByUserAsync(tSheetSpecsJsonString, this.CurrentUserService.UserId ?? "ANONYMOUS");
-            return Created(nameof(this.SaveTSheetSpecsInProgressByUser), fileName);
+            var userId = tSheetSpecsInProgressDto.UserId;
+            var fileName = await this.TSheetSpecsInProgressService.SaveTSheetSpecsInProgressByUserAsync(this.CurrentUserService.UserId ?? "ANONYMOUS", tSheetSpecsInProgressDto);
+            return Created(nameof(this.SaveTSheetSpecsInProgressByUser), userId);
         }
     }
 }

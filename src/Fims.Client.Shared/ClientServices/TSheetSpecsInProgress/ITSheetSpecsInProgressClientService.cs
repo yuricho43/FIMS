@@ -7,7 +7,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 {
     public interface ITSheetSpecsInProgressClientService
     {
-        Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressReqeust tSheetSpecsInProgressReqeust);
-        Task<Stream> GetTSheetSpecsInProgressByUser(string userId);
+        Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressDto);
+        Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId);
     }
 }

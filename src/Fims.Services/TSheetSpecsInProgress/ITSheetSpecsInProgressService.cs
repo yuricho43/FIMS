@@ -1,3 +1,4 @@
+using Fims.Data.Models.TSheetSpecsInProgress;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -11,7 +12,7 @@ namespace Fims.Services.TSheetSpecsInProgress
     //public interface ITSheetSpecsInProgressService : ISingletonService
     public interface ITSheetSpecsInProgressService //DO NOT inherits IService|ISingletonService|IScopedService
     {
-        public Task<string> SaveTSheetSpecsInProgressByUserAsync(string tSheetSpecsJsonStr, string userId);
-        public Task<string> GetTSheetSpecsInProgressAsync(string userId);
+        public Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto);
+        public Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressAsync(string userId);
     }
 }

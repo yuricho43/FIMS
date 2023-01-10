@@ -12,6 +12,7 @@ using ExcelMapper;
 using Fims.Common;
 using Fims.Data.Utils;
 using static System.Net.Mime.MediaTypeNames;
+using Fims.Data.Models.TSheetSpecsInProgress;
 
 namespace Fims.Services.TSheetSpecsInProgress
 {
@@ -20,39 +21,51 @@ namespace Fims.Services.TSheetSpecsInProgress
     //     This way, TSheetSpecsInProgressService will build TSheetSpecsInProgress immediatley upon startup.
     public class TSheetSpecsInProgressService : ITSheetSpecsInProgressService //DO NOT inherits IService|ISingletonService|IScopedService
     {
-        private readonly string TSheetSpecsInProgressFilePath = "./TSheetSpecsInProgress";
-        private readonly List<string> EquipmentModels;
-
         public TSheetSpecsInProgressService()
         {
-            EquipmentModels = new List<string>();
         }
 
-        public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string tSheetSpecsJsonStr, string userId)
+        public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
-            string filePath = $"{TSheetSpecsInProgressFilePath}-{userId}.json";
-
-            if (File.Exists(filePath))
+            var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
+            foreach (var serialToTSheetSpecPair in serialToTSheetSpecPairs)
             {
-                File.Delete(filePath);
+                var productSerial = serialToTSheetSpecPair.Key;
+                var tSheetSpecJsonString = serialToTSheetSpecPair.Value;
+
+                string filePath = $"{Constants.FimsTSheetSpecsInProgressFileNameBase}_{userId}_{productSerial}.json";
+                if (File.Exists(filePath))
+                {
+                    File.Delete(filePath);
+                }
+
+                await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
             }
 
-            await File.WriteAllTextAsync(filePath, tSheetSpecsJsonStr);
-            return filePath;
+            return userId;
         }
 
 
-        public async Task<string> GetTSheetSpecsInProgressAsync(string userId)
+        public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressAsync(string userId)
         {
-            string filePath = $"{TSheetSpecsInProgressFilePath}-{userId}.json";
-            if ( !File.Exists(filePath) )
+            string searchPattern = Constants.FimsTSheetSpecsInProgressFileNameBase + "_" + userId + "_" + "*" + ".json";
+            string[] filePaths = Directory.GetFiles(".", searchPattern);
+
+            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = new TSheetSpecsInProgressDto
             {
-                return String.Empty;
+                UserId = userId,
+                SerialToTSheetSpecPairs = new Dictionary<string, string>()
+            };
+
+            foreach (var filePath in filePaths)
+            {
+                //filePath: ".\\FimsTSheetSpecsInProgress_ANONYMOUS_2023010207.json"
+                var productSerial = filePath.Split('.').ToList()[1].Split('_').Last();
+                string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath); 
+                tSheetSpecsInProgressDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
             }
 
-            string fileContent = await File.ReadAllTextAsync(filePath);
-            return fileContent;
+            return tSheetSpecsInProgressDto;
         }
     }
-
 }

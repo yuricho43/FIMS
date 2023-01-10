@@ -7,5 +7,8 @@
         public const string ManagerRole = "Manager";
 
         public const string TSheetSpecNotDefined = "TSheetSpecNotDefined";
+
+        public const string FimsTSheetSpecsFileNameBase = "FimsTSheetSpecs";
+        public const string FimsTSheetSpecsInProgressFileNameBase = "FimsTSheetSpecsInProgress";
     }
 }

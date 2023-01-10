@@ -32,7 +32,7 @@ bld/
 [Ll]ogs/
 
 # Operation-In-Progress Savings
-TSheetSpecsInProgress-*.json
+FimsTSheetSpecsInProgress_*.json
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

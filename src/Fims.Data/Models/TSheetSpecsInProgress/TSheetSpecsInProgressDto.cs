@@ -8,9 +8,10 @@ using System.Threading.Tasks;
 
 namespace Fims.Data.Models.TSheetSpecsInProgress
 {
-    public class TSheetSpecsInProgressReqeust
+    public class TSheetSpecsInProgressDto
     {
         public string UserId { get; set; }
-        public string TSheetSpecsJsonString { get; set; }
+
+        public Dictionary<string, string> SerialToTSheetSpecPairs { get; set; }
     }
 }

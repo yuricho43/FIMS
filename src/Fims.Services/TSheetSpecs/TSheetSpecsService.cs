@@ -20,7 +20,6 @@ namespace Fims.Services.TSheetSpecs
     //     This way, TSheetSpecsService will build TSheetSpecs immediatley upon startup.
     public class TSheetSpecsService : ITSheetSpecsService //DO NOT inherits IService|ISingletonService|IScopedService
     {
-        private readonly string TItemSpecFilePath = "./FimsTestItemSpec-20221226.xlsx";
         private readonly List<string> EquipmentModels;
         private readonly Dictionary<string, TSheetSpec> EquipmentModelTSheetSpecDict;
 
@@ -28,7 +27,7 @@ namespace Fims.Services.TSheetSpecs
         {
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
-            BuildTSheetSpecsFromExcelSpecFile(TItemSpecFilePath);
+            BuildTSheetSpecsFromExcelSpecFile(Constants.FimsTSheetSpecsFileNameBase + "_" + "20221226" + ".xlsx");
         }
 
         //public async Task<List<string>> GetEquipmentModelsAsync()
@@ -74,13 +73,13 @@ namespace Fims.Services.TSheetSpecs
             }
         }
 
-        private void BuildTSheetSpecsFromExcelSpecFile(string tItemSpecFilePath)
+        private void BuildTSheetSpecsFromExcelSpecFile(string tSheetSpecsFilePath)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); //prevent NotSupportedException: "No data is available for encoding 1252" from the old Excel format.
             //Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB"); //dd/MM/yyyy
 
  
-            using var excelStream = File.OpenRead(tItemSpecFilePath); //make sure "using" so that, after the end of this method, the excel file handle should be released/disposed right away for others.
+            using var excelStream = File.OpenRead(tSheetSpecsFilePath); //make sure "using" so that, after the end of this method, the excel file handle should be released/disposed right away for others.
             var importer = new ExcelImporter(excelStream);
             importer.Configuration.SkipBlankLines = true;
             importer.Configuration.RegisterClassMap<TItemSpecClassMap>();
@@ -104,9 +103,6 @@ namespace Fims.Services.TSheetSpecs
 
                 EquipmentModelTSheetSpecDict.Add(equipmentModel, tSheetSpec);
             }
-
-            // JsonUtils.PrettyWrite(EquipmentModelTSheetSpecDict, "./FimsTestItemSpec-20221226.json");
-            int cool = 7;
         }
 
         private string ExtractEquipmentModelFromFileName(string specFileName)
