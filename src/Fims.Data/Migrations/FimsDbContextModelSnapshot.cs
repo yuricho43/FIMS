@@ -266,6 +266,9 @@ namespace Fims.Data.Migrations
                     b.Property<string>("ProductType")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("SpecFile")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");

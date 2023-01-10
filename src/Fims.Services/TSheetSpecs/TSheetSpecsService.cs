@@ -20,6 +20,9 @@ namespace Fims.Services.TSheetSpecs
     //     This way, TSheetSpecsService will build TSheetSpecs immediatley upon startup.
     public class TSheetSpecsService : ITSheetSpecsService //DO NOT inherits IService|ISingletonService|IScopedService
     {
+        public string FimsTSheetSpecsFileName { get; set; }
+        public string FimsTSheetSpecsFileFullPath { get; set; }
+
         private readonly List<string> EquipmentModels;
         private readonly Dictionary<string, TSheetSpec> EquipmentModelTSheetSpecDict;
 
@@ -27,7 +30,10 @@ namespace Fims.Services.TSheetSpecs
         {
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
-            BuildTSheetSpecsFromExcelSpecFile(Constants.FimsTSheetSpecsFileNameBase + "_" + "20221226" + ".xlsx");
+
+            FimsTSheetSpecsFileName = Constants.FimsTSheetSpecsFileNameBase + "_" + "20221226" + ".xlsx";
+            FimsTSheetSpecsFileFullPath = Constants.FimsTSheetSpecsRepoPath + "/" + FimsTSheetSpecsFileName;
+            BuildTSheetSpecsFromExcelSpecFile(FimsTSheetSpecsFileFullPath);
         }
 
         //public async Task<List<string>> GetEquipmentModelsAsync()
@@ -99,6 +105,7 @@ namespace Fims.Services.TSheetSpecs
                 {
                     ProductModel = equipmentModel,
                     TItemSpecs = tItemSpecs,
+                    SpecFile = FimsTSheetSpecsFileName
                 };
 
                 EquipmentModelTSheetSpecDict.Add(equipmentModel, tSheetSpec);

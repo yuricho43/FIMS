@@ -27,6 +27,7 @@ namespace Fims.Data.Entities
         public string Customer { get; set; }
         public string EndUser { get; set; }
         public string ProductType { get; set; } // "신규", "수리"
+        public string SpecFile { get; set; }    // "FimsTSheetSpecs_20221226.xlsx"
         public string Comment { get; set; }
         public string InspectorName { get; set; }
         public DateTime InspectionStartDateTime { get; set; }

@@ -21,4 +21,8 @@
     <ProjectReference Include="..\Client\Fims.Web.Client.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="FimsTSheetSpecsInProgressRepository\" />
+  </ItemGroup>
+
 </Project>

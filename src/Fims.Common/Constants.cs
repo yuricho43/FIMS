@@ -8,7 +8,10 @@
 
         public const string TSheetSpecNotDefined = "TSheetSpecNotDefined";
 
+        public const string FimsTSheetSpecsRepoPath   = "./FimsTSheetSpecsRepository";
         public const string FimsTSheetSpecsFileNameBase = "FimsTSheetSpecs";
+
+        public const string FimsTSheetSpecsInProgressRepoPath   = "./FimsTSheetSpecsInProgressRepository";
         public const string FimsTSheetSpecsInProgressFileNameBase = "FimsTSheetSpecsInProgress";
     }
 }

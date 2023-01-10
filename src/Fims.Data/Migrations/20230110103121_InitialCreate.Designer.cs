@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fims.Data.Migrations
 {
     [DbContext(typeof(FimsDbContext))]
-    [Migration("20230109102621_InitialCreate")]
+    [Migration("20230110103121_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -267,6 +267,9 @@ namespace Fims.Data.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductType")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SpecFile")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")

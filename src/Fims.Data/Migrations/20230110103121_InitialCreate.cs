@@ -177,6 +177,7 @@ namespace Fims.Data.Migrations
                     Customer = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     EndUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     ProductType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpecFile = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InspectorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     InspectionStartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),

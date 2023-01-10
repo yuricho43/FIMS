@@ -21,6 +21,9 @@ namespace Fims.Services.TSheetSpecsInProgress
     //     This way, TSheetSpecsInProgressService will build TSheetSpecsInProgress immediatley upon startup.
     public class TSheetSpecsInProgressService : ITSheetSpecsInProgressService //DO NOT inherits IService|ISingletonService|IScopedService
     {
+        public string FimsTSheetSpecsInProgressFileName { get; set; }
+        public string FimsTSheetSpecsInProgressFileFullPath { get; set; }
+
         public TSheetSpecsInProgressService()
         {
         }
@@ -33,7 +36,8 @@ namespace Fims.Services.TSheetSpecsInProgress
                 var productSerial = serialToTSheetSpecPair.Key;
                 var tSheetSpecJsonString = serialToTSheetSpecPair.Value;
 
-                string filePath = $"{Constants.FimsTSheetSpecsInProgressFileNameBase}_{userId}_{productSerial}.json";
+                string fileName = $"{Constants.FimsTSheetSpecsInProgressFileNameBase}_{userId}_{productSerial}.json";
+                string filePath = Path.Combine(Constants.FimsTSheetSpecsInProgressRepoPath, fileName); 
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -49,7 +53,7 @@ namespace Fims.Services.TSheetSpecsInProgress
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressAsync(string userId)
         {
             string searchPattern = Constants.FimsTSheetSpecsInProgressFileNameBase + "_" + userId + "_" + "*" + ".json";
-            string[] filePaths = Directory.GetFiles(".", searchPattern);
+            string[] filePaths = Directory.GetFiles(Constants.FimsTSheetSpecsInProgressRepoPath, searchPattern);
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = new TSheetSpecsInProgressDto
             {
