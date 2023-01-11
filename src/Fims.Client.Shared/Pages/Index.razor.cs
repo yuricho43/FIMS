@@ -23,6 +23,7 @@ using Fims.Data.Models.TSheetSpecs;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using System.Text;
+using System.Timers;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -72,6 +73,7 @@ namespace Fims.Client.Shared.Pages
         private string     CurrentProductSerial { get; set; }
         private TSheetSpec CurrentTSheetSpec { get; set; }
         private string     CurrentInspectorName { get; set; }
+        private string     CurrentInspectorUserId { get; set; }
 
         public bool AddNewProductDialogVisible { get; set; } = false;
 
@@ -79,10 +81,21 @@ namespace Fims.Client.Shared.Pages
 
         TelerikNotification IndexNotificationComponent { get; set; }
 
+        private System.Timers.Timer TSheetSpecsSavingTimer;
 
         protected override void OnInitialized()
         {
             Layout.DocsTitle = Localizer["HumanCapital"];
+
+            TSheetSpecsSavingTimer = new();
+            TSheetSpecsSavingTimer.Interval = 1000 * 30; // every 30 secs
+            TSheetSpecsSavingTimer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
+            {
+                OnSaveSessionDataByTimer();
+                //await InvokeAsync(StateHasChanged);
+                await Task.Delay(1); // for async
+            };
+            TSheetSpecsSavingTimer.Enabled = true;
 
             base.OnInitialized();
         }
@@ -127,6 +140,7 @@ namespace Fims.Client.Shared.Pages
                 var state = await this.AuthState.GetAuthenticationStateAsync();
                 var user = state.User;
                 CurrentInspectorName = user.GetFirstName();
+                CurrentInspectorUserId = user.GetUserId();
 
                 ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
             }
@@ -366,12 +380,7 @@ namespace Fims.Client.Shared.Pages
 
         public async void OnLoadSessionData()
         {
-            var authstate = await this.AuthState.GetAuthenticationStateAsync();
-            var user = authstate.User;
-            string userIdTx = user.GetUserId();
-            //string firstName = user.GetFirstName();
-
-            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(userIdTx);
+            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
 
             var userIdRx = tSheetSpecsInProgressDto.UserId;
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
@@ -401,7 +410,6 @@ namespace Fims.Client.Shared.Pages
                     ProductSerialToTSheetSpecDict?.Add(productSerial, tSheetSpec);
                     ProductSerialToSelectionDict?.Add(productSerial, false);
                     ProductSerials?.Add(productSerial);
-
                 }
             }
 
@@ -432,14 +440,45 @@ namespace Fims.Client.Shared.Pages
                 return;
             }
 
-            var authstate = await this.AuthState.GetAuthenticationStateAsync();
-            var user = authstate.User;
-            string userIdTx = user.GetUserId();
-            //string firstName = user.GetFirstName();
+            bool result = await SaveSessionData();
+
+            IndexNotificationComponent.Show(new NotificationModel()
+            {
+                Text = "진행목록이 성공적으로 저장되었습니다.",
+                ThemeColor = "success",
+                ShowIcon = true,
+                Icon = "caret-double-alt-up"
+            });
+        }
+
+        public async void OnSaveSessionDataByTimer()
+        {
+            if (ProductSerialToTSheetSpecDict.Count == 0)
+            {
+                return;
+            }
+
+            bool result = await SaveSessionData();
+
+            //  IndexNotificationComponent.Show(new NotificationModel()
+            //  {
+            //      Text = "진행목록 자동저장",
+            //      ThemeColor = "info",
+            //      ShowIcon = true,
+            //      Icon = "caret-double-alt-up"
+            //  });
+        }
+
+        public async Task<bool> SaveSessionData()
+        {
+            if (ProductSerialToTSheetSpecDict.Count == 0)
+            {
+                return false;
+            }
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressDto
             {
-                UserId = userIdTx,
+                UserId = CurrentInspectorUserId,
                 SerialToTSheetSpecPairs = new Dictionary<string, string>()
             };
 
@@ -453,15 +492,8 @@ namespace Fims.Client.Shared.Pages
 
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
 
-            IndexNotificationComponent.Show(new NotificationModel()
-            {
-                Text = "진행목록이 성공적으로 저장되었습니다.",
-                ThemeColor = "success",
-                ShowIcon = true,
-                Icon = "caret-double-alt-up"
-            });
+            return true;
         }
-
 
         [CascadingParameter]
         public DialogFactory Dialogs { get; set; }
