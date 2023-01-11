@@ -490,6 +490,7 @@ namespace Fims.Client.Shared.Pages
                 var tSheetSpec = productSerialToTSheetSpec.Value;
                 if ( !tSheetSpec.IsInspectionCompleted )
                 {
+                    // save "In-Progress" inspections only. do not save "Completed" inspections
                     countInProgress++;
                     var jsonString = JsonUtils.PrettySerialize(tSheetSpec);
                     tSheetSpecsInProgressReqeust.SerialToTSheetSpecPairs.Add(serial, jsonString);
@@ -498,7 +499,7 @@ namespace Fims.Client.Shared.Pages
 
             if (countInProgress == 0)
             {
-                return false; //save only "InProgress"
+                return false;
             }
 
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
