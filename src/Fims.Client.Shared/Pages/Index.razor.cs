@@ -366,7 +366,11 @@ namespace Fims.Client.Shared.Pages
 
         public async void OnLoadSessionData()
         {
-            string userIdTx = "coolbix";
+            var authstate = await this.AuthState.GetAuthenticationStateAsync();
+            var user = authstate.User;
+            string userIdTx = user.GetUserId();
+            //string firstName = user.GetFirstName();
+
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(userIdTx);
 
             var userIdRx = tSheetSpecsInProgressDto.UserId;
@@ -428,9 +432,14 @@ namespace Fims.Client.Shared.Pages
                 return;
             }
 
+            var authstate = await this.AuthState.GetAuthenticationStateAsync();
+            var user = authstate.User;
+            string userIdTx = user.GetUserId();
+            //string firstName = user.GetFirstName();
+
             TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressDto
             {
-                UserId = "coolbix",
+                UserId = userIdTx,
                 SerialToTSheetSpecPairs = new Dictionary<string, string>()
             };
 

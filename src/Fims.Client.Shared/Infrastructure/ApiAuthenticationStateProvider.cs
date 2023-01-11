@@ -64,6 +64,21 @@ namespace Fims.Client.Shared.Infrastructure
 
         private IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
+            /*
+             *  JWT Token consists of 3 parts separated by "."
+             *  
+             *      - Header (Algorithm & Token type)
+             *  
+             *      - Payload --> ClaimsPrincipal
+             *          . ClaimTypes.NameIdentifier : "f01b2252-3710-4e64-a45a-e285c9eee85f"  (this is the ID index in Db)
+             *          . ClaimTypes.Email:   "worker@fstc.co.kr"
+             *          . ClaimTypes.Name:    "김철수"
+             *          . ClaimTypes.SurName: "KCS"
+             *          . ClaimTypes.Role:    "Worker"
+             *  
+             *      - Signature
+             */
+
             var claims = new List<Claim>();
             var payload = jwt.Split('.')[1];
             var jsonBytes = this.ParseBase64WithoutPadding(payload);

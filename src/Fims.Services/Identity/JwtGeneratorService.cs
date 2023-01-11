@@ -32,6 +32,22 @@ namespace Fims.Services.Identity
 
         public async Task<string> GenerateJwtAsync(FimsUser user)
         {
+            /*
+             *  JWT Token consists of 3 parts separated by "."
+             *  
+             *      - Header (Algorithm & Token type)
+             *  
+             *      - Payload --> ClaimsPrincipal
+             *          . ClaimTypes.NameIdentifier : "f01b2252-3710-4e64-a45a-e285c9eee85f"  (this is the ID index in Db)
+             *          . ClaimTypes.Email:   "worker@fstc.co.kr"
+             *          . ClaimTypes.Name:    "김철수"
+             *          . ClaimTypes.SurName: "KCS"
+             *          . ClaimTypes.Role:    "Worker"
+             *  
+             *      - Signature
+             */
+
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
@@ -39,20 +55,23 @@ namespace Fims.Services.Identity
                 new Claim(ClaimTypes.Name, user.FirstName),
                 new Claim(ClaimTypes.Surname, user.LastName)
             };
-            /*
-             * claims:	
-             *     [0]	{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier:  c8cd5a1a-077b-448f-817f-4c19b1fa70dc}
-             *     [1]	{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress:    coolbix@hanmail.net}
-             *     [2]	{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name:            Cool}
-             *     [3]	{http://schemas.xmlsoap.org/ws/2005/05/identity/claims/surname:         Bix}
-             */        
-
 
             var isAdministrator = await this.userManager.IsInRoleAsync(user, AdministratorRole);
-
             if (isAdministrator)
             {
                 claims.Add(new Claim(ClaimTypes.Role, AdministratorRole));
+            }
+
+            var isManager = await this.userManager.IsInRoleAsync(user, ManagerRole);
+            if (isManager)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, ManagerRole));
+            }
+
+            var isWorker = await this.userManager.IsInRoleAsync(user, WorkerRole);
+            if (isWorker)
+            {
+                claims.Add(new Claim(ClaimTypes.Role, WorkerRole));
             }
 
             var secret = Encoding.UTF8.GetBytes(this.applicationSettings.Secret); //JBH: Secret comes from "ApplicationSettings" section @ appsettings.json
@@ -60,9 +79,7 @@ namespace Fims.Services.Identity
             var token = new JwtSecurityToken(
                 claims: claims,
                 expires: DateTime.UtcNow.AddDays(7),
-                signingCredentials: new SigningCredentials(
-                    new SymmetricSecurityKey(secret),
-                    SecurityAlgorithms.HmacSha256));
+                signingCredentials: new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256));
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var encryptedToken = tokenHandler.WriteToken(token);

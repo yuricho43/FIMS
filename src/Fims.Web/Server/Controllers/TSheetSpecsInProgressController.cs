@@ -29,9 +29,11 @@ namespace Fims.Web.Server.Controllers
 
         [HttpGet("{userId}")]
         [AllowAnonymous] //JBH
-        public async Task<ActionResult> GetTSheetSpecsInProgressByUser(string userId)
+        public async Task<ActionResult> GetTSheetSpecsInProgressByUser(string userIdRx)
         {
-            var tSheetSpecsInProgressDto = await this.TSheetSpecsInProgressService.GetTSheetSpecsInProgressAsync(this.CurrentUserService.UserId ?? "ANONYMOUS");
+            // "userIdRx" should be same with "this.CurrentUserService.UserId", and unused now.
+            var userId = this.CurrentUserService.UserId ?? "ANONYMOUS";
+            var tSheetSpecsInProgressDto = await this.TSheetSpecsInProgressService.GetTSheetSpecsInProgressAsync(userId);
             return Created(nameof(this.GetTSheetSpecsInProgressByUser), tSheetSpecsInProgressDto);
         }
 
@@ -40,8 +42,10 @@ namespace Fims.Web.Server.Controllers
         [AllowAnonymous] //JBH
         public async Task<ActionResult> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
-            var userId = tSheetSpecsInProgressDto.UserId;
-            var fileName = await this.TSheetSpecsInProgressService.SaveTSheetSpecsInProgressByUserAsync(this.CurrentUserService.UserId ?? "ANONYMOUS", tSheetSpecsInProgressDto);
+            // "userIdRx" should be same with "this.CurrentUserService.UserId", and unused now.
+            var userIdRx = tSheetSpecsInProgressDto.UserId;
+            var userId = this.CurrentUserService.UserId ?? "ANONYMOUS";
+            var fileName = await this.TSheetSpecsInProgressService.SaveTSheetSpecsInProgressByUserAsync(userId, tSheetSpecsInProgressDto);
             return Created(nameof(this.SaveTSheetSpecsInProgressByUser), userId);
         }
     }
