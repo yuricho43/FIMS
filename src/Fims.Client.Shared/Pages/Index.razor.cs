@@ -88,7 +88,7 @@ namespace Fims.Client.Shared.Pages
             Layout.DocsTitle = Localizer["HumanCapital"];
 
             TSheetSpecsSavingTimer = new();
-            TSheetSpecsSavingTimer.Interval = 1000 * 30; // every 30 secs
+            TSheetSpecsSavingTimer.Interval = 1000 * 60; // every 60 secs
             TSheetSpecsSavingTimer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
             {
                 OnSaveSessionDataByTimer();
@@ -482,12 +482,23 @@ namespace Fims.Client.Shared.Pages
                 SerialToTSheetSpecPairs = new Dictionary<string, string>()
             };
 
+            int countInProgress = 0;
+
             foreach (var productSerialToTSheetSpec in ProductSerialToTSheetSpecDict)
             {
                 var serial = productSerialToTSheetSpec.Key;
                 var tSheetSpec = productSerialToTSheetSpec.Value;
-                var jsonString = JsonUtils.PrettySerialize(tSheetSpec);
-                tSheetSpecsInProgressReqeust.SerialToTSheetSpecPairs.Add(serial, jsonString);
+                if ( !tSheetSpec.IsInspectionCompleted )
+                {
+                    countInProgress++;
+                    var jsonString = JsonUtils.PrettySerialize(tSheetSpec);
+                    tSheetSpecsInProgressReqeust.SerialToTSheetSpecPairs.Add(serial, jsonString);
+                }
+            }
+
+            if (countInProgress == 0)
+            {
+                return false; //save only "InProgress"
             }
 
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
