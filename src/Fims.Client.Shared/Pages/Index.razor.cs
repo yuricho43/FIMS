@@ -372,6 +372,18 @@ namespace Fims.Client.Shared.Pages
             var userIdRx = tSheetSpecsInProgressDto.UserId;
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
 
+            if (serialToTSheetSpecPairs.Count == 0)
+            {
+                IndexNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장된 진행목록이 없습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-down"
+                });
+                return;
+            }
+
             foreach (var serialToTSheetSpecPair in serialToTSheetSpecPairs)
             {
                 var productSerial = serialToTSheetSpecPair.Key;
@@ -396,7 +408,7 @@ namespace Fims.Client.Shared.Pages
             IndexNotificationComponent.Show(new NotificationModel()
             {
                 Text = "진행목록이 성공적으로 로딩되었습니다.",
-                ThemeColor = "info",
+                ThemeColor = "primary",
                 ShowIcon = true,
                 Icon = "caret-double-alt-down"
             });
@@ -404,6 +416,18 @@ namespace Fims.Client.Shared.Pages
 
         public async void OnSaveSessionData()
         {
+            if (ProductSerialToTSheetSpecDict.Count == 0)
+            {
+                IndexNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "진행목록이 비어 있습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+                return;
+            }
+
             TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressDto
             {
                 UserId = "coolbix",

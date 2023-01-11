@@ -8,6 +8,7 @@
 @*@inject Services.PublicHttp Http*@
 @inject MainLayoutState Layout
 
+
 <TelerikRootComponent>
     <div class="header">
         <div class="nav-container">
@@ -29,16 +30,16 @@
                    Expanded="@DrawerExpanded"
                    ExpandedChanged="((bool newValue) => ExpandedChangedHandler(newValue))"
                    Width="190px" Data="DrawerItems" Mode="DrawerMode.Push" Position="DrawerPosition.Left" MiniMode="true">
-        <Template>
-            <DrawTemplate Data="context"></DrawTemplate>
-        </Template>
         <DrawerContent>
             @Body
         </DrawerContent>
     </TelerikDrawer>
 </TelerikRootComponent>
 
+
+
 <TelerikMediaQuery Media="(max-width: 768px)" OnChange="((changed) => WindowWidthSmall = changed)"></TelerikMediaQuery>
+
 
 @code {
     TelerikDrawer<DrawerItem> MenuDrawer { get; set; }
@@ -53,8 +54,9 @@
         new DrawerItem{ Text = Localizer["Drawer_Home"], Icon = "grid", Url="/", Group = "home"},
         new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = "gear", Url="/BarcodeScanner", Group = "app"},
         new DrawerItem{ Text = Localizer["Drawer_Profile"], Icon = "user", Url="/account/settings", Group = "app"},
-        new DrawerItem{ Text = Localizer["Drawer_Info"], Icon = "information", Url="/Management/TSheetManagement", Group = "ext"}
-    };
+        new DrawerItem{ Text = Localizer["Drawer_Info"], Icon = "information", Url="/Management/TSheetManagement", Group = "ext"},
+        new DrawerItem{ Text = "Test", Icon = "star", Url="#", Group = "app"},
+        };
       
     async Task ToggleMenuDrawer()
     {
@@ -97,3 +99,38 @@
         // await InvokeAsync(Layout.LayoutStateChange);
     }
 }
+
+
+<style>
+    .k-drawer-item {
+        align-items: center;
+    }
+
+    .k-drawer-container {
+        position: relative;
+        width: 100%;
+        height:90%;
+        //background-color: crimson;
+    }
+
+    .k-drawer-content {
+        padding: 15px;
+        //font-size: 18px;
+        //background-color: lightseagreen;
+    }
+
+    .k-drawer-content h6 {
+        margin-top: 15px;
+        //background-color: darksalmon;
+    }
+
+    .custom-toolbar {
+        width: 100%;
+        background-color: coral;
+        line-height: 10px;
+        border-bottom: inset;
+        border-bottom-width: 1px;
+        padding: 3px 8px;
+        color: #656565;
+    }
+</style>

@@ -3,74 +3,54 @@
 @attribute [Authorize]
 
 
-
-<CardHeader>
-    <div class="card-header-wrapper">
-        <TelerikStackLayout Orientation="StackLayoutOrientation.Vertical" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%">
-            <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%">
-                <TelerikButton OnClick="OnAddNewProductClicked" Icon="plus-circle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)"><strong>제품등록</strong></TelerikButton>
-                <TelerikButton OnClick="OnLoadSessionData" Icon="caret-double-alt-down" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)"><strong>진행목록 불러오기</strong></TelerikButton>
-                <TelerikButton OnClick="OnSaveSessionData" Icon="caret-double-alt-up" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)"><strong>진행목록 저장</strong></TelerikButton>
-            </TelerikStackLayout>
-
-            <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%">
-                @if (ProductSerials != null)
-                {
-                    <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
-                        @foreach (string productSerial in ProductSerials)
-                        {
-                            var cool = ProductSerialToSelectionDict[productSerial];
-                            <ButtonGroupToggleButton @bind-Selected="@ProductSerialToSelectionDict[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))">
-                                <strong>@productSerial</strong>
-                                &nbsp;
-                                @*<span class="badge badge-success" style="width: 30px">@TModelToTSheetSpecDict[equipmentModel].TItemSpecs.Count</span>*@
-                            </ButtonGroupToggleButton>
-                        }
-                    </TelerikButtonGroup>
-                }
-            </TelerikStackLayout>
+<div class="fims-page">
+    <TelerikStackLayout Class="bars-section" Orientation="StackLayoutOrientation.Vertical" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Width="100%">
+        <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="50px">
+            <TelerikButton OnClick="OnAddNewProductClicked" Icon="plus-circle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)"><strong>제품등록</strong></TelerikButton>
+            <TelerikButton OnClick="OnLoadSessionData" Icon="caret-double-alt-down" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)"><strong>진행목록 불러오기</strong></TelerikButton>
+            <TelerikButton OnClick="OnSaveSessionData" Icon="caret-double-alt-up" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)"><strong>진행목록 저장</strong></TelerikButton>
         </TelerikStackLayout>
+    
+        <TelerikStackLayout Class="serials-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="50px">
+            @if (ProductSerials != null)
+            {
+                <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
+                    @foreach (string productSerial in ProductSerials)
+                    {
+                        var cool = ProductSerialToSelectionDict[productSerial];
+                        <ButtonGroupToggleButton @bind-Selected="@ProductSerialToSelectionDict[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))">
+                            <strong>@productSerial</strong>
+                            &nbsp;
+                            @*<span class="badge badge-success" style="width: 30px">@TModelToTSheetSpecDict[equipmentModel].TItemSpecs.Count</span>*@
+                        </ButtonGroupToggleButton>
+                    }
+                </TelerikButtonGroup>
+            }
+        </TelerikStackLayout>
+    </TelerikStackLayout>
+</div>
 
-    </div>
-</CardHeader>
-
+<div class="fims-page">
     @if (CurrentTSheetSpec != null)
     {
         @*<TSheetGridComp MyTSheetSpec="@CurrentTSheetSpec"></TSheetGridComp>*@
         @*<TSheetTableComp MyTSheetSpec="@CurrentTSheetSpec"></TSheetTableComp>*@
         <TSheetComponent MyTSheetSpec="@CurrentTSheetSpec"></TSheetComponent>
     }
+</div>
 
-    @if (AddNewProductDialogVisible)
-    {
-        <AddNewProductDialog ProductAdded="AddTProduct"></AddNewProductDialog>
-    }
+@if (AddNewProductDialogVisible)
+{
+    <AddNewProductDialog ProductAdded="AddTProduct"></AddNewProductDialog>
+}
 
 
 <TelerikNotification @ref="@IndexNotificationComponent"
-                     Class="demo-notification"
-                     VerticalPosition="NotificationVerticalPosition.Bottom"
+                     Class="IndexNotification"
+                     VerticalPosition="NotificationVerticalPosition.Top"
                      HorizontalPosition="NotificationHorizontalPosition.Right">
 </TelerikNotification>
 
-<style>
-    .italy-flag {
-        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/italy-flag.png');
-    }
-
-    .germany-flag {
-        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/germany-flag.png');
-    }
-
-    .france-flag {
-        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/france-flag.png');
-    }
-
-    .flag {
-        background-size: cover;
-        margin-right: 8px;
-    }
-</style>
 
 <style>
     .tab-parent .k-tabstrip-items li {
@@ -85,15 +65,31 @@
 
 
 <style>
-    .demo-notification {
-        position: absolute;
+    .IndexNotification .k-notification-container .k-notification-wrap {
+        //width: 300px;
+        height: 50px;
+        font-size: 1.5em;
+        text-align: center;
+        align-items: center;
+    }
+</style>
+
+
+<style>
+    .fims-page {
+        //margin-left: 15px;
+        //margin-right: 15px;
     }
 
-    #demo-runner {
-        height: 320px;
+    .bars-section {
+        //background-color:dimgrey;
     }
 
-    .k-notification-container {
-        margin: 6px 0;
+    .tools-bar {
+        //background-color:cadetblue;
+    }
+
+    .serials-bar {
+        //background-color:burlywood;
     }
 </style>

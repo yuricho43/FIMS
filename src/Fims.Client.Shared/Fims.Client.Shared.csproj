@@ -6,14 +6,6 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
-  <ItemGroup>
-    <None Remove="Shared\MainLayout.razor-ORG" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Content Include="Shared\MainLayout.razor-ORG" />
-  </ItemGroup>
-
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
