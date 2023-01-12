@@ -21,7 +21,7 @@ using Fims.Client.Shared.Localization;
 using Fims.Client.Shared.Shared.Layouts;
 
 using Fims.Client.MauiBlazor.Infrastructure.HttpDev;
-
+using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
 
 namespace Fims.Client.MauiBlazor
 {
@@ -87,6 +87,7 @@ namespace Fims.Client.MauiBlazor
 
             builder.Services.AddTransient<ITSheetsClientService, TSheetsClientService>();
             builder.Services.AddTransient<ITSheetSpecsClientService, TSheetSpecsClientService>();
+            builder.Services.AddTransient<ITSheetSpecsInProgressClientService, TSheetSpecsInProgressClientService>();
 
 
 #if JBH_USE_ORIGINAL
