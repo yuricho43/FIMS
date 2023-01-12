@@ -1,4 +1,4 @@
-﻿@page "/account/settings"
+﻿@page "/account/userprofile"
 @attribute [Authorize]
 
 @if (model == null)
@@ -19,7 +19,7 @@ else
                     <article class="card mb-3">
                         <div class="card-body">
 
-                            <h4 class="card-title mb-4">Account Settings</h4>
+                            <h4 class="card-title mb-4">Account UserProfile</h4>
                             <EditForm Model="model" OnValidSubmit="SubmitAsync">
 
                                 <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />

@@ -7,9 +7,9 @@ using Fims.Data.Models.Identity;
 
 namespace Fims.Client.Shared.Pages.Account
 {
-    public partial class Settings
+    public partial class UserProfile
     {
-        private readonly ChangeSettingsRequestModel model = new ChangeSettingsRequestModel();
+        private readonly ChangeUserProfileRequestModel model = new ChangeUserProfileRequestModel();
 
         private string email;
 
@@ -21,7 +21,7 @@ namespace Fims.Client.Shared.Pages.Account
 
         private async Task SubmitAsync()
         {
-            var response = await this.Http.PutAsJsonAsync("api/identity/changesettings", this.model);
+            var response = await this.Http.PutAsJsonAsync("api/identity/changeuserprofile", this.model);
 
             if (response.IsSuccessStatusCode)
             {
@@ -29,7 +29,7 @@ namespace Fims.Client.Shared.Pages.Account
 
                 await this.AuthClientService.Logout();
 
-                this.ToastService.ShowSuccess("Your account settings has been changed successfully.\n Please login.");
+                this.ToastService.ShowSuccess("Your account UserProfile has been changed successfully.\n Please login.");
                 this.NavigationManager.NavigateTo("/account/login");
             }
             else

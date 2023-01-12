@@ -54,7 +54,7 @@ namespace Fims.Client.Shared.ClientServices.TSheets
 
         public async Task<TSheet> FindTSheetWithDetailsByIdAsync(int id)
         {
-            var response = await this.http.GetFromJsonAsync<TSheet>($"{TSheetsPath}/{id}");
+            var response = await this.http.GetFromJsonAsync<TSheet>($"{TSheetsPath}/FindTSheetWithTItems/{id}");
             return response;
         }
 

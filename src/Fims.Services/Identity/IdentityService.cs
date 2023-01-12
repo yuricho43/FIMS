@@ -64,8 +64,8 @@ namespace Fims.Services.Identity
             return new LoginResponseModel { Token = token };
         }
 
-        public async Task<Result> ChangeSettingsAsync(
-            ChangeSettingsRequestModel model, string userId)
+        public async Task<Result> ChangeUserProfileAsync(
+            ChangeUserProfileRequestModel model, string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)

@@ -41,11 +41,11 @@ namespace Fims.Web.Server.Controllers
                 .ToActionResult();
 
         [Authorize]
-        [HttpPut(nameof(ChangeSettings))]
-        public async Task<ActionResult> ChangeSettings(
-            ChangeSettingsRequestModel model)
+        [HttpPut(nameof(ChangeUserProfile))]
+        public async Task<ActionResult> ChangeUserProfile(
+            ChangeUserProfileRequestModel model)
             => await this.identity
-                .ChangeSettingsAsync(model, this.currentUser.UserId)
+                .ChangeUserProfileAsync(model, this.currentUser.UserId)
                 .ToActionResult();
 
         [Authorize]

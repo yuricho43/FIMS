@@ -6,7 +6,7 @@ using static Fims.Data.ModelConstants.Common;
 
 namespace Fims.Data.Models.Identity
 {
-    public class ChangeSettingsRequestModel
+    public class ChangeUserProfileRequestModel
     {
         [Required]
         [StringLength(
