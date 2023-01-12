@@ -10,10 +10,10 @@ namespace Fims.Client.Shared.Infrastructure.Extensions
      *  
      *      - Payload --> ClaimsPrincipal
      *          . ClaimTypes.NameIdentifier : "f01b2252-3710-4e64-a45a-e285c9eee85f"  (this is the ID index in Db)
-     *          . ClaimTypes.Email:   "worker@fstc.co.kr"
+     *          . ClaimTypes.Email:   "inspector@fstc.co.kr"
      *          . ClaimTypes.Name:    "김철수"
      *          . ClaimTypes.SurName: "KCS"
-     *          . ClaimTypes.Role:    "Worker"
+     *          . ClaimTypes.Role:    "Inspector"
      *  
      *      - Signature
      */
