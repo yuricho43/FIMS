@@ -49,6 +49,9 @@ namespace Fims.Client.Shared.Pages
         }
         private TSheetSpec _MyTSheetSpec;
 
+        [Parameter]
+        public EventCallback<string> TSheetInspectionCompleted { get; set; }
+
         private IMapper Mapper { get; set; }
 
 
@@ -177,6 +180,8 @@ namespace Fims.Client.Shared.Pages
             tSheet.InspectionEndDateTime = DateTime.Now;
 
             var idTSheet = await TSheetsClientService.AddTSheet(tSheet);
+
+            await TSheetInspectionCompleted.InvokeAsync(tSheet.ProductSerial);
 
             TSheetComponentNotificationComponent.Show(new NotificationModel()
             {

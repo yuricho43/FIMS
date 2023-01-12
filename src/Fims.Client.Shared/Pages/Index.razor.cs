@@ -66,7 +66,9 @@ namespace Fims.Client.Shared.Pages
 
         private List<string>                   ProductSerials { get; set; } = new List<string>();
         private Dictionary<string, TSheetSpec> ProductSerialToTSheetSpecDict { get; set; } = new Dictionary<string, TSheetSpec>();
-        private Dictionary<string, bool>       ProductSerialToSelectionDict { get; set; } = new Dictionary<string, bool>();
+        private Dictionary<string, bool>       ProductSerialsSelected { get; set; } = new Dictionary<string, bool>();
+        private Dictionary<string, bool>       ProductSerialsSelectable { get; set; } = new Dictionary<string, bool>();
+        private Dictionary<string, string>     ProductSerialsButtonColor { get; set; } = new Dictionary<string, string>();
 
         private List<string> ProductModels { get; set; } = new List<string>();
 
@@ -80,6 +82,7 @@ namespace Fims.Client.Shared.Pages
         public int Page { get; set; } = 1;
 
         TelerikNotification IndexNotificationComponent { get; set; }
+        public List<string> ToggleButtonsThemeColor { get; set; }
 
         private System.Timers.Timer TSheetSpecsSavingTimer;
 
@@ -133,6 +136,11 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            /// All JavaScript tasks should be done HERE!
+            /// DO NOT at OnInitializedAsync().
+            /////////////////////////////////////////////////////////////////////////////////////////////
+
             // Accessing LocalStorage at the initializing phase is not allowed. JSRuntime out of WebView.
             // So do it here after rendering finished.
             if (firstRender)
@@ -155,6 +163,13 @@ namespace Fims.Client.Shared.Pages
             // }
 
             SetProductSerialAsCurrent(productSerial);
+        }
+
+        public void OnTSheetInspectionCompleted(string productSerial)
+        {
+            var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
+            ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
+            //StateHasChanged();
         }
 
         private async Task<bool> AddTProduct(TProductSpec tProductSpec)
@@ -186,7 +201,9 @@ namespace Fims.Client.Shared.Pages
                 ProductSerials.Add(tProductSpec.ProductSerial);
 
                 ProductSerialToTSheetSpecDict.Add(tProductSpec.ProductSerial, tSheetSpec);
-                ProductSerialToSelectionDict.Add(tProductSpec.ProductSerial, false);
+                ProductSerialsSelected.Add(tProductSpec.ProductSerial, false);
+                ProductSerialsSelectable.Add(tProductSpec.ProductSerial, true);
+                ProductSerialsButtonColor.Add(tProductSpec.ProductSerial, ThemeConstants.Button.ThemeColor.Primary);
 
                 SetProductSerialAsCurrent(tProductSpec.ProductSerial);
                 return true;
@@ -201,7 +218,7 @@ namespace Fims.Client.Shared.Pages
         {
             CurrentTSheetSpec = ProductSerialToTSheetSpecDict[productSerial] as TSheetSpec;
             CurrentProductSerial = productSerial;
-            ProductSerialToSelectionDict[productSerial] = true; //??
+            ProductSerialsSelected[productSerial] = true; //??
         }
 
         private async Task<TSheetSpec> GetTSheetSpecByTModelAsync(string tModel)
@@ -408,8 +425,10 @@ namespace Fims.Client.Shared.Pages
                 if (!ProductSerialToTSheetSpecDict.ContainsKey(productSerial))
                 {
                     ProductSerialToTSheetSpecDict?.Add(productSerial, tSheetSpec);
-                    ProductSerialToSelectionDict?.Add(productSerial, false);
+                    ProductSerialsSelected?.Add(productSerial, false);
+                    ProductSerialsSelectable?.Add(productSerial, true);
                     ProductSerials?.Add(productSerial);
+                    ProductSerialsButtonColor.Add(productSerial, ThemeConstants.Button.ThemeColor.Warning);
                 }
             }
 

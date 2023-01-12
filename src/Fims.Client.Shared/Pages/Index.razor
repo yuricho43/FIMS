@@ -17,8 +17,8 @@
                 <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
                     @foreach (string productSerial in ProductSerials)
                     {
-                        var cool = ProductSerialToSelectionDict[productSerial];
-                        <ButtonGroupToggleButton @bind-Selected="@ProductSerialToSelectionDict[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))">
+                        var cool = ProductSerialsSelected[productSerial];
+                        <ButtonGroupToggleButton @bind-Selected="@ProductSerialsSelected[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))" Enabled="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? false: true)" ThemeColor="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? ThemeConstants.Button.ThemeColor.Error: ThemeConstants.Button.ThemeColor.Base)" Class="serial-button">
                             <strong>@productSerial</strong>
                             &nbsp;
                             @*<span class="badge badge-success" style="width: 30px">@TModelToTSheetSpecDict[equipmentModel].TItemSpecs.Count</span>*@
@@ -35,7 +35,7 @@
     {
         @*<TSheetGridComp MyTSheetSpec="@CurrentTSheetSpec"></TSheetGridComp>*@
         @*<TSheetTableComp MyTSheetSpec="@CurrentTSheetSpec"></TSheetTableComp>*@
-        <TSheetComponent MyTSheetSpec="@CurrentTSheetSpec"></TSheetComponent>
+        <TSheetComponent MyTSheetSpec="@CurrentTSheetSpec" TSheetInspectionCompleted="OnTSheetInspectionCompleted"></TSheetComponent>
     }
 </div>
 
@@ -91,5 +91,15 @@
 
     .serials-bar {
         //background-color:burlywood;
+    }
+</style>
+
+<style>
+    .serial-button-enabled {
+
+    }
+
+    .serial-button {
+        height: 40px;
     }
 </style>

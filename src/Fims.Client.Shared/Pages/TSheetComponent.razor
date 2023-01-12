@@ -2,16 +2,16 @@
 
 
 <div class="toolbar-row">
-<TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%">
-    <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Left" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%">
+<TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%" Height="50px">
+    <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Stretch" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px" Width="100%">
         <div class="toolbar-block">제품SN:&nbsp;<strong>@MyTSheetSpec.ProductSerial</strong></div>
         <div class="toolbar-block">모델:&nbsp;<strong>@MyTSheetSpec.ProductModel</strong></div>
         <div class="toolbar-block">고객:&nbsp;<strong>@MyTSheetSpec.Customer</strong></div>
         <div class="toolbar-block">EndUser:&nbsp;<strong>@MyTSheetSpec.EndUser</strong></div>
         <div class="toolbar-block">검사자:&nbsp;<strong>@MyTSheetSpec.InspectorName</strong></div>
     </TelerikStackLayout>
-    <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%">
-        <TelerikButton Enabled="@IsSaveEnabled" Icon="save" OnClick="@SaveAllChanges" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)"><strong>입력완료/저장</strong></TelerikButton>
+    <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px" Width="100%">
+            <TelerikButton Enabled="@IsSaveEnabled" Icon="save" OnClick="@SaveAllChanges" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button"><strong>입력완료/저장</strong></TelerikButton>
     </TelerikStackLayout>
 </TelerikStackLayout>
 </div>
@@ -49,17 +49,15 @@
 
 <style>
     .toolbar-row {
-        //margin-left: 50px;
-        //margin-right: 50px;
         padding-left: 50px;
         padding-right: 50px;
+        color: white;
         background-color: slategray;
     }
 
     .toolbar-block {
+        color: white
         width: 200px;
-        //margin: 50px;
-        padding: 10px;
         //background-color:cadetblue;
     }
 </style>
@@ -80,5 +78,11 @@
     .tab-parent .k-tabstrip-items li.k-active {
         color: black;
         background: orange;
+    }
+</style>
+
+<style>
+    .save-button {
+        height: 40px;
     }
 </style>
