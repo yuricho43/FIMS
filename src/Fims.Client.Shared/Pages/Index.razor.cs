@@ -24,6 +24,7 @@ using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using System.Text;
 using System.Timers;
+using System.Collections.Generic;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -67,8 +68,6 @@ namespace Fims.Client.Shared.Pages
         private List<string>                   ProductSerials { get; set; } = new List<string>();
         private Dictionary<string, TSheetSpec> ProductSerialToTSheetSpecDict { get; set; } = new Dictionary<string, TSheetSpec>();
         private Dictionary<string, bool>       ProductSerialsSelected { get; set; } = new Dictionary<string, bool>();
-        private Dictionary<string, bool>       ProductSerialsSelectable { get; set; } = new Dictionary<string, bool>();
-        private Dictionary<string, string>     ProductSerialsButtonColor { get; set; } = new Dictionary<string, string>();
 
         private List<string> ProductModels { get; set; } = new List<string>();
 
@@ -202,8 +201,6 @@ namespace Fims.Client.Shared.Pages
 
                 ProductSerialToTSheetSpecDict.Add(tProductSpec.ProductSerial, tSheetSpec);
                 ProductSerialsSelected.Add(tProductSpec.ProductSerial, false);
-                ProductSerialsSelectable.Add(tProductSpec.ProductSerial, true);
-                ProductSerialsButtonColor.Add(tProductSpec.ProductSerial, ThemeConstants.Button.ThemeColor.Primary);
 
                 SetProductSerialAsCurrent(tProductSpec.ProductSerial);
                 return true;
@@ -218,7 +215,9 @@ namespace Fims.Client.Shared.Pages
         {
             CurrentTSheetSpec = ProductSerialToTSheetSpecDict[productSerial] as TSheetSpec;
             CurrentProductSerial = productSerial;
-            ProductSerialsSelected[productSerial] = true; //??
+
+            ProductSerialsSelected.Keys.ToList().ForEach(serial =>{ProductSerialsSelected[serial] = false;});
+            ProductSerialsSelected[productSerial] = true;
         }
 
         private async Task<TSheetSpec> GetTSheetSpecByTModelAsync(string tModel)
@@ -426,9 +425,7 @@ namespace Fims.Client.Shared.Pages
                 {
                     ProductSerialToTSheetSpecDict?.Add(productSerial, tSheetSpec);
                     ProductSerialsSelected?.Add(productSerial, false);
-                    ProductSerialsSelectable?.Add(productSerial, true);
                     ProductSerials?.Add(productSerial);
-                    ProductSerialsButtonColor.Add(productSerial, ThemeConstants.Button.ThemeColor.Warning);
                 }
             }
 
