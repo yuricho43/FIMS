@@ -14,5 +14,6 @@ namespace Fims.Services.TSheetSpecsInProgress
     {
         public Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto);
         public Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressAsync(string userId);
+        public string DeleteTSheetSpecsInProgressByProductSerial(string productSerial);
     }
 }

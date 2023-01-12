@@ -19,10 +19,12 @@ namespace Fims.Web.Server.Controllers
 {
     //[Authorize]
     //[Authorize(Roles = AdministratorRole)]
-    public class TSheetsController : ApiController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class TSheetsController : ControllerBase
     {
-        private readonly ITSheetsService     tSheetsService;
-        private readonly ITSheetSpecsService tSheetSpecsService;        
+        private readonly ITSheetsService tSheetsService;
+        private readonly ITSheetSpecsService tSheetSpecsService;
         private readonly ICurrentUserService currentUserService;
 
         public TSheetsController(
@@ -44,7 +46,7 @@ namespace Fims.Web.Server.Controllers
             return data;
         }
 
-        [HttpGet(Id)]
+        [HttpGet("FindTSheetWithTItems/{id}")]
         [AllowAnonymous] //JBH
         public async Task<ActionResult<TSheet>> FindTSheetWithTItems(int id)
             => await this.tSheetsService.FindTSheetWithTItemsByIdAsync(id);
@@ -70,8 +72,7 @@ namespace Fims.Web.Server.Controllers
                 .UpdateAsync(id, tSheet, this.currentUserService.UserId)
                 .ToActionResult();
 
-        [HttpDelete(nameof(DeleteTSheet) + PathSeparator + Id)]
-        //[HttpDelete(Id)]
+        [HttpDelete("DeleteTSheet/{id}")]
         public async Task<ActionResult> DeleteTSheet(int id)
             => await this.tSheetsService
                 .DeleteAsync(id)

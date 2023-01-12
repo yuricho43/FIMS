@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using static System.Net.Mime.MediaTypeNames;
 
 using ExcelMapper;
 
 using Fims.Common;
 using Fims.Data.Utils;
-using static System.Net.Mime.MediaTypeNames;
 using Fims.Data.Models.TSheetSpecsInProgress;
+using Fims.Data.Models;
 
 namespace Fims.Services.TSheetSpecsInProgress
 {
@@ -37,7 +38,7 @@ namespace Fims.Services.TSheetSpecsInProgress
                 var tSheetSpecJsonString = serialToTSheetSpecPair.Value;
 
                 string fileName = $"{Constants.FimsTSheetSpecsInProgressFileNameBase}_{userId}_{productSerial}.json";
-                string filePath = Path.Combine(Constants.FimsTSheetSpecsInProgressRepoPath, fileName); 
+                string filePath = Path.Combine(Constants.FimsTSheetSpecsInProgressRepoPath, fileName);
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -65,11 +66,20 @@ namespace Fims.Services.TSheetSpecsInProgress
             {
                 //filePath: ".\\FimsTSheetSpecsInProgress_ANONYMOUS_2023010207.json"
                 var productSerial = filePath.Split('.').ToList()[1].Split('_').Last();
-                string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath); 
+                string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
                 tSheetSpecsInProgressDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
             }
 
             return tSheetSpecsInProgressDto;
+        }
+
+        public string DeleteTSheetSpecsInProgressByProductSerial(string productSerial)
+        {
+            string searchPattern = Constants.FimsTSheetSpecsInProgressFileNameBase + "_" + "*" + "_" + productSerial + ".json";
+
+            string[] filePaths = Directory.GetFiles(Constants.FimsTSheetSpecsInProgressRepoPath, searchPattern);
+            filePaths.ToList().ForEach(filePath => File.Delete(filePath));
+            return (filePaths.Length > 0) ? productSerial : null;
         }
     }
 }

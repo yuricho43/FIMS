@@ -11,7 +11,9 @@ using Fims.Web.Server.Infrastructure.Extensions;
 
 namespace Fims.Web.Server.Controllers
 {
-    public class IdentityController : ApiController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class IdentityController : ControllerBase
     {
         private readonly IIdentityService identity;
         private readonly ICurrentUserService currentUser;

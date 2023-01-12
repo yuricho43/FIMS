@@ -9,5 +9,6 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
     {
         Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressDto);
         Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId);
+        Task<string> DeleteTSheetSpecsInProgressByUserIdProductSerial(string productSerial);
     }
 }

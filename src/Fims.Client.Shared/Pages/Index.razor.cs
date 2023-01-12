@@ -168,6 +168,9 @@ namespace Fims.Client.Shared.Pages
         {
             var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
             ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
+
+            TSheetSpecsInProgressClientService.DeleteTSheetSpecsInProgressByUserIdProductSerial(productSerial); 
+
             //StateHasChanged();
         }
 

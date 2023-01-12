@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fims.Data.Migrations
 {
     [DbContext(typeof(FimsDbContext))]
-    [Migration("20230110103121_InitialCreate")]
+    [Migration("20230112125915_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />

@@ -13,7 +13,9 @@ using Fims.Web.Server.Infrastructure.Services;
 namespace Fims.Web.Server.Controllers
 {
     [Authorize]
-    public class TSheetSpecsController : ApiController
+    [ApiController]
+    [Route("api/[controller]")]
+    public class TSheetSpecsController : ControllerBase
     {
         private readonly ITSheetSpecsService TSheetSpecsService;        
         private readonly ICurrentUserService CurrentUserService;

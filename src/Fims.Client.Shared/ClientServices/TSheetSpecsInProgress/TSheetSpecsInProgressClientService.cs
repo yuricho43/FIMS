@@ -39,5 +39,14 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
             var tSheetSpecsInProgressDto = await tSheetSpecsInProgressResponse.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
             return tSheetSpecsInProgressDto;
         }
+
+        public async Task<string> DeleteTSheetSpecsInProgressByUserIdProductSerial(string productSerial)
+        {
+            var path = $"{TSheetSpecsInProgressPath}/DeleteTSheetSpecsInProgressBySerial/{productSerial}";
+            var tSheetSpecsInProgressResponse = await this.http.DeleteAsync(path);
+            var deletedProductSerial = await tSheetSpecsInProgressResponse.Content.ReadAsStringAsync();
+            return deletedProductSerial;
+        }
+
     }
 }
