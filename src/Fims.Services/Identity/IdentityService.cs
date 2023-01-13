@@ -112,9 +112,28 @@ namespace Fims.Services.Identity
 
         public async Task<List<UserAuthInfoModel>>AllUsers()
         {
-            var users = (List<UserAuthInfoModel>)this.userManager.Users;
+            var users = this.userManager.Users.ToList();
             //var data = await this.TSheetSpecsService.GetEquipmentModelsAsync();
-            return users;
+
+            List<UserAuthInfoModel> userAuthInfos = new List<UserAuthInfoModel>();
+
+            foreach ( var user in users )
+            {
+                var userRoles = await userManager.GetRolesAsync(user);
+                var userRole = userRoles.FirstOrDefault();
+
+                var userAuthInfo = new UserAuthInfoModel
+                {
+                    Email = user.Email,
+                    //Password = user.Password,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    Role = userRole,
+                };
+                userAuthInfos.Add(userAuthInfo);
+            }
+
+            return userAuthInfos;
         }
 
     }

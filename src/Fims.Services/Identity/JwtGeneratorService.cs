@@ -48,7 +48,6 @@ namespace Fims.Services.Identity
              *      - Signature
              */
 
-
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
