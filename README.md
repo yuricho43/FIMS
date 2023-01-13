@@ -1,4 +1,4 @@
-# FineRecord
+# FIMS
 FST Mobile Inspection Data Management System (FIMS)
 
 ## :boy: Author 
@@ -10,7 +10,7 @@ Jong Beom Hwang (jbh7711@gmail.com)
 ```
 git clone https://github.com/coolbix/FIMS.git
 cd FIMS/src
-dotnet run --project FineRecord.Web/Server/FineRecord.Web.Server.csproj
+dotnet run --project Fims.Web/Server/Fims.Web.Server.csproj
 ```
 
 ## :construction_worker: Built with

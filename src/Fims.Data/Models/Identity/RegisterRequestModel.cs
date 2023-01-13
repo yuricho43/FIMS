@@ -7,8 +7,19 @@ using static Fims.Data.ModelConstants.Identity;
 
 namespace Fims.Data.Models.Identity
 {
-    public class RegisterRequestModel : LoginRequestModel
+    public class RegisterRequestModel
     {
+        [Required]
+        [EmailAddress]
+        [MinLength(MinEmailLength)]
+        [MaxLength(MaxEmailLength)]
+        public string Email { get; set; }
+
+        [Required]
+        [MinLength(MinPasswordLength)]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
         [Required]
         [StringLength(
             MaxNameLength,

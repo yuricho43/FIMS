@@ -93,7 +93,7 @@ namespace Fims.Client.Shared.Pages
             TSheetSpecsSavingTimer.Interval = 1000 * 60; // every 60 secs
             TSheetSpecsSavingTimer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
             {
-                OnSaveSessionDataByTimer();
+                //OnSaveSessionDataByTimer();
                 //await InvokeAsync(StateHasChanged);
                 await Task.Delay(1); // for async
             };

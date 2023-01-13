@@ -1,5 +1,6 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
 using Microsoft.AspNetCore.Identity;
 
@@ -7,10 +8,8 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 
-
 namespace Fims.Services.Identity
 {
-
     public class IdentityService : IIdentityService
     {
         private const string InvalidErrorMessage = "Invalid email or password.";
@@ -61,7 +60,8 @@ namespace Fims.Services.Identity
 
             //debug
             string userId = user.Id;
-            var roles = userManager.GetRolesAsync(user);
+            var userRoles = await userManager.GetRolesAsync(user);
+            var userRole = userRoles.FirstOrDefault();
             //debug
 
             var token = await this.jwtGenerator.GenerateJwtAsync(user);
@@ -108,5 +108,14 @@ namespace Fims.Services.Identity
                 ? Result.Success
                 : Result.Failure(errors);
         }
+
+
+        public async Task<List<UserAuthInfoModel>>AllUsers()
+        {
+            var users = (List<UserAuthInfoModel>)this.userManager.Users;
+            //var data = await this.TSheetSpecsService.GetEquipmentModelsAsync();
+            return users;
+        }
+
     }
 }

@@ -4,6 +4,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
+using System.Linq;
 
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
@@ -14,13 +15,13 @@ using Fims.Data.Models;
 
 using static Fims.Common.Constants;
 
-
 namespace Fims.Services.Identity
 {
     public class JwtGeneratorService : IJwtGeneratorService
     {
         private readonly UserManager<FimsUser> userManager;
         private readonly ApplicationSettings applicationSettings;
+        public bool AllowMultiRoles { get; set; } = false;
 
         public JwtGeneratorService(
             UserManager<FimsUser> userManager,
@@ -56,23 +57,43 @@ namespace Fims.Services.Identity
                 new Claim(ClaimTypes.Surname, user.LastName)
             };
 
-            var isAdministrator = await this.userManager.IsInRoleAsync(user, AdministratorRole);
-            if (isAdministrator)
+            //JBH: A User can have multiple Roles, for an example,
+            //     User "coolbix" may have two Roles such as "InspectorRole" and "ManagerRole".
+            //
+            //     For Now, let's use the "Single" Role --> AllowMultiRoles==false
+            if (AllowMultiRoles)
             {
-                claims.Add(new Claim(ClaimTypes.Role, AdministratorRole));
+                var isAdministrator = await this.userManager.IsInRoleAsync(user, AdministratorRole);
+                if (isAdministrator)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, AdministratorRole));
+                }
+
+                var isManager = await this.userManager.IsInRoleAsync(user, ManagerRole);
+                if (isManager)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, ManagerRole));
+                }
+
+                var isInspector = await this.userManager.IsInRoleAsync(user, InspectorRole);
+                if (isInspector)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, InspectorRole));
+                }
+
+                var isReporter = await this.userManager.IsInRoleAsync(user, ReporterRole);
+                if (isReporter)
+                {
+                    claims.Add(new Claim(ClaimTypes.Role, ReporterRole));
+                }
+            }
+            else
+            {
+                var userRoles = await this.userManager.GetRolesAsync(user);
+                var userRole = userRoles.FirstOrDefault();
+                claims.Add(new Claim(ClaimTypes.Role, userRole));
             }
 
-            var isManager = await this.userManager.IsInRoleAsync(user, ManagerRole);
-            if (isManager)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, ManagerRole));
-            }
-
-            var isInspector = await this.userManager.IsInRoleAsync(user, InspectorRole);
-            if (isInspector)
-            {
-                claims.Add(new Claim(ClaimTypes.Role, InspectorRole));
-            }
 
             var secret = Encoding.UTF8.GetBytes(this.applicationSettings.Secret); //JBH: Secret comes from "ApplicationSettings" section @ appsettings.json
 

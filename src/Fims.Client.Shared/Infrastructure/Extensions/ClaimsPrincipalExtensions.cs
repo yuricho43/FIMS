@@ -31,5 +31,9 @@ namespace Fims.Client.Shared.Infrastructure.Extensions
 
         public static string GetLastName(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.FindFirstValue(ClaimTypes.Surname);
+
+        public static string GetUserRole(this ClaimsPrincipal claimsPrincipal)
+          => claimsPrincipal.FindFirstValue(ClaimTypes.Role);
+
     }
 }
