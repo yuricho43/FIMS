@@ -59,13 +59,17 @@ namespace Fims.Services.Identity
                 return InvalidErrorMessage;
             }
 
+            //debug
+            string userId = user.Id;
+            var roles = userManager.GetRolesAsync(user);
+            //debug
+
             var token = await this.jwtGenerator.GenerateJwtAsync(user);
 
             return new LoginResponseModel { Token = token };
         }
 
-        public async Task<Result> ChangeUserProfileAsync(
-            ChangeUserProfileRequestModel model, string userId)
+        public async Task<Result> ChangeUserProfileAsync(ChangeUserProfileRequestModel model, string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
@@ -85,8 +89,7 @@ namespace Fims.Services.Identity
                 : Result.Failure(errors);
         }
 
-        public async Task<Result> ChangePasswordAsync(
-            ChangePasswordRequestModel model, string userId)
+        public async Task<Result> ChangePasswordAsync(ChangePasswordRequestModel model, string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
