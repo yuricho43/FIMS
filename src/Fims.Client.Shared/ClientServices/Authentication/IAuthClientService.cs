@@ -1,8 +1,8 @@
 ﻿using System.Threading.Tasks;
-
+using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace Fims.Client.Shared.ClientServices.Authentication
 {
@@ -15,6 +15,7 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         Task Logout();
 
         Task<List<UserAuthInfoModel>> AllUsers();
+        Task<List<FimsRole>> AllRoles();
 
     }
 }

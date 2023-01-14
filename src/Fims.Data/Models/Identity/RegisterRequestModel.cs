@@ -35,6 +35,13 @@ namespace Fims.Data.Models.Identity
         public string LastName { get; set; }
 
         [Required]
+        [StringLength(
+            MaxNameLength,
+            ErrorMessage = StringLengthErrorMessage,
+            MinimumLength = MinNameLength)]
+        public string Role { get; set; }
+
+        [Required]
         [MinLength(MinPasswordLength)]
         [DataType(DataType.Password)]
         [Compare(nameof(Password), ErrorMessage = PasswordsDoNotMatchErrorMessage)]

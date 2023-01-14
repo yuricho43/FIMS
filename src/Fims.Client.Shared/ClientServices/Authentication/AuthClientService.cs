@@ -11,7 +11,8 @@ using Fims.Client.Shared.Infrastructure.Extensions;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 using Fims.Client.Shared.Infrastructure;
-
+using Microsoft.AspNetCore.Identity;
+using Fims.Data.Entities;
 
 namespace Fims.Client.Shared.ClientServices.Authentication
 {
@@ -24,6 +25,7 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         private const string LoginPath = "api/identity/login";
         private const string RegisterPath = "api/identity/register";
         private const string AllUsersPath = "api/identity/getallusers";
+        private const string AllRolesPath = "api/identity/getroles";
 
         public AuthClientService(
             HttpClient httpClient,
@@ -81,6 +83,12 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         public async Task<List<UserAuthInfoModel>> AllUsers()
         {
             var response = await this.httpClient.GetFromJsonAsync<List<UserAuthInfoModel>>(AllUsersPath);
+            return response;
+        }
+
+        public async Task<List<FimsRole>> AllRoles()
+        {
+            var response = await this.httpClient.GetFromJsonAsync<List<FimsRole>>(AllRolesPath);
             return response;
         }
     }

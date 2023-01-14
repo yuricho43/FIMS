@@ -15,13 +15,16 @@ namespace Fims.Services.Identity
         private const string InvalidErrorMessage = "Invalid email or password.";
 
         private readonly UserManager<FimsUser> userManager;
+        private RoleManager<FimsRole> roleManager;
         private readonly IJwtGeneratorService jwtGenerator;
 
         public IdentityService(
             UserManager<FimsUser> userManager,
+            RoleManager<FimsRole> roleManager,
             IJwtGeneratorService jwtGenerator)
         {
             this.userManager = userManager;
+            this.roleManager = roleManager;
             this.jwtGenerator = jwtGenerator;
         }
 
@@ -110,14 +113,14 @@ namespace Fims.Services.Identity
         }
 
 
-        public async Task<List<UserAuthInfoModel>>AllUsers()
+        public async Task<List<UserAuthInfoModel>> AllUsers()
         {
             var users = this.userManager.Users.ToList();
             //var data = await this.TSheetSpecsService.GetEquipmentModelsAsync();
 
             List<UserAuthInfoModel> userAuthInfos = new List<UserAuthInfoModel>();
 
-            foreach ( var user in users )
+            foreach (var user in users)
             {
                 var userRoles = await userManager.GetRolesAsync(user);
                 var userRole = userRoles.FirstOrDefault();
@@ -125,7 +128,7 @@ namespace Fims.Services.Identity
                 var userAuthInfo = new UserAuthInfoModel
                 {
                     Email = user.Email,
-                    //Password = user.Password,
+                    Password = "************",
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     Role = userRole,
@@ -136,5 +139,12 @@ namespace Fims.Services.Identity
             return userAuthInfos;
         }
 
+
+        public async Task<List<FimsRole>> Roles()
+        {
+            var roles = roleManager.Roles;
+            var roleslist = roles.ToList();
+            return roleslist;
+        }
     }
 }

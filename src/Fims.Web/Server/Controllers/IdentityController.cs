@@ -8,6 +8,8 @@ using Fims.Data.Models.Identity;
 using Fims.Services.Identity;
 using Fims.Web.Server.Infrastructure.Services;
 using Fims.Web.Server.Infrastructure.Extensions;
+using Microsoft.AspNetCore.Identity;
+using Fims.Data.Entities;
 
 namespace Fims.Web.Server.Controllers
 {
@@ -62,6 +64,15 @@ namespace Fims.Web.Server.Controllers
         public async Task<List<UserAuthInfoModel>> GetAllUsers()
         {
             var data = await this.identityService.AllUsers();
+            return data;
+        }
+
+        // GET: api/Identity/GetRoles
+        [HttpGet("GetRoles")]
+        [AllowAnonymous]
+        public async Task<List<FimsRole>> GetRoles()
+        {
+            var data = await this.identityService.Roles();
             return data;
         }
 

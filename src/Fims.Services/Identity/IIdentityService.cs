@@ -2,10 +2,11 @@
 using System.Threading.Tasks;
 
 using Fims.Common;
+using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 using Fims.Services.Common;
-
+using Microsoft.AspNetCore.Identity;
 
 namespace Fims.Services.Identity
 {
@@ -21,6 +22,7 @@ namespace Fims.Services.Identity
         Task<Result> ChangePasswordAsync(ChangePasswordRequestModel model, string userId);
 
         Task<List<UserAuthInfoModel>> AllUsers();
+        Task<List<FimsRole>> Roles();
 
     }
 }

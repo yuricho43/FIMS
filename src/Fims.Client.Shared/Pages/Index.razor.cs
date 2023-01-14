@@ -85,16 +85,20 @@ namespace Fims.Client.Shared.Pages
 
         private System.Timers.Timer TSheetSpecsSavingTimer;
 
+        public bool IsLoadingSession { get; set; } = false;
+        public bool IsSavingSession { get; set; } = false;
+
+
         protected override void OnInitialized()
         {
             Layout.DocsTitle = Localizer["HumanCapital"];
 
             TSheetSpecsSavingTimer = new();
-            TSheetSpecsSavingTimer.Interval = 1000 * 60; // every 60 secs
+            TSheetSpecsSavingTimer.Interval = 1000 * 20; // every 60 secs
             TSheetSpecsSavingTimer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
             {
-                //OnSaveSessionDataByTimer();
-                //await InvokeAsync(StateHasChanged);
+                OnSaveSessionDataByTimer();
+                await InvokeAsync(StateHasChanged);
                 await Task.Delay(1); // for async
             };
             TSheetSpecsSavingTimer.Enabled = true;
@@ -393,12 +397,12 @@ namespace Fims.Client.Shared.Pages
         public void OnAddNewProductClicked()
         {
             AddNewProductDialogVisible = true;
-            //NavigationManager.NavigateTo("/AddNewProduct");
             //StateHasChanged();
         }
 
         public async void OnLoadSessionData()
         {
+            IsLoadingSession = true;
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
 
             var userIdRx = tSheetSpecsInProgressDto.UserId;
@@ -406,6 +410,7 @@ namespace Fims.Client.Shared.Pages
 
             if (serialToTSheetSpecPairs.Count == 0)
             {
+                IsLoadingSession = false;
                 IndexNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "저장된 진행목록이 없습니다.",
@@ -431,6 +436,7 @@ namespace Fims.Client.Shared.Pages
                     ProductSerials?.Add(productSerial);
                 }
             }
+            IsLoadingSession = false;
 
             //SetProductSerialAsCurrent(tProductSpec.ProductSerial);
 
@@ -447,8 +453,11 @@ namespace Fims.Client.Shared.Pages
 
         public async void OnSaveSessionData()
         {
+            IsSavingSession = true;
+ 
             if (ProductSerialToTSheetSpecDict.Count == 0)
             {
+                IsSavingSession = false;
                 IndexNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "진행목록이 비어 있습니다.",
@@ -460,6 +469,7 @@ namespace Fims.Client.Shared.Pages
             }
 
             bool result = await SaveSessionData();
+            IsSavingSession = false;
 
             IndexNotificationComponent.Show(new NotificationModel()
             {
@@ -468,24 +478,24 @@ namespace Fims.Client.Shared.Pages
                 ShowIcon = true,
                 Icon = "caret-double-alt-up"
             });
+
+            StateHasChanged();
         }
 
         public async void OnSaveSessionDataByTimer()
         {
+            IsSavingSession = true;
+
             if (ProductSerialToTSheetSpecDict.Count == 0)
             {
+                IsSavingSession = false;
                 return;
             }
 
             bool result = await SaveSessionData();
 
-            //  IndexNotificationComponent.Show(new NotificationModel()
-            //  {
-            //      Text = "진행목록 자동저장",
-            //      ThemeColor = "info",
-            //      ShowIcon = true,
-            //      Icon = "caret-double-alt-up"
-            //  });
+            IsSavingSession = false;
+            StateHasChanged();
         }
 
         public async Task<bool> SaveSessionData()
