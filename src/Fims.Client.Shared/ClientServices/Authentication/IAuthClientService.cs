@@ -13,5 +13,8 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         Task<Result> Login(LoginRequestModel model);
 
         Task Logout();
+
+        Task<List<UserAuthInfoModel>> AllUsers();
+
     }
 }

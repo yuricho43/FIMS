@@ -1,0 +1,142 @@
+﻿@page "/Management/UserManagement"
+
+@using Fims.Data.Models.Identity;
+@using Fims.Data.Entities;
+
+<div class="flex-center">
+    <TelerikCard>
+        <CardHeader>
+            <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>사용자 관리</strong></h2></CardTitle>
+            <CardSubTitle>조회/수정/추가/삭제</CardSubTitle>
+        </CardHeader>
+
+        <CardBody>
+            <CardSeparator></CardSeparator>
+
+            <TelerikGrid Data=@GridData
+                         EditMode="@GridEditMode.Inline"
+                         Height="500px"
+                         Resizable="true"
+                         Pageable="true"
+                         PageSize="@PageSize"
+                         ConfirmDelete="true"
+                         OnUpdate="@UpdateItem"
+                         OnDelete="@DeleteItem"
+                         OnCreate="@CreateItem">
+                <GridToolBar>
+                    <GridCommandButton Command="Add" Icon="plus-circle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="add-user-button"><strong>사용자 추가</strong></GridCommandButton>
+                </GridToolBar>
+ 
+                <GridSettings>
+                    <GridValidationSettings Enabled="@EnabledValidation" />
+                </GridSettings>
+
+                <GridColumns>
+                    <GridColumn Field=@nameof(UserAuthInfoModel.FirstName) Width="80px" Title="이름" Editable="false" />
+                    <GridColumn Field=@nameof(UserAuthInfoModel.Email) Width="200px" Title="ID" />
+                    @*<GridColumn Field=@nameof(UserAuthInfoModel.Password) Width="140px" Title="Password" DisplayFormat="{0:C2}" />*@
+                    <GridColumn Field=@nameof(UserAuthInfoModel.Role) Width="160px" Title="권한" />
+
+                    <GridCommandColumn Width="250px">
+                        <GridCommandButton Command="Edit" Icon="edit" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">수정</GridCommandButton>
+                        <GridCommandButton Command="Delete" Icon="delete">삭제</GridCommandButton>
+                        <GridCommandButton Command="Save" Icon="save" ShowInEdit="true">저장</GridCommandButton>
+                        <GridCommandButton Command="Cancel" Icon="cancel" ShowInEdit="true">취소</GridCommandButton>
+                    </GridCommandColumn>
+                </GridColumns>
+            </TelerikGrid>
+
+        </CardBody>
+
+        <CardFooter Class="k-hbox justify-space-between">
+            <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
+        </CardFooter>
+    </TelerikCard>
+</div>
+
+
+<style>
+    .k-grid td {
+        background-color: #E0E0E0;
+        color: black;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    .k-grid-header-wrap th {
+        background-color: teal;
+        color: white;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    /*    .k-grid-header {
+                color: whitesmoke;
+                background-color: teal;
+            }
+        */
+    .k-grid .k-focused-cell {
+        background-color: cornflowerblue;
+    }
+
+    .k-grid .k-disabled-cell {
+        background-color: #CACACA;
+    }
+
+    .k-grid .userinput-empty {
+        //color: dodgerblue;
+        background-color: #E0FAFA;
+        //font-weight: bold;
+    }
+
+    .k-grid .userinput-valid {
+        color: dodgerblue;
+        background-color: #C0D8DA;
+        font-weight: bold;
+    }
+
+    .k-grid .userinput-invalid {
+        color: red !important;
+        background-color: sandybrown;
+        font-weight: bold !important;
+        //opacity: 0.7;
+    }
+
+    /* CENTER */
+    /* non-sortable headers */
+    .k-grid th.center-me {
+        text-align: center;
+    }
+
+    /* sortable headers */
+    th.center-me .k-cell-inner > .k-link {
+        justify-content: center;
+    }
+
+    /* RIGHT */
+    /* non-sortable headers */
+    .k-grid th.align-right {
+        text-align: right;
+    }
+
+    /* sortable headers */
+    th.align-right .k-cell-inner > .k-link {
+        justify-content: right;
+    }
+
+    /* unbound and non-filterable columns */
+    .k-grid-header th.align-right.right-padding {
+        padding-right: 12px;
+    }
+
+    /* filterable grid, sortable non-filterable columns */
+    .k-grid-header th.align-right.right-padding > .k-cell-inner {
+        margin-right: 0;
+    }
+</style>
+
+<style>
+    .add-user-button {
+        height: 40px;
+    }
+</style>

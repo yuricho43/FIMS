@@ -15,7 +15,6 @@ using Fims.Client.Shared.Infrastructure;
 
 namespace Fims.Client.Shared.ClientServices.Authentication
 {
-
     public class AuthClientService : IAuthClientService
     {
         private readonly HttpClient httpClient;
@@ -24,6 +23,7 @@ namespace Fims.Client.Shared.ClientServices.Authentication
 
         private const string LoginPath = "api/identity/login";
         private const string RegisterPath = "api/identity/register";
+        private const string AllUsersPath = "api/identity/getallusers";
 
         public AuthClientService(
             HttpClient httpClient,
@@ -76,6 +76,12 @@ namespace Fims.Client.Shared.ClientServices.Authentication
             ((ApiAuthenticationStateProvider)this.authenticationStateProvider).MarkUserAsLoggedOut();
 
             this.httpClient.DefaultRequestHeaders.Authorization = null;
+        }
+
+        public async Task<List<UserAuthInfoModel>> AllUsers()
+        {
+            var response = await this.httpClient.GetFromJsonAsync<List<UserAuthInfoModel>>(AllUsersPath);
+            return response;
         }
     }
 }
