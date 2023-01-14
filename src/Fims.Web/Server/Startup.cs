@@ -65,7 +65,7 @@ namespace Fims.Web.Server
 
             app.UseExceptionHandling(env);
             app.UseValidationExceptionHandler();
-            app.UseHttpsRedirection();
+            //FIXME  app.UseHttpsRedirection();
             app.UseBlazorFrameworkFiles();
             app.UseStaticFiles();
             app.UseRouting();
