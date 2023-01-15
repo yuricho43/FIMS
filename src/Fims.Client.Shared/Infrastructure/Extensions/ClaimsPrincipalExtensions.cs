@@ -1,4 +1,5 @@
-﻿using System.Security.Claims;
+﻿using Fims.Common;
+using System.Security.Claims;
 
 
 namespace Fims.Client.Shared.Infrastructure.Extensions
@@ -35,25 +36,15 @@ namespace Fims.Client.Shared.Infrastructure.Extensions
             => claimsPrincipal.FindFirstValue(ClaimTypes.Surname);
 
         public static string GetUserRole(this ClaimsPrincipal claimsPrincipal)
-          => claimsPrincipal.FindFirstValue(ClaimTypes.Role);
+            => claimsPrincipal.FindFirstValue(ClaimTypes.Role);
 
-        public static string GetTenantId(this ClaimsPrincipal claimsPrincipal)
-        {
-            return claimsPrincipal.FindFirstValue(CloudpressClaimTypes.TenantId);
-        }
+        public static string GetLoginName(this ClaimsPrincipal claimsPrincipal) //JBH: add to extend the standard ClaimTypes
+            => claimsPrincipal.FindFirstValue(CustomClaimTypes.LoginName);
 
-        public static bool IsCurrentUser(this ClaimsPrincipal claimsPrincipal, string id)
+        public static bool IsCurrentUser(this ClaimsPrincipal claimsPrincipal, string id) //JBH add
         {
             var currentUserId = GetUserId(claimsPrincipal);
             return string.Equals(currentUserId, id, StringComparison.OrdinalIgnoreCase);
         }
-
-    }
-
-    public static class CloudpressClaimTypes
-    {
-        public const string TenantId = "urn:cloudpress:tenant_id";
-
-        // other custom claim types for my application...
     }
 }
