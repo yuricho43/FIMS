@@ -91,18 +91,29 @@
         //border-radius: 8px;
     }
 
-    .k-grid-header-wrap th {
-        background-color: teal;
+    /*
+     * JBH NOTE:
+     * if "k-grid-header th" defined --> header weired upon Sorting
+     * if "k-grid-header"    defined --> header border not shown
+     */
+
+  
+    .k-grid-header th {
         color: white;
+        background-color: teal;
         border: 1px solid white;
         //border-radius: 8px;
     }
 
-    /*    .k-grid-header {
-            color: whitesmoke;
-            background-color: teal;
-        }
+    /*
+    .k-grid-header {
+        color: white;
+        background-color: teal;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
     */
+
     .k-grid .k-focused-cell {
         background-color: cornflowerblue;
     }
@@ -157,8 +168,8 @@
         padding-right: 12px;
     }
 
-        /* filterable grid, sortable non-filterable columns */
-        .k-grid-header th.align-right.right-padding > .k-cell-inner {
-            margin-right: 0;
-        }
+    /* filterable grid, sortable non-filterable columns */
+    .k-grid-header th.align-right.right-padding > .k-cell-inner {
+        margin-right: 0;
+    }
 </style>

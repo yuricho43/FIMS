@@ -1,19 +1,32 @@
 ﻿@page "/Management/AddUserDialog"
 
-<TelerikDialog Visible="true" Title="신규 Inspection 설비 추가">
+<TelerikDialog Visible="true" Title="사용자 추가" Width="700px">
     <DialogContent>
 
         <TelerikForm Model="@NewUserRegisterRequestModel"
                      @ref="@AddUserFormRef"
                      OnValidSubmit="@HandleValidSubmit"
                      OnInvalidSubmit="@HandleInvalidSubmit"
-                     Width="500px">
+                     Orientation="FormOrientation.Horizontal"
+                     >
             <FormValidation>
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
             <FormItems>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.FirstName)"></FormItem>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.LastName)"></FormItem>
+                <FormItem Field="@nameof(NewUserRegisterRequestModel.FirstName)">
+                    <Template>
+                        <label for="fname" class="k-label k-form-label">이름*:</label>
+                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.FirstName"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.FirstName)"></TelerikValidationMessage>
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(NewUserRegisterRequestModel.LastName)">
+                    <Template>
+                        <label for="lname" class="k-label k-form-label">이니셜*:</label>
+                        <TelerikTextBox Id="lname" @bind-Value="@NewUserRegisterRequestModel.LastName"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.LastName)"></TelerikValidationMessage>
+                    </Template>
+                </FormItem>
                 <FormItem Field="@nameof(NewUserRegisterRequestModel.Email)">
                     <Template>
                         <label for="mail" class="k-label k-form-label">Email*:</label>
@@ -30,7 +43,8 @@
                 </FormItem>
                 <FormItem Field="@nameof(NewUserRegisterRequestModel.Role)">
                     <Template>
-                        <TelerikDropDownList Data="@Roles" @bind-Value="NewUserRegisterRequestModel.Role" Width="200px"></TelerikDropDownList>
+                        <label for="role" class="k-label k-form-label">권한*:</label>
+                        <TelerikDropDownList Id="role" Data="@Roles" @bind-Value="NewUserRegisterRequestModel.Role"></TelerikDropDownList>
                     </Template>
                 </FormItem>
             </FormItems>
@@ -38,7 +52,8 @@
             <FormButtons>
                 <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">등록</TelerikButton>
                 <TelerikButton ButtonType="ButtonType.Button" OnClick="@OnAddUserDialogCancel">취소</TelerikButton>
-            </FormButtons>
+           </FormButtons>
+
         </TelerikForm>
 
     </DialogContent>

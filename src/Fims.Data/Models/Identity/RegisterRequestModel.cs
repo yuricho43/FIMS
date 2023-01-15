@@ -21,24 +21,21 @@ namespace Fims.Data.Models.Identity
         public string Password { get; set; }
 
         [Required]
-        [StringLength(
-            MaxNameLength,
-            ErrorMessage = StringLengthErrorMessage,
-            MinimumLength = MinNameLength)]
+        [StringLength(MaxNameLength,
+                      ErrorMessage = StringLengthErrorMessage,
+                      MinimumLength = MinNameLength)]
         public string FirstName { get; set; }
 
         [Required]
-        [StringLength(
-            MaxNameLength,
-            ErrorMessage = StringLengthErrorMessage,
-            MinimumLength = MinNameLength)]
+        [StringLength(MaxNameLength,
+                      ErrorMessage = StringLengthErrorMessage,
+                      MinimumLength = MinNameLength)]
         public string LastName { get; set; }
 
         [Required]
-        [StringLength(
-            MaxNameLength,
-            ErrorMessage = StringLengthErrorMessage,
-            MinimumLength = MinNameLength)]
+        [StringLength(MaxNameLength,
+                      ErrorMessage = StringLengthErrorMessage,
+                      MinimumLength = MinNameLength)]
         public string Role { get; set; }
 
         [Required]

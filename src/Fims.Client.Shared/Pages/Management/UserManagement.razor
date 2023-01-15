@@ -24,7 +24,7 @@
                          OnDelete="@DeleteItem"
                          OnCreate="@CreateItem">
                 <GridToolBar>
-                    <GridCommandButton OnClick="OnAddUserClicked" Icon="plus-circle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="add-user-button"><strong>사용자 추가</strong></GridCommandButton>
+                    <GridCommandButton OnClick="ShowAddUserDialog" Icon="plus-circle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="add-user-button"><strong>사용자 추가</strong></GridCommandButton>
                 </GridToolBar>
  
                 <GridSettings>
@@ -54,9 +54,9 @@
     </TelerikCard>
 </div>
 
-@if (ShowAddUserForm)
+@if (AddUserDialogVisible)
 {
-    <AddUserDialog></AddUserDialog>
+    <AddUserDialog AddUserFinished="OnAddUserFinished"></AddUserDialog>
 }
 
 <style>

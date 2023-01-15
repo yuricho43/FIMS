@@ -30,7 +30,7 @@ namespace Fims.Client.Shared.Pages.Management
         public TelerikForm AddUserFormRef { get; set; }
 
         [Parameter]
-        public EventCallback<UserAuthInfoModel> UserAdded { get; set; }
+        public EventCallback<RegisterRequestModel> AddUserFinished { get; set; }
 
         public RegisterRequestModel NewUserRegisterRequestModel { get; set; } = new RegisterRequestModel();
         private List<string> Roles { get; set; } = new List<string> { "Admin", "Inspector", "Reporter", "Manager"};
@@ -95,6 +95,7 @@ namespace Fims.Client.Shared.Pages.Management
         void OnAddUserDialogCancel()
         {
             //ValidSubmit = false;
+            AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
         }
 
 

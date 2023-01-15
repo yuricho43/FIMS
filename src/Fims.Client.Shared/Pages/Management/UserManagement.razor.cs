@@ -18,7 +18,7 @@ namespace Fims.Client.Shared.Pages.Management
         public List<FimsRole> UserRoles { get; set; }
         public List<string> UserRoleNames { get; set; } = new List<string>();
         public bool EnabledValidation { get; set; } = true;
-        public bool ShowAddUserForm { get; set; } = false;
+        public bool AddUserDialogVisible { get; set; } = false;
 
         protected override async Task OnInitializedAsync()
         {
@@ -58,12 +58,18 @@ namespace Fims.Client.Shared.Pages.Management
             //LoadData();
         }
 
-        private void OnAddUserClicked(GridCommandEventArgs args)
+        private void ShowAddUserDialog(GridCommandEventArgs args)
         {
             //ProductService.UpdateProduct((ProductDto)args.Item);
             //LoadData();
-            ShowAddUserForm = true;
-            StateHasChanged();
+            AddUserDialogVisible = true;
+            //StateHasChanged();
+        }
+
+        private async void OnAddUserFinished(RegisterRequestModel newRegisterRequestModel)
+        {
+            AddUserDialogVisible = false;
+            await LoadData();
         }
 
 
