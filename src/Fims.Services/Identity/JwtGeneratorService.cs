@@ -52,8 +52,8 @@ namespace Fims.Services.Identity
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName)
+                new Claim(ClaimTypes.Name, user.HangulName),
+                new Claim(ClaimTypes.Surname, user.EnglishName)
             };
 
             //JBH: A User can have multiple Roles, for an example,

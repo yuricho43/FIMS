@@ -13,13 +13,13 @@ namespace Fims.Data.Models.Identity
             MaxNameLength,
             ErrorMessage = StringLengthErrorMessage,
             MinimumLength = MinNameLength)]
-        public string FirstName { get; set; }
+        public string HangulName { get; set; }
 
         [Required]
         [StringLength(
             MaxNameLength,
             ErrorMessage = StringLengthErrorMessage,
             MinimumLength = MinNameLength)]
-        public string LastName { get; set; }
+        public string EnglishName { get; set; }
     }
 }

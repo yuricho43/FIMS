@@ -45,8 +45,8 @@ namespace Fims.Client.Shared.Pages.Account
             var user = state.User;
             
             this.email = user.GetEmail();
-            this.model.FirstName = user.GetFirstName();
-            this.model.LastName = user.GetLastName();
+            this.model.HangulName  = user.GetHangulName();
+            this.model.EnglishName = user.GetEnglishName();
         }
     }
 }

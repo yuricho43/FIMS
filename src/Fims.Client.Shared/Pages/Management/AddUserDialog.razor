@@ -13,18 +13,18 @@
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
             <FormItems>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.FirstName)">
+                <FormItem Field="@nameof(NewUserRegisterRequestModel.HangulName)">
                     <Template>
                         <label for="fname" class="k-label k-form-label">이름*:</label>
-                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.FirstName"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.FirstName)"></TelerikValidationMessage>
+                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.HangulName"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.HangulName)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.LastName)">
+                <FormItem Field="@nameof(NewUserRegisterRequestModel.EnglishName)">
                     <Template>
                         <label for="lname" class="k-label k-form-label">이니셜*:</label>
-                        <TelerikTextBox Id="lname" @bind-Value="@NewUserRegisterRequestModel.LastName"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.LastName)"></TelerikValidationMessage>
+                        <TelerikTextBox Id="lname" @bind-Value="@NewUserRegisterRequestModel.EnglishName"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.EnglishName)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
                 <FormItem Field="@nameof(NewUserRegisterRequestModel.Email)">

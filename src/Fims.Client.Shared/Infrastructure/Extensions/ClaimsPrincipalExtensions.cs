@@ -23,25 +23,25 @@ namespace Fims.Client.Shared.Infrastructure.Extensions
 
     public static class ClaimsPrincipalExtensions
     {
-        public static string GetUserId(this ClaimsPrincipal claimsPrincipal)
+        public static string GetUserId(this ClaimsPrincipal claimsPrincipal)    // UserId here is the db index for the user.
             => claimsPrincipal.FindFirstValue(ClaimTypes.NameIdentifier);
+
+        public static string GetUserName(this ClaimsPrincipal claimsPrincipal)
+            => claimsPrincipal.FindFirstValue(CustomClaimTypes.UserName);       //NOTE: using CustomClaimTypes
+
+        public static string GetHangulName(this ClaimsPrincipal claimsPrincipal)
+            => claimsPrincipal.FindFirstValue(CustomClaimTypes.HangulName);     //NOTE: using CustomClaimTypes
+
+        public static string GetEnglishName(this ClaimsPrincipal claimsPrincipal)
+            => claimsPrincipal.FindFirstValue(CustomClaimTypes.EnglishName);    //NOTE: using CustomClaimTypes
 
         public static string GetEmail(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.FindFirstValue(ClaimTypes.Email);
 
-        public static string GetFirstName(this ClaimsPrincipal claimsPrincipal)
-            => claimsPrincipal.FindFirstValue(ClaimTypes.Name);
-
-        public static string GetLastName(this ClaimsPrincipal claimsPrincipal)
-            => claimsPrincipal.FindFirstValue(ClaimTypes.Surname);
-
         public static string GetUserRole(this ClaimsPrincipal claimsPrincipal)
             => claimsPrincipal.FindFirstValue(ClaimTypes.Role);
 
-        public static string GetLoginName(this ClaimsPrincipal claimsPrincipal) //JBH: add to extend the standard ClaimTypes
-            => claimsPrincipal.FindFirstValue(CustomClaimTypes.LoginName);
-
-        public static bool IsCurrentUser(this ClaimsPrincipal claimsPrincipal, string id) //JBH add
+        public static bool IsCurrentUser(this ClaimsPrincipal claimsPrincipal, string id)
         {
             var currentUserId = GetUserId(claimsPrincipal);
             return string.Equals(currentUserId, id, StringComparison.OrdinalIgnoreCase);

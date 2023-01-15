@@ -27,21 +27,21 @@ else
                                 <ValidationSummary />
 
                                 <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">한글이름</label>
+                                    <div class="col-sm-6">
+                                        <InputText @bind-Value="model.HangulName" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">영문이름</label>
+                                    <div class="col-sm-6">
+                                        <InputText @bind-Value="model.EnglishName" type="text" class="form-control" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-6">
                                         <InputText @bind-Value="email" type="email" class="form-control-plaintext" readonly />
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">First name</label>
-                                    <div class="col-sm-6">
-                                        <InputText @bind-Value="model.FirstName" type="text" class="form-control" />
-                                    </div>
-                                </div>
-                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">Last name</label>
-                                    <div class="col-sm-6">
-                                        <InputText @bind-Value="model.LastName" type="text" class="form-control" />
                                     </div>
                                 </div>
 

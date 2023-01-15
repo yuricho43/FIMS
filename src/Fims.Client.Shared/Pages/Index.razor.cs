@@ -113,7 +113,7 @@ namespace Fims.Client.Shared.Pages
         //FIXME
         //FIXME      var state = await this.AuthState.GetAuthenticationStateAsync();
         //FIXME      var user = state.User;
-        //FIXME      CurrentInspectorName = user.GetFirstName();
+        //FIXME      CurrentInspectorName = user.GetHangulName();
         //FIXME  
         //FIXME      ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
         //FIXME  }
@@ -150,7 +150,7 @@ namespace Fims.Client.Shared.Pages
             {
                 var state = await this.AuthState.GetAuthenticationStateAsync();
                 var user = state.User;
-                CurrentInspectorName = user.GetFirstName();
+                CurrentInspectorName   = user.GetHangulName();
                 CurrentInspectorUserId = user.GetUserId();
 
                 ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();

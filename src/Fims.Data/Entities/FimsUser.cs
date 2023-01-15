@@ -12,9 +12,9 @@ namespace Fims.Data.Entities
     {
         public FimsUser() => this.Id = Guid.NewGuid().ToString();
 
-        public string FirstName { get; set; }
+        public string HangulName { get; set; }
 
-        public string LastName { get; set; }
+        public string EnglishName { get; set; }
 
         //for IAuditInfo
         public DateTime CreatedOn { get; set; }

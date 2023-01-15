@@ -76,13 +76,13 @@ namespace Fims.Data
                     await this.roleManager.CreateAsync(adminRole);
                     var adminUser = new FimsUser
                     {
-                        FirstName = "장성욱",
-                        LastName = "JSW",
+                        UserName = "admin",
+                        HangulName = "장성욱",
+                        EnglishName = "JSW",
                         Email = "admin@fstc.co.kr",
-                        UserName = "admin@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(adminUser, "admin123456");
+                    await this.userManager.CreateAsync(adminUser, "fims2023");
                     await this.userManager.AddToRoleAsync(adminUser, AdministratorRole);
 
 
@@ -91,13 +91,13 @@ namespace Fims.Data
                     await this.roleManager.CreateAsync(managerRole);
                     var managerUser = new FimsUser
                     {
-                        FirstName = "홍과장",
-                        LastName = "HGJ",
-                        Email = "manager@fstc.co.kr",
-                        UserName = "manager@fstc.co.kr",
+                        UserName = "manager1",
+                        HangulName = "홍과장",
+                        EnglishName = "HGJ",
+                        Email = "manager1@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(managerUser, "manager123456");
+                    await this.userManager.CreateAsync(managerUser, "fims2023");
                     await this.userManager.AddToRoleAsync(managerUser, ManagerRole);
 
 
@@ -106,13 +106,13 @@ namespace Fims.Data
                     await this.roleManager.CreateAsync(inspectorRole);
                     var inspectorUser = new FimsUser
                     {
-                        FirstName = "김철수",
-                        LastName = "KCS",
-                        Email = "inspector@fstc.co.kr",
-                        UserName = "inspector@fstc.co.kr",
+                        UserName = "inspector1",
+                        HangulName = "김철수",
+                        EnglishName = "KCS",
+                        Email = "inspector1@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(inspectorUser, "inspector123456");
+                    await this.userManager.CreateAsync(inspectorUser, "fims2023");
                     await this.userManager.AddToRoleAsync(inspectorUser, InspectorRole);
 
 
@@ -121,13 +121,13 @@ namespace Fims.Data
                     await this.roleManager.CreateAsync(reporterRole);
                     var reporterUser = new FimsUser
                     {
-                        FirstName = "장보고",
-                        LastName = "JBG",
-                        Email = "reporter@fstc.co.kr",
-                        UserName = "reporter@fstc.co.kr",
+                        UserName = "reporter1",
+                        HangulName = "장보고",
+                        EnglishName = "JBG",
+                        Email = "reporter1@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(reporterUser, "reporter123456");
+                    await this.userManager.CreateAsync(reporterUser, "fims2023");
                     await this.userManager.AddToRoleAsync(reporterUser, ReporterRole);
                 })
                 .GetAwaiter()

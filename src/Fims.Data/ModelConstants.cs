@@ -10,9 +10,13 @@
 
         public class Identity
         {
+            public const int MinUserNameLength = 2;
+            public const int MaxUserNameLength = 50;
             public const int MinEmailLength = 3;
             public const int MaxEmailLength = 50;
             public const int MinPasswordLength = 4;
+            public const int MinRoleNameLength = 2;
+            public const int MaxRoleNameLength = 50;
         }
 
         public class Address

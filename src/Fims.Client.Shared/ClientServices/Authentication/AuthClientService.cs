@@ -64,7 +64,7 @@ namespace Fims.Client.Shared.ClientServices.Authentication
 
             await this.localStorage.SetItem("authToken", token); //JBH: changed from SetItemAsync
 
-            ((ApiAuthenticationStateProvider)this.authenticationStateProvider).MarkUserAsAuthenticated(model.Email);
+            ((ApiAuthenticationStateProvider)this.authenticationStateProvider).MarkUserAsAuthenticated(model.UserName);
 
             this.httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 

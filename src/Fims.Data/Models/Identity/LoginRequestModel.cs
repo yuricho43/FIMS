@@ -8,10 +8,15 @@ namespace Fims.Data.Models.Identity
     public class LoginRequestModel
     {
         [Required]
-        [EmailAddress]
-        [MinLength(MinEmailLength)]
-        [MaxLength(MaxEmailLength)]
-        public string Email { get; set; }
+        [MinLength(MinUserNameLength)]
+        [MaxLength(MaxUserNameLength)]
+        public string UserName { get; set; } //login name
+
+        // [Required]
+        // [EmailAddress]
+        // [MinLength(MinEmailLength)]
+        // [MaxLength(MaxEmailLength)]
+        // public string Email { get; set; }
 
         [Required]
         [MinLength(MinPasswordLength)]

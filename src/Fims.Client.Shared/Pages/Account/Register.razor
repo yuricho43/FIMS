@@ -13,12 +13,19 @@
 
                 <div class="form-row">
                     <div class="col form-group">
-                        <label>First name</label>
-                        <InputText @bind-Value="model.FirstName" type="text" class="form-control" />
+                        <label>사용자 ID</label>
+                        <InputText @bind-Value="model.UserName" type="text" class="form-control" />
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="col form-group">
+                        <label>한글이름</label>
+                        <InputText @bind-Value="model.HangulName" type="text" class="form-control" />
                     </div>
                     <div class="col form-group">
-                        <label>Last name</label>
-                        <InputText @bind-Value="model.LastName" type="text" class="form-control" />
+                        <label>영문이름</label>
+                        <InputText @bind-Value="model.EnglishName" type="text" class="form-control" />
                     </div>
                 </div>
                 <div class="form-group">

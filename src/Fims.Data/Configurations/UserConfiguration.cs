@@ -12,14 +12,14 @@ namespace Fims.Data.Configurations
         public void Configure(EntityTypeBuilder<FimsUser> user)
         {
             user
-                .Property(u => u.FirstName)
+                .Property(u => u.HangulName)
                 .HasMaxLength(MaxNameLength)
                 .IsRequired();
 
             user
-                .Property(u => u.LastName)
-                .HasMaxLength(MaxNameLength)
-                .IsRequired();
+                .Property(u => u.EnglishName)
+                .HasMaxLength(MaxNameLength);
+                //optional  .IsRequired();
 
             user
                 .HasIndex(u => u.IsDeleted);

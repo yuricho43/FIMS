@@ -3,8 +3,10 @@
     //JBH: https://www.jerriepelser.com/blog/useful-claimsprincipal-extension-methods/
     public static class CustomClaimTypes
     {
-        public const string LoginName = "urn:jbh:loginname";
+        public const string UserName    = "urn:jbh:username"; //login name
 
-        // other custom claim types for my application...
+        public const string HangulName  = "urn:jbh:hangulname";
+
+        public const string EnglishName = "urn:jbh:englishname";
     }
 }

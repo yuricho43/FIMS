@@ -10,10 +10,10 @@ namespace Fims.Data.Models.Identity
     public class RegisterRequestModel
     {
         [Required]
-        [EmailAddress]
-        [MinLength(MinEmailLength)]
-        [MaxLength(MaxEmailLength)]
-        public string Email { get; set; }
+        [StringLength(MaxUserNameLength,
+                      ErrorMessage = StringLengthErrorMessage,
+                      MinimumLength = MinUserNameLength)]
+        public string UserName { get; set; } //login name
 
         [Required]
         [MinLength(MinPasswordLength)]
@@ -21,22 +21,28 @@ namespace Fims.Data.Models.Identity
         public string Password { get; set; }
 
         [Required]
-        [StringLength(MaxNameLength,
+        [StringLength(MaxRoleNameLength,
                       ErrorMessage = StringLengthErrorMessage,
-                      MinimumLength = MinNameLength)]
-        public string FirstName { get; set; }
-
-        [Required]
-        [StringLength(MaxNameLength,
-                      ErrorMessage = StringLengthErrorMessage,
-                      MinimumLength = MinNameLength)]
-        public string LastName { get; set; }
-
-        [Required]
-        [StringLength(MaxNameLength,
-                      ErrorMessage = StringLengthErrorMessage,
-                      MinimumLength = MinNameLength)]
+                      MinimumLength = MinRoleNameLength)]
         public string Role { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [MinLength(MinEmailLength)]
+        [MaxLength(MaxEmailLength)]
+        public string Email { get; set; }
+
+        [Required]
+        [StringLength(MaxNameLength,
+                      ErrorMessage = StringLengthErrorMessage,
+                      MinimumLength = MinNameLength)]
+        public string HangulName { get; set; }
+
+        //[Required]
+        [StringLength(MaxNameLength,
+                      ErrorMessage = StringLengthErrorMessage,
+                      MinimumLength = MinNameLength)]
+        public string EnglishName { get; set; }
 
         [Required]
         [MinLength(MinPasswordLength)]

@@ -32,10 +32,10 @@ namespace Fims.Services.Identity
         {
             var user = new FimsUser
             {
-                FirstName = model.FirstName,
-                LastName = model.LastName,
+                UserName = model.UserName,
+                HangulName = model.HangulName,
+                EnglishName = model.EnglishName,
                 Email = model.Email,
-                UserName = model.Email
             };
 
             var identityResult = await this.userManager.CreateAsync(user, model.Password);
@@ -49,7 +49,8 @@ namespace Fims.Services.Identity
 
         public async Task<Result<LoginResponseModel>> LoginAsync(LoginRequestModel model)
         {
-            var user = await this.userManager.FindByEmailAsync(model.Email);
+            //var user = await this.userManager.FindByEmailAsync(model.Email);
+            var user = await this.userManager.FindByNameAsync(model.UserName);
             if (user == null)
             {
                 return InvalidErrorMessage;
@@ -80,8 +81,8 @@ namespace Fims.Services.Identity
                 return InvalidErrorMessage;
             }
 
-            user.FirstName = model.FirstName;
-            user.LastName = model.LastName;
+            user.HangulName = model.HangulName;
+            user.EnglishName = model.EnglishName;
 
             var identityResult = await this.userManager.UpdateAsync(user);
 
@@ -127,11 +128,12 @@ namespace Fims.Services.Identity
 
                 var userAuthInfo = new UserAuthInfoModel
                 {
-                    Email = user.Email,
+                    UserName = user.UserName,
                     Password = "************",
-                    FirstName = user.FirstName,
-                    LastName = user.LastName,
                     Role = userRole,
+                    HangulName = user.HangulName,
+                    EnglishName = user.EnglishName,
+                    Email = user.Email,
                 };
                 userAuthInfos.Add(userAuthInfo);
             }
