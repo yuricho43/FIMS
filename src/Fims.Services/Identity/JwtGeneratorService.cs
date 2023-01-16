@@ -14,6 +14,7 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 
 using static Fims.Common.Constants;
+using Fims.Common;
 
 namespace Fims.Services.Identity
 {
@@ -39,21 +40,23 @@ namespace Fims.Services.Identity
              *      - Header (Algorithm & Token type)
              *  
              *      - Payload --> ClaimsPrincipal
-             *          . ClaimTypes.NameIdentifier : "f01b2252-3710-4e64-a45a-e285c9eee85f"  (this is the ID index in Db)
-             *          . ClaimTypes.Email:   "inspector@fstc.co.kr"
-             *          . ClaimTypes.Name:    "김철수"
-             *          . ClaimTypes.SurName: "KCS"
-             *          . ClaimTypes.Role:    "Inspector"
-             *  
+             *          . ClaimTypes.NameIdentifier:        "f01b2252-3710-4e64-a45a-e285c9eee85f"  (this is the ID index in Db)
+             *          . CustomClaimTypes.UserName:        "inspector1"
+             *          . ClaimTypes.Email:                 "inspector1@fstc.co.kr"
+             *          . CustomClaimTypes.HangulName:      "김철수"
+             *          . CustomClaimTypes.EnglishName:     "KCS"
+             *          . ClaimTypes.Role:                  "Inspector"
+             *          
              *      - Signature
              */
 
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id),
+                new Claim(CustomClaimTypes.UserName, user.UserName),        //NOTE: using CustomClaimTypes
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.HangulName),
-                new Claim(ClaimTypes.Surname, user.EnglishName)
+                new Claim(CustomClaimTypes.HangulName, user.HangulName),    //NOTE: using CustomClaimTypes
+                new Claim(CustomClaimTypes.EnglishName, user.EnglishName)   //NOTE: using CustomClaimTypes
             };
 
             //JBH: A User can have multiple Roles, for an example,

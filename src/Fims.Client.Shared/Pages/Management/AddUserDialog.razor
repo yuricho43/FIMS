@@ -20,13 +20,15 @@
                         <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.HangulName)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.EnglishName)">
+
+@*                <FormItem Field="@nameof(NewUserRegisterRequestModel.EnglishName)">
                     <Template>
-                        <label for="lname" class="k-label k-form-label">이니셜*:</label>
+                        <label for="lname" class="k-label k-form-label">영문이름*:</label>
                         <TelerikTextBox Id="lname" @bind-Value="@NewUserRegisterRequestModel.EnglishName"></TelerikTextBox>
                         <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.EnglishName)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
+*@
                 <FormItem Field="@nameof(NewUserRegisterRequestModel.Email)">
                     <Template>
                         <label for="mail" class="k-label k-form-label">Email*:</label>
