@@ -1,0 +1,318 @@
+﻿@page "/Management/TSheetSpecsFileManagement"
+
+@using System.ComponentModel.DataAnnotations
+@using Telerik.Blazor.Components.Upload
+@inject NavigationManager NavigationManager
+@inject IJSRuntime JsInterop
+
+
+<div class="flex-center">
+    <TelerikCard>
+        <CardHeader>
+            <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>Spec Sheets 관리</strong></h2></CardTitle>
+            <CardSubTitle>Upload</CardSubTitle>
+        </CardHeader>
+
+        <CardBody>
+            <CardSeparator></CardSeparator>
+
+            <div class="k-form k-form-horizontal">
+                @if (string.IsNullOrEmpty(SuccessMessage))
+                {
+                    <EditForm EditContext="@MyEditContext" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit">
+                        <DataAnnotationsValidator />
+
+                        @if (NotValid)
+                        {
+                            <div class="demo-alert demo-alert-error">
+                                <ValidationSummary />
+                            </div>
+                        }
+
+                        @*        <div class="k-form-field">
+                    <label for="name" class="k-label k-form-label">Name:</label>
+                    <div class="k-form-field-wrap">
+                    <TelerikTextBox @bind-Value="@currentForm.Name" Id="name" />
+                    </div>
+                    </div>
+                    <div class="k-form-field">
+                    <label for="email" class="k-label k-form-label">Email:</label>
+                    <div class="k-form-field-wrap">
+                    <TelerikTextBox @bind-Value="@currentForm.Email" Id="email" />
+                    </div>
+                    </div>
+                    *@
+                        <h3 class="kd-demo-heading">Spec Sheets 파일 선택</h3>
+
+                        <div class="k-form-field">
+                            <div class="k-form-field-wrap">
+                                <TelerikUpload SaveUrl="@SaveUrl"
+                                               RemoveUrl="@RemoveUrl"
+                                               AllowedExtensions="@( new List<string>() { ".xlsx" } )"
+                                               OnSelect="@OnSelectHandler"
+                                               OnCancel="@OnCancelHandler"
+                                               OnRemove="@OnRemoveHandler">
+                                </TelerikUpload>
+                                <div class="k-form-hint">Accepted files: <strong>FimsTSheetSpecs_YYYYMMDD.xlsx</strong></div>
+                            </div>
+                        </div>
+
+                        <div class="text-center">
+                            <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">Spec Sheets 업로드</TelerikButton>
+                        </div>
+                    </EditForm>
+                }
+                else
+                {
+                    <div class="demo-alert demo-alert-success" role="alert">
+                        @SuccessMessage
+                        <br />
+                        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@BackToForm">Go back</TelerikButton>
+                    </div>
+                }
+            </div>
+        </CardBody>
+
+        <CardFooter Class="k-hbox justify-space-between">
+            <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
+        </CardFooter>
+    </TelerikCard>
+</div>
+
+<style>
+    .k-upload-files {
+        max-height: 200px;
+        overflow-y: auto;
+    }
+
+    .k-form-hint {
+        display: block;
+        margin-top: 1em;
+    }
+
+    .demo-section > .kd-demo-heading {
+        padding-bottom: 0;
+        margin-bottom: 1em;
+    }
+
+</style>
+
+<style>
+    .k-grid td {
+        background-color: #E0E0E0;
+        color: black;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    /*
+         * JBH NOTE:
+         * if "k-grid-header th" defined --> header weired upon Sorting
+         * if "k-grid-header"    defined --> header border not shown
+         */
+
+
+    .k-grid-header th {
+        color: white;
+        background-color: teal;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+        .k-grid-header th.k-sorted {
+            background-color: white;
+            color: teal;
+            border: 2px solid teal;
+        }
+
+        .k-grid-header th .k-i-sort-asc-small,
+        .k-grid-header th .k-i-sort-desc-small {
+            color: teal;
+        }
+
+    /*
+        .k-grid-header {
+            color: white;
+            background-color: teal;
+            border: 1px solid white;
+            //border-radius: 8px;
+        }
+        */
+
+    .k-grid .k-focused-cell {
+        background-color: cornflowerblue;
+    }
+
+    .k-grid .k-disabled-cell {
+        background-color: #CACACA;
+    }
+
+    .k-grid .userinput-empty {
+        //color: dodgerblue;
+        background-color: #E0FAFA;
+        //font-weight: bold;
+    }
+
+    .k-grid .userinput-valid {
+        color: dodgerblue;
+        background-color: #C0D8DA;
+        font-weight: bold;
+    }
+
+    .k-grid .userinput-invalid {
+        color: red !important;
+        background-color: sandybrown;
+        font-weight: bold !important;
+        //opacity: 0.7;
+    }
+
+    /* CENTER */
+    /* non-sortable headers */
+    .k-grid th.center-me {
+        text-align: center;
+    }
+
+    /* sortable headers */
+    th.center-me .k-cell-inner > .k-link {
+        justify-content: center;
+    }
+
+    /* RIGHT */
+    /* non-sortable headers */
+    .k-grid th.align-right {
+        text-align: right;
+    }
+
+    /* sortable headers */
+    th.align-right .k-cell-inner > .k-link {
+        justify-content: right;
+    }
+
+    /* unbound and non-filterable columns */
+    .k-grid-header th.align-right.right-padding {
+        padding-right: 12px;
+    }
+
+        /* filterable grid, sortable non-filterable columns */
+        .k-grid-header th.align-right.right-padding > .k-cell-inner {
+            margin-right: 0;
+        }
+</style>
+
+@code {
+    // setup upload endpoints
+    public string SaveUrl => ToAbsoluteUrl("api/TSheetSpecs/save");
+    public string RemoveUrl => ToAbsoluteUrl("api/TSheetSpecs/remove");
+
+    public string ToAbsoluteUrl(string url)
+    {
+        return $"{NavigationManager.BaseUri}{url}";
+    }
+
+    // setup validation, this is a workaround because file validation does not exist in the framework
+    // see more here https://github.com/dotnet/aspnetcore/issues/18821
+    JobApplicationForm currentForm { get; set; }
+    protected EditContext MyEditContext { get; set; }
+
+    private bool NotValid => MyEditContext.GetValidationMessages().Any();
+    Dictionary<string, bool> FilesValidationInfo { get; set; } = new Dictionary<string, bool>();
+
+    protected override void OnInitialized()
+    {
+        currentForm = new JobApplicationForm();
+        MyEditContext = new EditContext(currentForm);
+    }
+
+    void OnSelectHandler(UploadSelectEventArgs e)
+    {
+        foreach (var item in e.Files)
+        {
+            if (!FilesValidationInfo.Keys.Contains(item.Id))
+            {
+                // nothing is assumed to be valid until the server returns an OK
+                FilesValidationInfo.Add(item.Id, IsSelectedFileValid(item));
+            }
+        }
+
+        UpdateValidationModel();
+    }
+
+    void OnCancelHandler(UploadCancelEventArgs e)
+    {
+        RemoveFailedFilesFromList(e.Files);
+        UpdateValidationModel();
+    }
+
+    void OnRemoveHandler(UploadEventArgs e)
+    {
+        RemoveFailedFilesFromList(e.Files);
+        UpdateValidationModel();
+    }
+
+    void RemoveFailedFilesFromList(List<UploadFileInfo> files)
+    {
+        foreach (var file in files)
+        {
+            if (FilesValidationInfo.Keys.Contains(file.Id))
+            {
+                FilesValidationInfo.Remove(file.Id);
+            }
+        }
+    }
+
+    bool IsSelectedFileValid(UploadFileInfo file)
+    {
+        return !(file.InvalidExtension || file.InvalidMaxFileSize || file.InvalidMinFileSize);
+    }
+
+    void UpdateValidationModel()
+    {
+        bool areAllUploadedFilesValid = false;
+
+        if (FilesValidationInfo.Keys.Count > 0 &&
+            !FilesValidationInfo.Values.Contains(false))
+        {
+            areAllUploadedFilesValid = true;
+        }
+
+        currentForm.IsResumeValid = areAllUploadedFilesValid;
+
+        // we update the validation state out of the standard form cycle and events
+        // so we need an EditContext that we can call upon to re-evaluate the validation
+        MyEditContext.Validate();
+    }
+
+
+    // sample model
+    public class JobApplicationForm
+    {
+        [Required(ErrorMessage = "Enter your name")]
+        public string Name { get; set; }
+
+        [Required(ErrorMessage = "Enter your email")]
+        [EmailAddress(ErrorMessage = "Please provide a valid email address.")]
+        public string Email { get; set; }
+
+        [Required(ErrorMessage = "Please upload a resume - PDF or DOCX files only")]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Please upload a resume - PDF or DOCX files only")]
+        public bool IsResumeValid { get; set; }
+    }
+
+    // UI for the demo to showcase changes to the form validation and success
+    string SuccessMessage = string.Empty;
+
+    void HandleValidSubmit()
+    {
+        SuccessMessage = "Form Submitted Successfully! We will get back to you.";
+    }
+
+    void HandleInvalidSubmit()
+    {
+        SuccessMessage = string.Empty;
+    }
+
+    async Task BackToForm()
+    {
+        await JsInterop.InvokeVoidAsync("window.location.reload");
+    }
+}

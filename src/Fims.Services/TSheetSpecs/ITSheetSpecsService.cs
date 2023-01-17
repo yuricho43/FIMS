@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
+using Microsoft.AspNetCore.Http;
+
 using Fims.Data.Models.TSheetSpecs;
 
 
@@ -16,5 +18,7 @@ namespace Fims.Services.TSheetSpecs
         public Task<List<string>> GetEquipmentModelsAsync();
         public Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync();
         public Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel);
+        public Task<bool> SaveAsync(IEnumerable<IFormFile> files);
+        public Task<bool> RemoveAsync(string[] files);
     }
 }

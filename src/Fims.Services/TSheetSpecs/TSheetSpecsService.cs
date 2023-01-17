@@ -3,15 +3,15 @@ using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Net.Http.Headers;
+
+using Microsoft.AspNetCore.Http;
 
 using ExcelMapper;
 
 using Fims.Data.Models.TSheetSpecs;
-using System.Reflection.Metadata;
 using Fims.Common;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Fims.Data.Utils;
+
 
 namespace Fims.Services.TSheetSpecs
 {
@@ -124,6 +124,69 @@ namespace Fims.Services.TSheetSpecs
         public async Task<int> MethodAsync()
         {
             return await Task.Run(() => { return 1; });
+        }
+
+        public async Task<bool> SaveAsync(IEnumerable<IFormFile> files)
+        {
+            bool result = false;
+
+            if (files != null)
+            {
+                foreach (var file in files)
+                {
+                    var fileContent = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
+
+                    // Some browsers send file names with full path.
+                    // We are only interested in the file name.
+                    var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
+                    var physicalPath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, fileName);
+                    if (File.Exists(physicalPath))
+                    {
+                        File.Delete(physicalPath);
+                    }
+
+                    // implement validation and authentication here
+
+                    // await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                    using (var fileStream = new FileStream(physicalPath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+
+
+                    // instead mock async operation
+                    await Task.Yield();
+                }
+
+                result = true;
+            }
+
+            return result;
+        }
+
+        public async Task<bool> RemoveAsync(string[] files)
+        {
+            bool result = false;
+
+            if (files != null)
+            {
+                foreach (var fullName in files)
+                {
+                    var fileName = Path.GetFileName(fullName);
+                    var physicalPath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, fileName);
+                    if (File.Exists(physicalPath))
+                    {
+                        File.Delete(physicalPath);
+                    }
+
+                    // instead mock async operation
+                    await Task.Yield();
+                }
+                result = true;
+            }
+
+            // this controller always returns a success, unless an exception is thrown
+            return result;
         }
     }
 

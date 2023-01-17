@@ -74,27 +74,5 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
             var tSheetSpec = await this.http.GetFromJsonAsync<TSheetSpec>(TSheetSpecsRoute + "/TSheetSpecByModel/" + equipmentModel);
             return tSheetSpec;
         }
-
-
-        /*
-        public async Task<Result> AddProduct(TSheetRequest model)
-            => await this.http
-                .PostAsJsonAsync($"{TSheetSpecsPath}/{nameof(this.AddProduct)}", model)
-                .ToResult();
-
-        public async Task<Result> UpdateProduct(TSheetRequest model)
-            => await this.http
-                .PutAsJsonAsync($"{TSheetSpecsPath}/{nameof(this.UpdateProduct)}", model)
-                .ToResult();
-
-        public async Task<Result> RemoveProduct(int id)
-            => await this.http.DeleteAsync($"{TSheetSpecsPath}/{nameof(this.RemoveProduct)}/{id}").ToResult();
-
-        public async Task<int> TotalProductsCount()
-            => await this.http.GetFromJsonAsync<int>($"{TSheetSpecsPath}/{nameof(this.TotalProductsCount)}");
-
-        public async Task<IEnumerable<TSheetResponse>> Mine()
-            => await this.http.GetFromJsonAsync<IEnumerable<TSheetResponse>>(TSheetSpecsPath);
-        */
     }
 }
