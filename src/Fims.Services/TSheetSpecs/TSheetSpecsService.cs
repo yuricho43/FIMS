@@ -11,6 +11,7 @@ using ExcelMapper;
 
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Common;
+using Fims.Data.Models;
 
 
 namespace Fims.Services.TSheetSpecs
@@ -22,6 +23,7 @@ namespace Fims.Services.TSheetSpecs
     {
         public string FimsTSheetSpecsFileName { get; set; }
         public string FimsTSheetSpecsFileFullPath { get; set; }
+        public string FimsTSheetSpecsFileValidationMessage { get; set; }
 
         private readonly List<string> EquipmentModels;
         private readonly Dictionary<string, TSheetSpec> EquipmentModelTSheetSpecDict;
@@ -31,60 +33,21 @@ namespace Fims.Services.TSheetSpecs
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
 
-            FimsTSheetSpecsFileName = Constants.FimsTSheetSpecsFileNameBase + "_" + "20221226" + ".xlsx";
-            FimsTSheetSpecsFileFullPath = Constants.FimsTSheetSpecsRepoPath + "/" + FimsTSheetSpecsFileName;
-            BuildTSheetSpecsFromExcelSpecFile(FimsTSheetSpecsFileFullPath);
-        }
+            // find SpecSheet files
+            string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
+            string[] fimsTSheetSpecsFilePaths = Directory.GetFiles(Constants.FimsTSheetSpecsRepoPath, specsFilePattern);
 
-        //public async Task<List<string>> GetEquipmentModelsAsync()
-        //{
-        //    return EquipmentModels;
-        //}
-        public Task<List<string>> GetEquipmentModelsAsync()
-        {
-            return Task.FromResult(EquipmentModels);
-        }
-
-        //public async Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync()
-        //{
-        //    return EquipmentModelTSheetSpecDict;
-        //}
-        public Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync()
-        {
-            return Task.FromResult(EquipmentModelTSheetSpecDict);
-        }
-
-        //public async Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel)
-        //{
-        //    if (EquipmentModelTSheetSpecDict.ContainsKey(equipmentModel))
-        //    {
-        //        var tSheetSpec = EquipmentModelTSheetSpecDict[equipmentModel];
-        //        return tSheetSpec;
-        //    }
-        //    else
-        //    {
-        //        return new TSheetSpec{ EquipmentModel = Constants.TSheetSpecNotDefined };
-        //    }
-        //}
-        public Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel)
-        {
-            if (EquipmentModelTSheetSpecDict.ContainsKey(equipmentModel))
+            if (fimsTSheetSpecsFilePaths.Length > 0)
             {
-                var tSheetSpec = EquipmentModelTSheetSpecDict[equipmentModel];
-                return Task.FromResult(tSheetSpec);
-            }
-            else
-            {
-                return Task.FromResult(new TSheetSpec { ProductModel = Constants.TSheetSpecNotDefined });
+                string result = BuildTSheetSpecsFromExcelSpecFile(fimsTSheetSpecsFilePaths.First());
             }
         }
 
-        private void BuildTSheetSpecsFromExcelSpecFile(string tSheetSpecsFilePath)
+        private string BuildTSheetSpecsFromExcelSpecFile(string tSheetSpecsFilePath)
         {
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); //prevent NotSupportedException: "No data is available for encoding 1252" from the old Excel format.
-            //Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB"); //dd/MM/yyyy
+                                                                                                   //Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB"); //dd/MM/yyyy
 
- 
             using var excelStream = File.OpenRead(tSheetSpecsFilePath); //make sure "using" so that, after the end of this method, the excel file handle should be released/disposed right away for others.
             var importer = new ExcelImporter(excelStream);
             importer.Configuration.SkipBlankLines = true;
@@ -98,17 +61,55 @@ namespace Fims.Services.TSheetSpecs
                 //TItemSpec[] tItemSpecs = sheet.ReadRows<TItemSpec>().ToArray();
                 //IEnumerable<TItemSpec> tItemSpecs = sheet.ReadRows<TItemSpec>().ToArray();
                 //IEnumerable<TItemSpec> tItemSpecs = sheet.ReadRows<TItemSpec>().ToList();
-                List<TItemSpec> tItemSpecs = sheet.ReadRows<TItemSpec>().ToList();
-                tItemSpecs.RemoveAll(x => x.Applicable == null);
 
-                var tSheetSpec = new TSheetSpec
+                List<TItemSpec> tItemSpecs;
+                try
                 {
-                    ProductModel = equipmentModel,
-                    TItemSpecs = tItemSpecs,
-                    SpecFile = FimsTSheetSpecsFileName
-                };
+                    tItemSpecs = sheet.ReadRows<TItemSpec>().ToList();
+                    tItemSpecs.RemoveAll(x => x.Applicable == null);
 
-                EquipmentModelTSheetSpecDict.Add(equipmentModel, tSheetSpec);
+                    var tSheetSpec = new TSheetSpec
+                    {
+                        ProductModel = equipmentModel,
+                        TItemSpecs = tItemSpecs,
+                        SpecFile = FimsTSheetSpecsFileName
+                    };
+
+                    EquipmentModelTSheetSpecDict.Add(equipmentModel, tSheetSpec);
+                }
+                catch (Exception ex)
+                {
+                    EquipmentModels.Clear();
+                    EquipmentModelTSheetSpecDict.Clear();
+                    FimsTSheetSpecsFileValidationMessage = $"FAIL: {ex.Message}";
+                    return $"FAIL: {ex.Message}";
+                }
+            }
+
+            FimsTSheetSpecsFileValidationMessage = "SUCCESS";
+            return "SUCCESS";
+        }
+
+        public Task<List<string>> GetEquipmentModelsAsync()
+        {
+            return Task.FromResult(EquipmentModels);
+        }
+
+        public Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync()
+        {
+            return Task.FromResult(EquipmentModelTSheetSpecDict);
+        }
+
+        public Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel)
+        {
+            if (EquipmentModelTSheetSpecDict.ContainsKey(equipmentModel))
+            {
+                var tSheetSpec = EquipmentModelTSheetSpecDict[equipmentModel];
+                return Task.FromResult(tSheetSpec);
+            }
+            else
+            {
+                return Task.FromResult(new TSheetSpec { ProductModel = Constants.TSheetSpecNotDefined });
             }
         }
 
