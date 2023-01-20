@@ -85,6 +85,8 @@ namespace Fims.Client.MauiBlazor.Infrastructure.HttpDev
             return handler;
         }
 
+        // JBH NOTE: from https://gist.github.com/Eilon/49e3c5216abfa3eba81e453d45cba2d4
+        //    FYI since xamarin/xamarin-android#7246 was merged, the CustomHostnameVerifier hack won't be necessary in .NET 7 on Android.
         internal sealed class CustomAndroidMessageHandler : Xamarin.Android.Net.AndroidMessageHandler
         {
             protected override Javax.Net.Ssl.IHostnameVerifier GetSSLHostnameVerifier(Javax.Net.Ssl.HttpsURLConnection connection)

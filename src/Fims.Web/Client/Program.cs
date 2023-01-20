@@ -49,9 +49,11 @@ namespace Fims.Web.Client
             builder.Services.AddTransient<ITSheetSpecsInProgressClientService, TSheetSpecsInProgressClientService>();
 
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
+
+            var baseAddress = builder.HostEnvironment.BaseAddress; // comes from applicationUrl@launchSettings.json
             builder.Services.AddHttpClient(
                                 ClientName,
-                                client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
+                                client => client.BaseAddress = new Uri(baseAddress))
                             .AddHttpMessageHandler<AuthenticationHeaderHandler>();
 
             builder.Services.AddScoped<MainLayoutState>();

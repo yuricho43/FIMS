@@ -27,7 +27,7 @@ namespace Fims.Client.MauiBlazor
     public static class MauiProgram
     {
 #if JBH_USE_ORIGINAL
-       public static string Base = DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2" : "https://localhost";
+        public static string Base = DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2" : "https://localhost";
         public static string BaseAddress = $"{Base}:5001/";
 #endif
 
@@ -86,7 +86,6 @@ namespace Fims.Client.MauiBlazor
             builder.Services.AddTransient<ITSheetsClientService, TSheetsClientService>();
             builder.Services.AddTransient<ITSheetSpecsClientService, TSheetSpecsClientService>();
             builder.Services.AddTransient<ITSheetSpecsInProgressClientService, TSheetSpecsInProgressClientService>();
-
 
 #if JBH_USE_ORIGINAL
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
