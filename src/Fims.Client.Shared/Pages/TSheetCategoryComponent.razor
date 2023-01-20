@@ -1,4 +1,7 @@
-﻿<TelerikGrid Data=@MyCategoryTItemSpecs
+﻿@using Telerik.Blazor.Components.Common.Icon
+
+
+<TelerikGrid Data=@MyCategoryTItemSpecs
              EditMode="@GridEditMode.Incell"
              SelectionMode="GridSelectionMode.Multiple"
              @ref="@TItemSpecGrid"
@@ -30,7 +33,7 @@
             <Template>
                 <span>@((context as TItemSpec).Title)</span>
                 <TelerikTooltip TargetSelector=".tooltip-target" />
-                <span title="@((context as TItemSpec).RangeToolTip)" class="tooltip-target" style="float:right"><TelerikIcon Icon="question-circle" /></span>
+                <span title="@((context as TItemSpec).RangeToolTip)" class="tooltip-target" style="float:right"><TelerikIcon Icon="@FontIcon.QuestionCircle" /></span>
             </Template>
         </GridColumn>
 

@@ -1,7 +1,7 @@
 ﻿@page "/ProductSelect"
 
-@*@using TelerikBlazorDemos.Models
-*@
+@using Telerik.Blazor.Components.Common.Icon
+
 
 <section class="section-conten padding-y bg">
 
@@ -25,7 +25,7 @@
                     </GridLayoutColumns>
                     <GridLayoutItems>
                         <GridLayoutItem Row="1" Column="1" ColumnSpan="1">
-                            <TelerikIcon Icon="gears" />
+                            <TelerikIcon Icon="@FontIcon.Gears" />
                             <span >거래처</span>
                         </GridLayoutItem>
                         <GridLayoutItem Row="1" Column="2" ColumnSpan="1">
@@ -33,7 +33,7 @@
                         </GridLayoutItem>
 
                         <GridLayoutItem Row="2" Column="1" ColumnSpan="1">
-                            <TelerikIcon Icon="gears" />
+                            <TelerikIcon Icon="@FontIcon.Gears" />
                             <span >End User</span>
                         </GridLayoutItem>
                         <GridLayoutItem Row="2" Column="2" ColumnSpan="1">
@@ -41,7 +41,7 @@
                         </GridLayoutItem>
 
                         <GridLayoutItem Row="3" Column="1" ColumnSpan="1">
-                            <TelerikIcon Icon="gears" />
+                            <TelerikIcon Icon="@FontIcon.Gears" />
                             <span >Model</span>
                         </GridLayoutItem>
                         <GridLayoutItem Row="3" Column="2" ColumnSpan="1">
@@ -49,7 +49,7 @@
                         </GridLayoutItem>
 
                         <GridLayoutItem Row="4" Column="1" ColumnSpan="1">
-                            <TelerikIcon Icon="gears" />
+                            <TelerikIcon Icon="@FontIcon.Gears" />
                             <span >Serial</span>
                         </GridLayoutItem>
                         <GridLayoutItem Row="4" Column="2" ColumnSpan="1">
@@ -61,7 +61,7 @@
                         </GridLayoutItem>
 
                         <GridLayoutItem Row="6" Column="1" ColumnSpan="1" Class="ok-button">
-                            <TelerikButton Icon="barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
+                            <TelerikButton Icon="@FontIcon.Barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
                         </GridLayoutItem>
                         <GridLayoutItem Row="6" Column="2" ColumnSpan="1" Class="ok-button">
                             <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" Class="my-button">OK</TelerikButton>

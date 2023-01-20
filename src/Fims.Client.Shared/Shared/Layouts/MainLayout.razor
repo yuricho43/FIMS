@@ -1,5 +1,6 @@
 ﻿@namespace Fims.Client.Shared.Shared
 @using Fims.Client.Shared.Shared.NavMenu
+@using Telerik.Blazor.Components.Common.Icon
 
 @inherits LayoutComponentBase
 @inject ITelerikStringLocalizer Localizer
@@ -13,7 +14,7 @@
     <div class="header">
         <div class="nav-container">
             <div class="menu-button">
-                <TelerikButton Icon="menu" OnClick="ToggleMenuDrawer" />
+                <TelerikButton Icon="@FontIcon.Menu" OnClick="ToggleMenuDrawer" />
             </div>
             <div class="title">
                 <h1>@Localizer["Fims_Title"]</h1>
@@ -29,7 +30,7 @@
     <TelerikDrawer @ref="MenuDrawer"
                    Expanded="@DrawerExpanded"
                    ExpandedChanged="((bool newValue) => ExpandedChangedHandler(newValue))"
-                   Width="190px" Data="DrawerItems" Mode="DrawerMode.Push" Position="DrawerPosition.Left" MiniMode="true">
+                   Width="190px" Data="DrawerItems" Mode="DrawerMode.Push" Position="DrawerPosition.Start" MiniMode="true">
         <DrawerContent>
             @Body
         </DrawerContent>
@@ -51,13 +52,13 @@
     IEnumerable<DrawerItem> DrawerItems =>
     new List<DrawerItem>
     {
-        new DrawerItem{ Text = Localizer["Drawer_Home"], Icon = "grid", Url="/", Group = "home"},
-        new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = "gear", Url="/BarcodeScanner", Group = "app"},
-        new DrawerItem{ Text = Localizer["Drawer_Profile"], Icon = "user", Url="/account/UserProfile", Group = "app"},
-        new DrawerItem{ Text = Localizer["Drawer_Info"], Icon = "information", Url="/Management/TSheetManagement", Group = "ext"},
-        new DrawerItem{ Text = "Spec Sheets", Icon = "upload", Url="/Management/TSheetSpecsFileManagement", Group = "ext"},
-        new DrawerItem{ Text = "사용자 관리", Icon = "myspace", Url="/Management/UserManagement", Group = "ext"},
-        new DrawerItem{ Text = "Test", Icon = "star", Url="#", Group = "app"},
+        new DrawerItem{ Text = Localizer["Drawer_Home"], Icon = FontIcon.Grid, Url="/", Group = "home"},
+        new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = FontIcon.Gear, Url="/BarcodeScanner", Group = "app"},
+        new DrawerItem{ Text = Localizer["Drawer_Profile"], Icon = FontIcon.User, Url="/account/UserProfile", Group = "app"},
+        new DrawerItem{ Text = Localizer["Drawer_Info"], Icon = FontIcon.InfoCircle, Url="/Management/TSheetManagement", Group = "ext"},
+        new DrawerItem{ Text = "Spec Sheets", Icon = FontIcon.Upload, Url="/Management/TSheetSpecsManagement", Group = "ext"},
+        new DrawerItem{ Text = "사용자 관리", Icon = FontIcon.Myspace, Url="/Management/UserManagement", Group = "ext"},
+        new DrawerItem{ Text = "Test", Icon = FontIcon.Star, Url="#", Group = "app"},
         };
       
     async Task ToggleMenuDrawer()

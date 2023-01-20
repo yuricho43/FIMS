@@ -1,4 +1,7 @@
-﻿<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex">
+﻿@using Telerik.Blazor.Components.Common.Icon
+
+
+<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
     {
         <TabStripTab>
@@ -25,7 +28,7 @@
                         <td>
                             @itemspec.Title
                             <TelerikTooltip TargetSelector=".tooltip-target" />
-                            <span title="@itemspec.RangeToolTip" class="tooltip-target" style="float:right"><TelerikIcon Icon="question-circle" /></span>
+                            <span title="@itemspec.RangeToolTip" class="tooltip-target" style="float:right"><TelerikIcon Icon="@FontIcon.QuestionCircle" /></span>
                         </td>
 
                         @if (itemspec.Channels == 1)

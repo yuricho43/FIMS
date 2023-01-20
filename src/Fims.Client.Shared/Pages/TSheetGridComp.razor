@@ -1,4 +1,7 @@
-﻿<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex">
+﻿@using Telerik.Blazor.Components.Common.Icon
+
+
+<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
     {
         <TabStripTab>
@@ -42,7 +45,7 @@
                             <Template>
                                 <span>@((context as TItemSpec).Title)</span>
                                 <TelerikTooltip TargetSelector=".tooltip-target" />
-                                <span title="@((context as TItemSpec).RangeToolTip)" class="tooltip-target" style="float:right"><TelerikIcon Icon="question-circle" /></span>
+                                <span title="@((context as TItemSpec).RangeToolTip)" class="tooltip-target" style="float:right"><TelerikIcon Icon="@FontIcon.QuestionCircle" /></span>
                             </Template>
                         </GridColumn>
                         <GridColumn Field="@nameof(TItemSpec.Ch1Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch1Data"))" Title="CH1" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">

@@ -1,5 +1,8 @@
 ﻿@page "/AddNewProductDialog"
 
+@using Telerik.Blazor.Components.Common.Icon
+
+
 <TelerikDialog Visible="true" Title="신규 Inspection 설비 추가">
     <DialogContent>
         <TelerikGridLayout RowSpacing="20px" ColumnSpacing="20px" Class="grid-layout" HorizontalAlign="GridLayoutHorizontalAlign.Center" VerticalAlign="GridLayoutVerticalAlign.Center">
@@ -16,18 +19,18 @@
             </GridLayoutColumns>
             <GridLayoutItems>
                 <GridLayoutItem Row="1" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="gears" />
+                    <TelerikIcon Icon="@FontIcon.Gears" />
                     <span class="grid-layout-heading k-text-uppercase k-font-weight-bold k-text-inverse">측정 설비</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="1" Column="2" ColumnSpan="1">
                     <TelerikButton OnClick="OnManualSelectionClicked" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">수동 선택</TelerikButton>
                 </GridLayoutItem>
                 <GridLayoutItem Row="1" Column="3" ColumnSpan="1">
-                    <TelerikButton OnClick="OnBarcodeSelectionClicked" Icon="barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
+                    <TelerikButton OnClick="OnBarcodeSelectionClicked" Icon="@FontIcon.Barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
                 </GridLayoutItem>
 
                 <GridLayoutItem Row="2" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="parameter-date-time" />
+                    <TelerikIcon Icon="@FontIcon.ParameterDateTime" />
                     <span class="grid-layout-heading k-text-uppercase k-font-weight-bold k-text-inverse">검사형태</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="2" Column="2" ColumnSpan="1">
@@ -64,7 +67,7 @@
             </GridLayoutColumns>
             <GridLayoutItems>
                 <GridLayoutItem Row="1" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="gears" />
+                    <TelerikIcon Icon="@FontIcon.Gears" />
                     <span>거래처</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="1" Column="2" ColumnSpan="1">
@@ -72,7 +75,7 @@
             </GridLayoutItem>
 
                 <GridLayoutItem Row="2" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="gears" />
+                    <TelerikIcon Icon="@FontIcon.Gears" />
                     <span>End User</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="2" Column="2" ColumnSpan="1">
@@ -80,7 +83,7 @@
                 </GridLayoutItem>
 
                 <GridLayoutItem Row="3" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="gears" />
+                    <TelerikIcon Icon="@FontIcon.Gears" />
                     <span>Model</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="3" Column="2" ColumnSpan="1">
@@ -88,7 +91,7 @@
                 </GridLayoutItem>
 
                 <GridLayoutItem Row="4" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="gears" />
+                    <TelerikIcon Icon="@FontIcon.Gears" />
                     <span>Serial</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="4" Column="2" ColumnSpan="1">
@@ -100,7 +103,7 @@
                 </GridLayoutItem>
 
                 <GridLayoutItem Row="6" Column="2" ColumnSpan="1" Class="ok-button">
-                    <TelerikButton Icon="barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
+                    <TelerikButton Icon="@FontIcon.Barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
                 </GridLayoutItem>
 
             </GridLayoutItems>

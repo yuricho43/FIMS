@@ -6,12 +6,12 @@
 <div class="fims-page">
     <TelerikStackLayout Class="bars-section" Orientation="StackLayoutOrientation.Vertical" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Width="100%">
         <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="50px">
-            <TelerikButton OnClick="OnAddNewProductClicked" Icon="plus-circle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="prod-register-button"><strong>제품등록</strong></TelerikButton>
-            <TelerikButton OnClick="OnLoadSessionData" Icon="caret-double-alt-down" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
+            <TelerikButton OnClick="OnAddNewProductClicked" Icon="@FontIcon.PlusCircle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="prod-register-button"><strong>제품등록</strong></TelerikButton>
+            <TelerikButton OnClick="OnLoadSessionData" Icon="@FontIcon.CaretDoubleAltDown" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
                 @if (IsLoadingSession) {<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>}
                 <strong>진행목록 불러오기</strong>
             </TelerikButton>
-            <TelerikButton OnClick="OnSaveSessionData" Icon="caret-double-alt-up" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
+            <TelerikButton OnClick="OnSaveSessionData" Icon="@FontIcon.CaretDoubleAltUp" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
                 @if (IsSavingSession) {<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>}
                 <strong>진행목록 저장</strong></TelerikButton>
         </TelerikStackLayout>

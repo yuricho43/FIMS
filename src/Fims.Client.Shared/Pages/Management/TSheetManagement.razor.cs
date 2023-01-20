@@ -1,19 +1,23 @@
-﻿using AutoMapper;
+﻿using System.Collections;
+using System.Collections.ObjectModel;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
+
+using Microsoft.AspNetCore.Components;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.JSInterop;
+
+using Telerik.Blazor;
+using Telerik.Blazor.Components;
+using Telerik.DataSource;
+
+using AutoMapper;
+
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
 using Fims.Common;
 using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.TSheetSpecs;
-using Microsoft.AspNetCore.Components;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.JSInterop;
-using System.Collections;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Telerik.Blazor;
-using Telerik.Blazor.Components;
-using Telerik.DataSource;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace Fims.Client.Shared.Pages.Management
 {

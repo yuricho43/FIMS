@@ -127,40 +127,34 @@ namespace Fims.Services.TSheetSpecs
             return await Task.Run(() => { return 1; });
         }
 
-        public async Task<bool> SaveAsync(IEnumerable<IFormFile> files)
+        public async Task<bool> SaveAsync(IFormFile specFormFile)
         {
             bool result = false;
 
-            if (files != null)
+            var specFileContent = ContentDispositionHeaderValue.Parse(specFormFile.ContentDisposition);
+
+            // Some browsers send file names with full path.
+            // We are only interested in the file name.
+            var specFileName = Path.GetFileName(specFileContent.FileName.ToString().Trim('"'));
+            var specFilePath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, specFileName);
+            if (File.Exists(specFilePath))
             {
-                foreach (var file in files)
-                {
-                    var fileContent = ContentDispositionHeaderValue.Parse(file.ContentDisposition);
-
-                    // Some browsers send file names with full path.
-                    // We are only interested in the file name.
-                    var fileName = Path.GetFileName(fileContent.FileName.ToString().Trim('"'));
-                    var physicalPath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, fileName);
-                    if (File.Exists(physicalPath))
-                    {
-                        File.Delete(physicalPath);
-                    }
-
-                    // implement validation and authentication here
-
-                    // await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
-                    using (var fileStream = new FileStream(physicalPath, FileMode.Create))
-                    {
-                        await file.CopyToAsync(fileStream);
-                    }
-
-
-                    // instead mock async operation
-                    await Task.Yield();
-                }
-
-                result = true;
+                File.Delete(specFilePath);
             }
+
+            // implement validation and authentication here
+
+            // await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+            using (var specStream = new FileStream(specFilePath, FileMode.Create))
+            {
+                await specFormFile.CopyToAsync(specStream);
+            }
+
+
+            // instead mock async operation
+            await Task.Yield();
+
+            result = true;
 
             return result;
         }

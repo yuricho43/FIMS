@@ -19,9 +19,9 @@
                          Height="600px"
                          Pageable=true PageSize=@PageSize>
 
-                <GridToolBar>
-                    <GridCommandButton Command="ExcelExport" Icon="file-excel">보고서 출력</GridCommandButton>
-                </GridToolBar>
+                <GridToolBarTemplate>
+                    <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">보고서 출력</GridCommandButton>
+                </GridToolBarTemplate>
                 <GridExport>
                     <GridExcelExport FileName="FIMS-Report" AllPages="true" />
                 </GridExport>
@@ -69,8 +69,8 @@
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
                     <GridCommandColumn Width="100px">
-                        <GridCommandButton OnClick="@ShowDetailsHandler" Icon="zoom-in">상세보기</GridCommandButton>
-                        <GridCommandButton Command="Delete" Icon="delete">Delete</GridCommandButton>
+                        <GridCommandButton OnClick="@ShowDetailsHandler" Icon="@FontIcon.ZoomIn">상세보기</GridCommandButton>
+                        <GridCommandButton Command="Delete" Icon="@FontIcon.Trash">Delete</GridCommandButton>
                     </GridCommandColumn>
                 </GridColumns>
             </TelerikGrid>

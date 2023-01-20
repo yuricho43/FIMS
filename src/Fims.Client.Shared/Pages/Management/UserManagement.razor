@@ -23,9 +23,9 @@
                          OnUpdate="@UpdateItem"
                          OnDelete="@DeleteItem"
                          OnCreate="@CreateItem">
-                <GridToolBar>
-                    <GridCommandButton OnClick="ShowAddUserDialog" Icon="plus-circle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="add-user-button"><strong>사용자 추가</strong></GridCommandButton>
-                </GridToolBar>
+                <GridToolBarTemplate>
+                    <GridCommandButton OnClick="ShowAddUserDialog" Icon="@FontIcon.PlusCircle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="add-user-button"><strong>사용자 추가</strong></GridCommandButton>
+                </GridToolBarTemplate>
  
                 <GridSettings>
                     <GridValidationSettings Enabled="@EnabledValidation" />
@@ -38,10 +38,10 @@
                     <GridColumn Field=@nameof(UserAuthInfoModel.Role) Width="160px" Title="권한" />
 
                     <GridCommandColumn Width="250px">
-                        <GridCommandButton Command="Edit" Icon="edit" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">수정</GridCommandButton>
-                        <GridCommandButton Command="Delete" Icon="delete">삭제</GridCommandButton>
-                        <GridCommandButton Command="Save" Icon="save" ShowInEdit="true">저장</GridCommandButton>
-                        <GridCommandButton Command="Cancel" Icon="cancel" ShowInEdit="true">취소</GridCommandButton>
+                        <GridCommandButton Command="Edit" Icon="@FontIcon.EditTools" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">수정</GridCommandButton>
+                        <GridCommandButton Command="Delete" Icon="@FontIcon.Trash">삭제</GridCommandButton>
+                        <GridCommandButton Command="Save" Icon="@FontIcon.Save" ShowInEdit="true">저장</GridCommandButton>
+                        <GridCommandButton Command="Cancel" Icon="@FontIcon.Cancel" ShowInEdit="true">취소</GridCommandButton>
                     </GridCommandColumn>
                 </GridColumns>
             </TelerikGrid>
