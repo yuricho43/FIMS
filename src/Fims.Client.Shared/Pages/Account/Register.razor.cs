@@ -25,8 +25,7 @@ namespace Fims.Client.Shared.Pages.Account
                 // this.ToastService.ShowSuccess(
                 //     "You have successfully registered.\n Please login.",
                 //     "Congratulations!");
-                this.ToastService.ShowSuccess(
-                    "You have successfully registered.\n Please login.");
+                //this.ToastService.ShowSuccess("You have successfully registered.\n Please login.");
 
                 this.NavigationManager.NavigateTo("/account/login");
             }

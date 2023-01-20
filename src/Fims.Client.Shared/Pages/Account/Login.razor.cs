@@ -21,7 +21,7 @@ namespace Fims.Client.Shared.Pages.Account
             if (result.Succeeded)
             {
                 this.ShowErrors = false;
-                this.ToastService.ShowSuccess("You have successfully logged in");
+                //this.ToastService.ShowSuccess("You have successfully logged in");
                 this.NavigationManager.NavigateTo("/");
             }
             else

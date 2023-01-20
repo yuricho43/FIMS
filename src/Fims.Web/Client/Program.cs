@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Telerik.Blazor.Services;
 
 //using Blazored.LocalStorage;
-using Blazored.Toast;
 
 using Fims.Client.Shared.Infrastructure; //for ApiAuthenticationStateProvider
 using Fims.Client.Shared.ClientServices.Authentication;
@@ -33,7 +32,6 @@ namespace Fims.Web.Client
 
             builder.Services.AddTelerikBlazor();
 
-            builder.Services.AddBlazoredToast();
             //builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<LocalStorageInterop>();
 

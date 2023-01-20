@@ -8,7 +8,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Telerik.Blazor.Services;
 
 //using Blazored.LocalStorage;
-using Blazored.Toast;
 
 //using Fims.Client.MauiBlazor.Data;
 
@@ -74,7 +73,6 @@ namespace Fims.Client.MauiBlazor
 
             //builder.Services.AddSingleton<WeatherForecastService>();
             builder.Services.AddAuthorizationCore();
-            builder.Services.AddBlazoredToast();
 
             //builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<LocalStorageInterop>();

@@ -29,7 +29,7 @@ namespace Fims.Client.Shared.Pages.Account
 
                 await this.AuthClientService.Logout();
 
-                this.ToastService.ShowSuccess("Your account UserProfile has been changed successfully.\n Please login.");
+                //this.ToastService.ShowSuccess("Your account UserProfile has been changed successfully.\n Please login.");
                 this.NavigationManager.NavigateTo("/account/login");
             }
             else

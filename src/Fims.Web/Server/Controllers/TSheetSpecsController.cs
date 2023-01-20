@@ -12,7 +12,7 @@ using Fims.Data.Models.TSheetSpecs;
 using Fims.Services.TSheetSpecs;
 
 using Fims.Web.Server.Infrastructure.Services;
-
+using System.Linq;
 
 namespace Fims.Web.Server.Controllers
 {
@@ -65,8 +65,9 @@ namespace Fims.Web.Server.Controllers
 
         [HttpPost(nameof(Save))]
         [AllowAnonymous]
-        public async Task<bool> Save(IFormFile specFormFile)
+        public async Task<bool> Save(IEnumerable<IFormFile> files)
         {
+            var specFormFile = files.First();
             var result = await this.TSheetSpecsService.SaveAsync(specFormFile);
             return result;
         }
