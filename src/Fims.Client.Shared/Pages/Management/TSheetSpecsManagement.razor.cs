@@ -154,7 +154,7 @@ namespace Fims.Client.Shared.Pages.Management
 
         void HandleValidSubmit()
         {
-            SuccessMessage = "Form Submitted Successfully! We will get back to you.";
+            SuccessMessage = "Spec Sheets 파일을 성공적으로 교체하였습니다.";
         }
 
         void HandleInvalidSubmit()
