@@ -3,80 +3,73 @@
 @inject IJSRuntime JsInterop
 
 
-<div class="flex-center">
-    <TelerikCard>
-        <CardHeader>
-            <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>Spec Sheets 관리</strong></h2></CardTitle>
-            <CardSubTitle>Upload</CardSubTitle>
-        </CardHeader>
+<TelerikCard>
+    <CardHeader>
+        <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>Spec Sheets 관리</strong></h2></CardTitle>
+        <CardSubTitle>교체(Replace)</CardSubTitle>
+    </CardHeader>
 
-        <CardBody>
-            <CardSeparator></CardSeparator>
+    <CardBody>
 
-            <div class="k-form k-form-horizontal">
-                @if (string.IsNullOrEmpty(SuccessMessage))
-                {
-                    <EditForm EditContext="@MyEditContext" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit">
-                        <DataAnnotationsValidator />
+        <div class="k-form k-form-horizontal">
+            @if (string.IsNullOrEmpty(SuccessMessage))
+            {
+                <EditForm EditContext="@MyEditContext" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit">
+                    <DataAnnotationsValidator />
 
-                        @if (NotValid)
-                        {
-                            <div class="demo-alert demo-alert-error">
-                                <ValidationSummary />
-                            </div>
-                        }
+                    <h2 class="demo-alert demo-alert-error">
+                        <span>Spec Sheets 교체는 CRITICAL한 작업입니다.</span>
+                        <br/>
+                        <span>업로드할 Spec Sheets 파일을 신중하게 선택하세요</span>
+                    </h2>
 
-                        @*        <div class="k-form-field">
-                    <label for="name" class="k-label k-form-label">Name:</label>
-                    <div class="k-form-field-wrap">
-                    <TelerikTextBox @bind-Value="@currentForm.Name" Id="name" />
-                    </div>
-                    </div>
                     <div class="k-form-field">
-                    <label for="email" class="k-label k-form-label">Email:</label>
-                    <div class="k-form-field-wrap">
-                    <TelerikTextBox @bind-Value="@currentForm.Email" Id="email" />
-                    </div>
-                    </div>
-                    *@
-                        <h3 class="kd-demo-heading">Spec Sheets 파일 선택</h3>
-
-                        <div class="k-form-field">
-                            <div class="k-form-field-wrap">
-                                <TelerikUpload SaveUrl="@SaveUrl"
-                                               RemoveUrl="@RemoveUrl"
-                                               AllowedExtensions="@( new List<string>() { ".xlsx" } )"
-                                               OnSelect="@OnSelectHandler"
-                                               OnCancel="@OnCancelHandler"
-                                               OnRemove="@OnRemoveHandler">
-                                </TelerikUpload>
-                                <div class="k-form-hint">Accepted files: <strong>FimsTSheetSpecs_YYYYMMDD.xlsx</strong></div>
-                            </div>
+                        <div class="k-form-field-wrap">
+                            <TelerikUpload SaveUrl="@SaveUrl"
+                                       RemoveUrl="@RemoveUrl"
+                                       AllowedExtensions="@( new List<string>() { ".xlsx" } )"
+                                       OnSelect="@OnSelectHandler"
+                                       OnRemove="@OnRemoveHandler"
+                                       OnSuccess="@OnSuccessHandler"
+                                       OnError="@OnErrorHandler"
+                                       OnCancel="@OnCancelHandler">
+                            </TelerikUpload>
+                            <br/>
+                            <div class="k-form-hint">Spec Sheets 파일포멧: <strong>FimsTSheetSpecs_YYYYMMDD.xlsx</strong></div>
                         </div>
-
-                        <div class="text-center">
-                            <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">Spec Sheets 업로드</TelerikButton>
-                        </div>
-                    </EditForm>
-                }
-                else
-                {
-                    <div class="demo-alert demo-alert-success" role="alert">
-                        @SuccessMessage
-                        <br />
-                        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@BackToForm">Go back</TelerikButton>
                     </div>
-                }
-            </div>
-        </CardBody>
 
-        <CardFooter Class="k-hbox justify-space-between">
-            <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
-        </CardFooter>
-    </TelerikCard>
-</div>
+                    @if (NotValid)
+                    {
+                        <div class="demo-alert demo-alert-error">
+                            <ValidationSummary />
+                        </div>
+                    }
 
-<style>
+                    <br />
+                    <br />
+                    <div class="text-center">
+                        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">Spec Sheets 업로드</TelerikButton>
+                    </div>
+                </EditForm>
+            }
+            else
+            {
+                <div class="demo-alert demo-alert-success" role="alert">
+                    @SuccessMessage
+                    <br />
+                    <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@BackToForm">Go back</TelerikButton>
+                </div>
+            }
+        </div>
+    </CardBody>
+
+    <CardFooter Class="k-hbox justify-space-between">
+        <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
+    </CardFooter>
+</TelerikCard>
+
+@*<style>
     .k-upload-files {
         max-height: 200px;
         overflow-y: auto;
@@ -93,6 +86,7 @@
     }
 
 </style>
+*@
 
 <style>
     .k-grid td {

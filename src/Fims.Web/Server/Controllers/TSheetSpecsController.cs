@@ -65,10 +65,10 @@ namespace Fims.Web.Server.Controllers
 
         [HttpPost(nameof(Save))]
         [AllowAnonymous]
-        public async Task<bool> Save(IEnumerable<IFormFile> files)
+        public async Task<string> Save(IEnumerable<IFormFile> files)
         {
             var specFormFile = files.First();
-            var result = await this.TSheetSpecsService.SaveAsync(specFormFile);
+            var result = await this.TSheetSpecsService.ReplaceAsync(specFormFile);
             return result;
         }
 

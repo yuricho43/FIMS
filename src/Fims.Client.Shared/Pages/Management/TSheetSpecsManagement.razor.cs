@@ -64,13 +64,37 @@ namespace Fims.Client.Shared.Pages.Management
             UpdateValidationModel();
         }
 
-        void OnCancelHandler(UploadCancelEventArgs e)
+        void OnSuccessHandler(UploadSuccessEventArgs e)
+        {
+            if (e.Operation == UploadOperationType.Upload)
+            {
+                if (FilesValidationInfo.Keys.Contains(e.Files[0].Id))
+                {
+                    // only when the server got the file, saved it and confirmed it is OK do we update client validation
+                    FilesValidationInfo[e.Files[0].Id] = true;
+                }
+            }
+            else
+            {
+                RemoveFailedFilesFromList(e.Files);
+            }
+
+            UpdateValidationModel();
+        }
+
+        void OnRemoveHandler(UploadEventArgs e)
         {
             RemoveFailedFilesFromList(e.Files);
             UpdateValidationModel();
         }
 
-        void OnRemoveHandler(UploadEventArgs e)
+        void OnErrorHandler(UploadErrorEventArgs e)
+        {
+            RemoveFailedFilesFromList(e.Files);
+            UpdateValidationModel();
+        }
+
+        void OnCancelHandler(UploadCancelEventArgs e)
         {
             RemoveFailedFilesFromList(e.Files);
             UpdateValidationModel();
@@ -102,7 +126,7 @@ namespace Fims.Client.Shared.Pages.Management
                 areAllUploadedFilesValid = true;
             }
 
-            currentForm.IsResumeValid = areAllUploadedFilesValid;
+            currentForm.IsSpecFileValid = areAllUploadedFilesValid;
 
             // we update the validation state out of the standard form cycle and events
             // so we need an EditContext that we can call upon to re-evaluate the validation
@@ -113,16 +137,16 @@ namespace Fims.Client.Shared.Pages.Management
         // sample model
         public class JobApplicationForm
         {
-            [Required(ErrorMessage = "Enter your name")]
-            public string Name { get; set; }
+            //[Required(ErrorMessage = "Enter your name")]
+            //public string Name { get; set; }
 
-            [Required(ErrorMessage = "Enter your email")]
-            [EmailAddress(ErrorMessage = "Please provide a valid email address.")]
-            public string Email { get; set; }
+            //[Required(ErrorMessage = "Enter your email")]
+            //[EmailAddress(ErrorMessage = "Please provide a valid email address.")]
+            //public string Email { get; set; }
 
-            [Required(ErrorMessage = "Please upload a resume - PDF or DOCX files only")]
-            [Range(typeof(bool), "true", "true", ErrorMessage = "Please upload a resume - PDF or DOCX files only")]
-            public bool IsResumeValid { get; set; }
+            [Required(ErrorMessage = "FimsTSheetSpecs_YYYYMMDD.xlsx 형식의 파일을 선택하세요")]
+            [Range(typeof(bool), "true", "true", ErrorMessage = "FimsTSheetSpecs_YYYYMMDD.xlsx 형식의 파일을 선택하세요")]
+            public bool IsSpecFileValid { get; set; }
         }
 
         // UI for the demo to showcase changes to the form validation and success

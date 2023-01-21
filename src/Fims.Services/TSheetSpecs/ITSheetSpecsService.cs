@@ -18,7 +18,7 @@ namespace Fims.Services.TSheetSpecs
         public Task<List<string>> GetEquipmentModelsAsync();
         public Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync();
         public Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel);
-        public Task<bool> SaveAsync(IFormFile specsFile);
+        public Task<string> ReplaceAsync(IFormFile specsFile);
         public Task<bool> RemoveAsync(string[] files);
     }
 }

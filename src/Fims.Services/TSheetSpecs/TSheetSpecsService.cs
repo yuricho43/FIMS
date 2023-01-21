@@ -127,36 +127,50 @@ namespace Fims.Services.TSheetSpecs
             return await Task.Run(() => { return 1; });
         }
 
-        public async Task<bool> SaveAsync(IFormFile specFormFile)
+        public async Task<string> ReplaceAsync(IFormFile specFormFile)
         {
-            bool result = false;
+            // backup the current SpecSheet file.
+            string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
+            string currentSpecFilePath = Directory.GetFiles(Constants.FimsTSheetSpecsRepoPath, specsFilePattern).First();
+            if (currentSpecFilePath != null)
+            {
+                File.Move(currentSpecFilePath, currentSpecFilePath + ".BACKUP");
+            }
 
-            var specFileContent = ContentDispositionHeaderValue.Parse(specFormFile.ContentDisposition);
+
+            var newSpecFileContent = ContentDispositionHeaderValue.Parse(specFormFile.ContentDisposition);
 
             // Some browsers send file names with full path.
             // We are only interested in the file name.
-            var specFileName = Path.GetFileName(specFileContent.FileName.ToString().Trim('"'));
-            var specFilePath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, specFileName);
-            if (File.Exists(specFilePath))
+            var newSpecFileName = Path.GetFileName(newSpecFileContent.FileName.ToString().Trim('"'));
+            var newSpecFilePath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, newSpecFileName);
+            if (File.Exists(newSpecFilePath))
             {
-                File.Delete(specFilePath);
+                File.Delete(newSpecFilePath);
             }
-
-            // implement validation and authentication here
 
             // await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
-            using (var specStream = new FileStream(specFilePath, FileMode.Create))
+            using (var newSpecFileStream = new FileStream(newSpecFilePath, FileMode.Create))
             {
-                await specFormFile.CopyToAsync(specStream);
+                await specFormFile.CopyToAsync(newSpecFileStream);
             }
 
+            // verify the new spec file is valid
+            string buildresult = BuildTSheetSpecsFromExcelSpecFile(newSpecFilePath) ?? string.Empty;
+
+            if (buildresult != "SUCCESS")
+            {
+                //restore the current
+                File.Move(currentSpecFilePath + ".BACKUP", currentSpecFilePath);
+
+                //delete the new
+                File.Delete(newSpecFilePath);
+            }
 
             // instead mock async operation
             await Task.Yield();
 
-            result = true;
-
-            return result;
+            return buildresult;
         }
 
         public async Task<bool> RemoveAsync(string[] files)
