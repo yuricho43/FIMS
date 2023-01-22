@@ -1,4 +1,22 @@
-﻿using AutoMapper;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
+
+using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Web;
+using Microsoft.AspNetCore.WebUtilities;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
+using Telerik.Blazor;
+using Telerik.Blazor.Components;
+using Telerik.DataSource;
+using static Telerik.Blazor.ThemeConstants;
+
+using AutoMapper;
+
 using Fims.Client.Shared.ClientModels;
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
 using Fims.Common;
@@ -7,46 +25,23 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
-using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Web;
-using Microsoft.AspNetCore.WebUtilities;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Telerik.Blazor;
-using Telerik.Blazor.Components;
-using Telerik.DataSource;
-using static System.Net.Mime.MediaTypeNames;
-using static Telerik.Blazor.ThemeConstants;
+using Fims.Client.Shared.ClientServices.Authentication;
 
 
 namespace Fims.Client.Shared.Pages.Management
 {
     public partial class AddUserDialog
     {
-        public TelerikForm AddUserFormRef { get; set; }
-
         [Parameter]
         public EventCallback<RegisterRequestModel> AddUserFinished { get; set; }
 
         public RegisterRequestModel NewUserRegisterRequestModel { get; set; } = new RegisterRequestModel();
         private List<string> Roles { get; set; } = new List<string> { "Admin", "Inspector", "Reporter", "Manager"};
 
-        public string ProductSerial { get; set; }
-        public string ProductModel { get; set; }
-        public string Customer { get; set; }
-        public string EndUser { get; set; }
-        protected string ProductType { get; set; } = "신규";
-
-        private List<string> ProductModels { get; set; } = new List<string>();
-        protected List<string> ProductTypes = new List<string>() { "신규", "수리" };
-
-        private bool ManualSelectionDialogVisible { get; set; } = false;
-        private bool BarcodeSelectionDialogVisible { get; set; } = false;
-        private bool ProgressListDialogVisible { get; set; } = false;
+        public TelerikForm AddUserFormRef { get; set; }
+        public TelerikNotification AddUserNotificationComponent { get; set; }
+        public bool ShowErrors { get; set; }
+        public IEnumerable<string> Errors { get; set; }
 
 
         //protected override void OnInitialized()
@@ -62,7 +57,7 @@ namespace Fims.Client.Shared.Pages.Management
         //    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
         //}
 
-    public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
+        public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
     public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
     {
         FormValidationMessageType.None,
@@ -75,11 +70,31 @@ namespace Fims.Client.Shared.Pages.Management
     {
         ValidSubmit = true;
 
-        await Task.Delay(2000);
+        var result = await this.AuthClientService.Register(this.NewUserRegisterRequestModel);
+
+        if (result.Succeeded)
+        {
+            this.ShowErrors = false;
+
+            AddUserNotificationComponent.Show(new NotificationModel
+            {
+                Text = "사용자 등록 성공",
+                ThemeColor = "error",
+                CloseAfter = 3000
+            });
+
+            await AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
+            //this.NavigationManager.NavigateTo("/account/login");
+        }
+        else
+        {
+            this.Errors = result.Errors;
+            this.ShowErrors = true;
+        }
 
         ValidSubmit = false;
 
-        //StateHasChanged();
+        StateHasChanged();
     }
 
     void HandleInvalidSubmit()

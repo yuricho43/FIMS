@@ -76,5 +76,10 @@ namespace Fims.Web.Server.Controllers
             return data;
         }
 
+        //[HttpDelete(Id)]
+        [HttpDelete("DeleteUser/{username}")]
+        public async Task<ActionResult> Delete(string username)
+            => await this.identityService.DeleteAsync(username).ToActionResult();
+
     }
 }

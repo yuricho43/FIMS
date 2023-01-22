@@ -17,5 +17,6 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         Task<List<UserAuthInfoModel>> AllUsers();
         Task<List<FimsRole>> AllRoles();
 
+        Task<Result> Delete(string username);
     }
 }

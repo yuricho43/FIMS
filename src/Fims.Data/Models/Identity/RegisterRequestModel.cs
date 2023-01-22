@@ -38,16 +38,16 @@ namespace Fims.Data.Models.Identity
                       MinimumLength = MinNameLength)]
         public string HangulName { get; set; }
 
-        //[Required]
-        [StringLength(MaxNameLength,
-                      ErrorMessage = StringLengthErrorMessage,
-                      MinimumLength = MinNameLength)]
-        public string EnglishName { get; set; }
+        ////[Required]
+        //[StringLength(MaxNameLength,
+        //              ErrorMessage = StringLengthErrorMessage,
+        //              MinimumLength = MinNameLength)]
+        //public string EnglishName { get; set; }
 
-        [Required]
-        [MinLength(MinPasswordLength)]
-        [DataType(DataType.Password)]
-        [Compare(nameof(Password), ErrorMessage = PasswordsDoNotMatchErrorMessage)]
-        public string ConfirmPassword { get; set; }
+        ////[Required]
+        //[MinLength(MinPasswordLength)]
+        //[DataType(DataType.Password)]
+        //[Compare(nameof(Password), ErrorMessage = PasswordsDoNotMatchErrorMessage)]
+        //public string ConfirmPassword { get; set; }
     }
 }

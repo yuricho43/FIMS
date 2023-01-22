@@ -24,5 +24,7 @@ namespace Fims.Services.Identity
         Task<List<UserAuthInfoModel>> AllUsers();
         Task<List<FimsRole>> Roles();
 
+        Task<Result> DeleteAsync(string username);
+
     }
 }

@@ -13,12 +13,14 @@ namespace Fims.Client.Shared.Pages.Management
     public partial class UserManagement
     {
         int PageSize = 15;
-        private readonly RegisterRequestModel model = new RegisterRequestModel();
         public List<UserAuthInfoModel> GridData { get; set; }
         public List<FimsRole> UserRoles { get; set; }
         public List<string> UserRoleNames { get; set; } = new List<string>();
         public bool EnabledValidation { get; set; } = true;
         public bool AddUserDialogVisible { get; set; } = false;
+        public TelerikNotification UserManagementNotificationComponent { get; set; }
+        public bool ShowErrors { get; set; }
+        public IEnumerable<string> Errors { get; set; }
 
         protected override async Task OnInitializedAsync()
         {
@@ -41,22 +43,42 @@ namespace Fims.Client.Shared.Pages.Management
             //LoadData();
         }
 
-        private void DeleteItem(GridCommandEventArgs args)
+        private async Task DeleteUser(GridCommandEventArgs args)
         {
-            //ProductService.DeleteProduct((ProductDto)args.Item);
-            //LoadData();
+            var userinfo = (UserAuthInfoModel)args.Item;
+
+            var result = await this.AuthClientService.Delete(userinfo.UserName);
+
+            if (result.Succeeded)
+            {
+                this.ShowErrors = false;
+
+                UserManagementNotificationComponent.Show(new NotificationModel
+                {
+                    Text = "사용자 계정삭제 성공",
+                    ThemeColor = "success",
+                    //CloseAfter = 3000
+                });
+            }
+            else
+            {
+                this.Errors = result.Errors;
+                this.ShowErrors = true;
+            }
+
+            await LoadData();
         }
 
-        private void UpdateItem(GridCommandEventArgs args)
+        private void UpdateUser(GridCommandEventArgs args)
         {
             //ProductService.UpdateProduct((ProductDto)args.Item);
-            //LoadData();
+            //await LoadData();
         }
 
         private void ShowAddUserDialog(GridCommandEventArgs args)
         {
             //ProductService.UpdateProduct((ProductDto)args.Item);
-            //LoadData();
+            //await LoadData();
             AddUserDialogVisible = true;
             //StateHasChanged();
         }

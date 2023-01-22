@@ -12,34 +12,22 @@
                 <ValidationSummary />
 
                 <div class="form-row">
-                    <div class="col form-group">
-                        <label>사용자 ID</label>
-                        <InputText @bind-Value="model.UserName" type="text" class="form-control" />
-                    </div>
+                    <label>사용자 ID</label>
+                    <InputText @bind-Value="model.UserName" type="text" class="form-control" />
                 </div>
-
                 <div class="form-row">
-                    <div class="col form-group">
-                        <label>한글이름</label>
-                        <InputText @bind-Value="model.HangulName" type="text" class="form-control" />
-                    </div>
-                    <div class="col form-group">
-                        <label>영문이름</label>
-                        <InputText @bind-Value="model.EnglishName" type="text" class="form-control" />
-                    </div>
+                    <label>이름</label>
+                    <InputText @bind-Value="model.HangulName" type="text" class="form-control" />
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label>E-mail</label>
                     <InputText @bind-Value="model.Email" type="email" class="form-control" />
                 </div>
-                <div class="form-group">
+                <div class="form-row">
                     <label>Password</label>
                     <InputText @bind-Value="model.Password" type="password" class="form-control" />
                 </div>
-                <div class="form-group">
-                    <label>Confirm password</label>
-                    <InputText @bind-Value="model.ConfirmPassword" type="password" class="form-control" />
-                </div>
+
                 <div class="form-group">
                     <button type="submit" class="btn btn-primary btn-block"> Register </button>
                 </div>

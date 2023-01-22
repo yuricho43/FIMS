@@ -26,6 +26,7 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         private const string RegisterPath = "api/identity/register";
         private const string AllUsersPath = "api/identity/getallusers";
         private const string AllRolesPath = "api/identity/getroles";
+        private const string DeletePath = "api/identity/deleteuser";
 
         public AuthClientService(
             HttpClient httpClient,
@@ -91,5 +92,10 @@ namespace Fims.Client.Shared.ClientServices.Authentication
             var response = await this.httpClient.GetFromJsonAsync<List<FimsRole>>(AllRolesPath);
             return response;
         }
+
+        public async Task<Result> Delete(string username)
+            => await this.httpClient
+                .DeleteAsync(DeletePath + "/" + username)
+                .ToResult();
     }
 }

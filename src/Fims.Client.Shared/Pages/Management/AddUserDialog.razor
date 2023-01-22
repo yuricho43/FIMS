@@ -7,33 +7,17 @@
                      @ref="@AddUserFormRef"
                      OnValidSubmit="@HandleValidSubmit"
                      OnInvalidSubmit="@HandleInvalidSubmit"
-                     Orientation="FormOrientation.Horizontal"
-                     >
+                     Orientation="FormOrientation.Horizontal">
             <FormValidation>
+                <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
             <FormItems>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.HangulName)">
+                <FormItem Field="@nameof(NewUserRegisterRequestModel.UserName)">
                     <Template>
-                        <label for="fname" class="k-label k-form-label">이름*:</label>
-                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.HangulName"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.HangulName)"></TelerikValidationMessage>
-                    </Template>
-                </FormItem>
-
-@*                <FormItem Field="@nameof(NewUserRegisterRequestModel.EnglishName)">
-                    <Template>
-                        <label for="lname" class="k-label k-form-label">영문이름*:</label>
-                        <TelerikTextBox Id="lname" @bind-Value="@NewUserRegisterRequestModel.EnglishName"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.EnglishName)"></TelerikValidationMessage>
-                    </Template>
-                </FormItem>
-*@
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.Email)">
-                    <Template>
-                        <label for="mail" class="k-label k-form-label">Email*:</label>
-                        <TelerikTextBox Id="mail" @bind-Value="@NewUserRegisterRequestModel.Email" InputMode="email" PlaceHolder="example@domain.com"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.Email)"></TelerikValidationMessage>
+                        <label for="fname" class="k-label k-form-label">ID*:</label>
+                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.UserName"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.UserName)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
                 <FormItem Field="@nameof(NewUserRegisterRequestModel.Password)">
@@ -47,6 +31,20 @@
                     <Template>
                         <label for="role" class="k-label k-form-label">권한*:</label>
                         <TelerikDropDownList Id="role" Data="@Roles" @bind-Value="NewUserRegisterRequestModel.Role"></TelerikDropDownList>
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(NewUserRegisterRequestModel.HangulName)">
+                    <Template>
+                        <label for="fname" class="k-label k-form-label">이름*:</label>
+                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.HangulName"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.HangulName)"></TelerikValidationMessage>
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(NewUserRegisterRequestModel.Email)">
+                    <Template>
+                        <label for="mail" class="k-label k-form-label">Email*:</label>
+                        <TelerikTextBox Id="mail" @bind-Value="@NewUserRegisterRequestModel.Email" InputMode="email" PlaceHolder="example@domain.com"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.Email)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
             </FormItems>
@@ -66,6 +64,25 @@
     </DialogButtons>
 *@
 </TelerikDialog>
+
+
+<div class="notification-parent">
+    <TelerikNotification @ref="AddUserNotificationComponent"
+                         Class="MyTelerikNotification"
+                         HorizontalPosition="@NotificationHorizontalPosition.Center"
+                         VerticalPosition="@NotificationVerticalPosition.Top"></TelerikNotification>
+</div>
+
+
+<style>
+    .MyTelerikNotification .k-notification-container .k-notification-wrap {
+        width: 300px;
+        height: 50px;
+        font-size: 1.5em;
+        text-align: center;
+        align-items: center;
+    }
+</style>
 
 
 <style>
