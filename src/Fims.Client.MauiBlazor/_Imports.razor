@@ -11,20 +11,32 @@
 @*@using Microsoft.AspNetCore.Components.WebAssembly.Http*@
 @using Microsoft.JSInterop
 
-@*@using Blazored.LocalStorage*@
+@using Microsoft.Extensions.Localization
+@using Telerik.DataSource
+@using Telerik.Blazor
+@using Telerik.Blazor.Components
+@using Telerik.Blazor.Services
+@using Telerik.FontIcons
 
 @using Fims.Client.MauiBlazor
 @*@using Fims.Web.Client.Infrastructure.Extensions*@  @*for WebAssemblyHostBuilderExtensions*@
 
+@*@using Blazored.LocalStorage*@
+
 @using Fims.Common
 
 @using Fims.Data.Models
-@using Fims.Data.Models.Identity
+@using Fims.Data.Models.TSheetSpecs;
 
+
+@using Fims.Client.Shared
 @using Fims.Client.Shared.Infrastructure              @*for ApiAuthenticationStateProvider, LocalStorageInterop*@
+@using Fims.Client.Shared.Infrastructure.Extensions
 @using Fims.Client.Shared.ClientServices
 @using Fims.Client.Shared.ClientServices.Authentication
 @using Fims.Client.Shared.ClientServices.TSheets
+@using Fims.Client.Shared.ClientServices.TSheetSpecs
+@using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
 @using Fims.Client.Shared.Pages
 @using Fims.Client.Shared.Pages.Account
@@ -32,9 +44,16 @@
 @using Fims.Client.Shared.Shared
 @using Fims.Client.Shared.Shared.Common
 
+@using Fims.Client.Shared.Shared.Layouts
+@using Fims.Web.Client.Layouts
+
+@inject ITelerikStringLocalizer Localizer
+@inject MainLayoutState Layout
+
 @inject ApiAuthenticationStateProvider AuthState
 @inject NavigationManager NavigationManager
 @inject HttpClient Http
-
-@inject IAuthClientService AuthService
+@inject IAuthClientService AuthClientService
 @inject ITSheetsClientService TSheetsClientService
+@inject ITSheetSpecsClientService TSheetSpecsClientService
+@inject ITSheetSpecsInProgressClientService TSheetSpecsInProgressClientService

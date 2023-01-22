@@ -15,8 +15,9 @@ using Fims.Client.Shared.ClientServices.TSheets;
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
 
 using Fims.Client.Shared.Localization;
-using Fims.Client.Shared.Shared.Layouts;
 using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
+using Fims.Web.Client.Layouts;
+using Fims.Client.Shared.Shared.Layouts;
 
 namespace Fims.Web.Client
 {
