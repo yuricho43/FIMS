@@ -30,41 +30,6 @@ namespace Fims.Client.Shared.Pages
 {
     public partial class Index
     {
-        #region PassByQueryStrings
-        [Parameter]
-        [SupplyParameterFromQuery(Name = "ProductSerial")]
-        public string? XXProductSerial { get; set; }
-
-        [Parameter]
-        [SupplyParameterFromQuery(Name = "ProductModel")]
-        public string? XXProductModel { get; set; }
- 
-        [Parameter]
-        [SupplyParameterFromQuery(Name = "Customer")]
-        public string? XXCustomer { get; set; }
-
-        [Parameter]
-        [SupplyParameterFromQuery(Name = "EndUser")]
-        public string? XXEndUser { get; set; }
- 
-        [Parameter]
-        [SupplyParameterFromQuery(Name = "ProductType")]
-        public string? XXProductType { get; set; }
-
-        // For String List such as "/querystrings?filter=scifi stars&page=3&star=LeVar Burton&star=Gary Oldman"
-        //      [Parameter]
-        //      [SupplyParameterFromQuery]
-        //      public string? Filter { get; set; }
-        //      
-        //      [Parameter]
-        //      [SupplyParameterFromQuery]
-        //      public int? Page { get; set; }
-        //      
-        //      [Parameter]
-        //      [SupplyParameterFromQuery(Name = "star")]
-        //      public string[]? Stars { get; set; }
-        #endregion
-
         private List<string>                   ProductSerials { get; set; } = new List<string>();
         private Dictionary<string, TSheetSpec> ProductSerialToTSheetSpecDict { get; set; } = new Dictionary<string, TSheetSpec>();
         private Dictionary<string, bool>       ProductSerialsSelected { get; set; } = new Dictionary<string, bool>();
@@ -95,7 +60,7 @@ namespace Fims.Client.Shared.Pages
 
             TSheetSpecsSavingTimer = new();
             TSheetSpecsSavingTimer.Interval = 1000 * 20; // every 60 secs
-            TSheetSpecsSavingTimer.Elapsed += async (object? sender, ElapsedEventArgs e) =>
+            TSheetSpecsSavingTimer.Elapsed += async (object sender, ElapsedEventArgs e) =>
             {
                 OnSaveSessionDataByTimer();
                 await InvokeAsync(StateHasChanged);
@@ -120,21 +85,7 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnParametersSetAsync()
         {
-            if (XXProductSerial.IsNullOrEmpty())
-            { 
-                return;
-            }
-
-            var product = new TProductSpec
-            {
-                ProductSerial = XXProductSerial,
-                ProductModel = XXProductModel,
-                Customer = XXCustomer,
-                EndUser = XXEndUser,
-                ProductType = XXProductType,
-            };
-
-            bool result = await AddTProduct(product);
+            await base.OnParametersSetAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -545,11 +496,5 @@ namespace Fims.Client.Shared.Pages
 
             await Dialogs.AlertAsync(message, title);
         }
-    }
-
-
-    public static class EnumerableExtensions
-    {
-        public static IEnumerable<T> EmptyIfNull<T>(this IEnumerable<T>? source) => source ?? Enumerable.Empty<T>();
     }
 }

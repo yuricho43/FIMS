@@ -31,7 +31,6 @@ namespace Fims.Client.Shared.Pages.Management
 
         int filterDebounceDelay { get; set; } = 200;
         int PageSize = 10;
-        int CurrentPage = 1;
 
 
         public string TextBoxFillMode { get; set; } = ThemeConstants.TextBox.FillMode.Solid;
@@ -46,7 +45,6 @@ namespace Fims.Client.Shared.Pages.Management
 
         protected override async Task OnInitializedAsync()
         {
-            int cool = 7;
             TSheets = await TSheetsClientService.AllTSheetsAsync();
         }
 

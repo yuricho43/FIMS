@@ -42,10 +42,6 @@ namespace Fims.Client.Shared.Pages
         protected override void OnInitialized()
         {
             MaxChannels = MyCategoryTItemSpecs.Select(x => x.Channels).Max();
-            if (MaxChannels >3)
-            {
-                int cool = 7;
-            }
             Layout.DocsTitle = Localizer["HumanCapital"];
             base.OnInitialized();
         }

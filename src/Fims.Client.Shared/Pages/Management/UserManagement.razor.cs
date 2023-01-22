@@ -33,27 +33,22 @@ namespace Fims.Client.Shared.Pages.Management
             foreach (var userRole in UserRoles) {
                 UserRoleNames.Add(userRole.Name);
             }
-
-            int cool = 7;
         }
 
         private void CreateItem(GridCommandEventArgs args)
         {
-            int cool = 7;
             //ProductService.CreateProduct((ProductDto)args.Item);
             //LoadData();
         }
 
         private void DeleteItem(GridCommandEventArgs args)
         {
-            int cool = 7;
             //ProductService.DeleteProduct((ProductDto)args.Item);
             //LoadData();
         }
 
         private void UpdateItem(GridCommandEventArgs args)
         {
-            int cool = 7;
             //ProductService.UpdateProduct((ProductDto)args.Item);
             //LoadData();
         }

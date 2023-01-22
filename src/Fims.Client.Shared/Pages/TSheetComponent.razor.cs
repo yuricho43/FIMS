@@ -87,8 +87,6 @@ namespace Fims.Client.Shared.Pages
                     MyTSheetSpec.TItemSpecsFinal.Add(k);
                 }
             }
-
-            int cool = 7;
         }
 
         public TSheet MakeFromTSheetSpecToTSheet(TSheetSpec tSheetSpec)
