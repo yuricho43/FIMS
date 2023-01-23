@@ -14,8 +14,10 @@ namespace Fims.Client.Shared.Pages.Management
     {
         int PageSize = 15;
         public List<UserAuthInfoModel> GridData { get; set; }
+        public UserAuthInfoModel CurrentUserAuthInfoModel { get; set; }
         public List<FimsRole> UserRoles { get; set; }
         public List<string> UserRoleNames { get; set; } = new List<string>();
+        public string UserRoleName { get; set; }
         public bool EnabledValidation { get; set; } = true;
         public bool AddUserDialogVisible { get; set; } = false;
         public TelerikNotification UserManagementNotificationComponent { get; set; }
@@ -37,10 +39,25 @@ namespace Fims.Client.Shared.Pages.Management
             }
         }
 
-        private void CreateItem(GridCommandEventArgs args)
+        private async void ChangeUserRole(GridCommandEventArgs args)
         {
-            //ProductService.CreateProduct((ProductDto)args.Item);
-            //LoadData();
+            var userinfo = (UserAuthInfoModel)args.Item;
+            //ProductService.UpdateProduct((ProductDto)args.Item);
+            //await LoadData();
+        }
+
+        private async Task ResetPassword(UserAuthInfoModel item)
+        {
+            if (item != null)
+            {
+                //selectedProduct = new ProductDto { ProductId = item.ProductId, ProductName = item.ProductName, UnitPrice = item.UnitPrice };
+            }
+            else
+            {
+                //ClearSelection();
+            }
+
+            StateHasChanged();
         }
 
         private async Task DeleteUser(GridCommandEventArgs args)
@@ -67,12 +84,6 @@ namespace Fims.Client.Shared.Pages.Management
             }
 
             await LoadData();
-        }
-
-        private void UpdateUser(GridCommandEventArgs args)
-        {
-            //ProductService.UpdateProduct((ProductDto)args.Item);
-            //await LoadData();
         }
 
         private void ShowAddUserDialog(GridCommandEventArgs args)

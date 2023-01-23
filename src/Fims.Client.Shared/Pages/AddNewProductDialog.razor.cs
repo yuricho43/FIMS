@@ -29,16 +29,17 @@ namespace Fims.Client.Shared.Pages
         [Parameter]
         public EventCallback<TProductSpec> ProductAdded { get; set; }
 
+        [Parameter]
+        public List<string> ProductModels { get; set; }
+
         public string ProductSerial { get; set; }
         public string ProductModel { get; set; }
         public string Customer { get; set; }
         public string EndUser { get; set; }
         protected string ProductType { get; set; } = "신규";
 
-        private List<string> ProductModels { get; set; } = new List<string>();
         protected List<string> ProductTypes = new List<string>() { "신규", "수리" };
 
-        private bool ManualSelectionDialogVisible { get; set; } = false;
         private bool BarcodeSelectionDialogVisible { get; set; } = false;
         private bool ProgressListDialogVisible { get; set; } = false;
 
@@ -50,15 +51,10 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            var state = await this.AuthState.GetAuthenticationStateAsync();
-            var user = state.User;
+            //var state = await this.AuthState.GetAuthenticationStateAsync();
+            //var user = state.User;
 
-            ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
-        }
-
-        private void OnManualSelectionClicked()
-        {
-            ManualSelectionDialogVisible = true;
+            //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
         }
 
         private void OnBarcodeSelectionClicked()
@@ -74,8 +70,6 @@ namespace Fims.Client.Shared.Pages
 
         private void OnAddNewProductDialogOK()
         {
-            ManualSelectionDialogVisible = false;
-
             var product = new TProductSpec
             {
                 ProductSerial = ProductSerial,
@@ -90,8 +84,6 @@ namespace Fims.Client.Shared.Pages
 
         private void OnAddNewProductDialogCancel()
         {
-            ManualSelectionDialogVisible = false;
-
             var product = new TProductSpec
             {
                 ProductSerial = "SSSSSSSS",
@@ -102,20 +94,6 @@ namespace Fims.Client.Shared.Pages
             };
 
             ProductAdded.InvokeAsync(product);
-        }
-
-
-        /// <summary>
-        /// Popup Dialog
-        /// </summary>
-        private void OnSelectionDialogOK()
-        {
-            ManualSelectionDialogVisible = false;
-        }
-
-        private void OnSelectionDialogCancel()
-        {
-            ManualSelectionDialogVisible = false;
         }
 
 

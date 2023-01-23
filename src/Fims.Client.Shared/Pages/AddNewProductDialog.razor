@@ -1,59 +1,12 @@
 ﻿@page "/AddNewProductDialog"
 
-@using Telerik.Blazor.Components.Common.Icon
 
-
-<TelerikDialog Visible="true" Title="신규 Inspection 설비 추가">
+@*<TelerikDialog @bind-Visible="@ManualSelectionDialogVisible" Title="측정설비 선택">*@
+<TelerikDialog Visible="true" Title="검사설비 추가" Width="600px" Height="500px" Class="add-product">
     <DialogContent>
         <TelerikGridLayout RowSpacing="20px" ColumnSpacing="20px" Class="grid-layout" HorizontalAlign="GridLayoutHorizontalAlign.Center" VerticalAlign="GridLayoutVerticalAlign.Center">
             <GridLayoutRows>
                 <GridLayoutRow Height="40px"></GridLayoutRow>
-                <GridLayoutRow Height="40px"></GridLayoutRow>
-                <GridLayoutRow Height="40px"></GridLayoutRow>
-                <GridLayoutRow Height="40px"></GridLayoutRow>
-            </GridLayoutRows>
-            <GridLayoutColumns>
-                <GridLayoutColumn Width="200px"></GridLayoutColumn>
-                <GridLayoutColumn Width="200px"></GridLayoutColumn>
-                <GridLayoutColumn Width="200px"></GridLayoutColumn>
-            </GridLayoutColumns>
-            <GridLayoutItems>
-                <GridLayoutItem Row="1" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="@FontIcon.Gears" />
-                    <span class="grid-layout-heading k-text-uppercase k-font-weight-bold k-text-inverse">측정 설비</span>
-                </GridLayoutItem>
-                <GridLayoutItem Row="1" Column="2" ColumnSpan="1">
-                    <TelerikButton OnClick="OnManualSelectionClicked" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">수동 선택</TelerikButton>
-                </GridLayoutItem>
-                <GridLayoutItem Row="1" Column="3" ColumnSpan="1">
-                    <TelerikButton OnClick="OnBarcodeSelectionClicked" Icon="@FontIcon.Barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
-                </GridLayoutItem>
-
-                <GridLayoutItem Row="2" Column="1" ColumnSpan="1">
-                    <TelerikIcon Icon="@FontIcon.ParameterDateTime" />
-                    <span class="grid-layout-heading k-text-uppercase k-font-weight-bold k-text-inverse">검사형태</span>
-                </GridLayoutItem>
-                <GridLayoutItem Row="2" Column="2" ColumnSpan="1">
-                    <TelerikDropDownList Data="@ProductTypes" @bind-Value="ProductType"></TelerikDropDownList>
-                </GridLayoutItem>
-                <GridLayoutItem Row="2" Column="3" ColumnSpan="1">
-                    <TelerikButton OnClick="OnProgessListClicked" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">진행 List</TelerikButton>
-                </GridLayoutItem>
-            </GridLayoutItems>
-        </TelerikGridLayout>
-    </DialogContent>
-
-    <DialogButtons>
-        <TelerikButton OnClick="OnAddNewProductDialogCancel">취소</TelerikButton>
-        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" OnClick="OnAddNewProductDialogOK">OK</TelerikButton>
-    </DialogButtons>
-</TelerikDialog>
-
-
-<TelerikDialog @bind-Visible="@ManualSelectionDialogVisible" Title="측정설비 선택">
-    <DialogContent>
-        <TelerikGridLayout RowSpacing="20px" ColumnSpacing="20px" Class="grid-layout" HorizontalAlign="GridLayoutHorizontalAlign.Center" VerticalAlign="GridLayoutVerticalAlign.Center">
-            <GridLayoutRows>
                 <GridLayoutRow Height="40px"></GridLayoutRow>
                 <GridLayoutRow Height="40px"></GridLayoutRow>
                 <GridLayoutRow Height="40px"></GridLayoutRow>
@@ -65,21 +18,22 @@
                 <GridLayoutColumn Width="200px"></GridLayoutColumn>
                 <GridLayoutColumn Width="200px"></GridLayoutColumn>
             </GridLayoutColumns>
+ 
             <GridLayoutItems>
                 <GridLayoutItem Row="1" Column="1" ColumnSpan="1">
                     <TelerikIcon Icon="@FontIcon.Gears" />
                     <span>거래처</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="1" Column="2" ColumnSpan="1">
-                    <TelerikTextBox @bind-Value=Customer Class="k-grid k-focused-cell" PlaceHolder="SEC"></TelerikTextBox>
-            </GridLayoutItem>
+                    <TelerikTextBox @bind-Value=Customer Class="k-grid k-focused-cell"></TelerikTextBox>
+                </GridLayoutItem>
 
                 <GridLayoutItem Row="2" Column="1" ColumnSpan="1">
                     <TelerikIcon Icon="@FontIcon.Gears" />
                     <span>End User</span>
                 </GridLayoutItem>
                 <GridLayoutItem Row="2" Column="2" ColumnSpan="1">
-                    <TelerikTextBox @bind-Value=EndUser Class="k-grid k-focused-cell" PlaceHolder="P2"></TelerikTextBox>
+                    <TelerikTextBox @bind-Value=EndUser Class="k-grid k-focused-cell"></TelerikTextBox>
                 </GridLayoutItem>
 
                 <GridLayoutItem Row="3" Column="1" ColumnSpan="1">
@@ -91,15 +45,19 @@
                 </GridLayoutItem>
 
                 <GridLayoutItem Row="4" Column="1" ColumnSpan="1">
+                    <TelerikIcon Icon="@FontIcon.ParameterDateTime" />
+                    <span class="grid-layout-heading k-text-uppercase k-font-weight-bold k-text-inverse">검사형태</span>
+                </GridLayoutItem>
+                <GridLayoutItem Row="4" Column="2" ColumnSpan="1">
+                    <TelerikDropDownList Data="@ProductTypes" @bind-Value="ProductType"></TelerikDropDownList>
+                </GridLayoutItem>
+
+                <GridLayoutItem Row="5" Column="1" ColumnSpan="1">
                     <TelerikIcon Icon="@FontIcon.Gears" />
                     <span>Serial</span>
                 </GridLayoutItem>
-                <GridLayoutItem Row="4" Column="2" ColumnSpan="1">
-                    <TelerikTextBox @bind-Value=ProductSerial Class="k-grid k-focused-cell" PlaceHolder="2023010201"></TelerikTextBox>
-                </GridLayoutItem>
-
-                <GridLayoutItem Row="5" Column="1" ColumnSpan="2">
-                    <div></div>
+                <GridLayoutItem Row="5" Column="2" ColumnSpan="1">
+                    <TelerikTextBox @bind-Value=ProductSerial Class="k-grid k-focused-cell"></TelerikTextBox>
                 </GridLayoutItem>
 
                 <GridLayoutItem Row="6" Column="2" ColumnSpan="1" Class="ok-button">
@@ -111,11 +69,18 @@
     </DialogContent>
 
     <DialogButtons>
-        <TelerikButton OnClick="OnSelectionDialogCancel">취소</TelerikButton>
-        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" OnClick="OnSelectionDialogOK">OK</TelerikButton>
+        <TelerikButton OnClick="OnAddNewProductDialogCancel">취소</TelerikButton>
+        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" OnClick="OnAddNewProductDialogOK">OK</TelerikButton>
     </DialogButtons>
 </TelerikDialog>
 
+
+<style>
+    .add-product {
+        background-color:cornflowerblue;
+    }
+
+</style>
 
 <style>
     .my-button {

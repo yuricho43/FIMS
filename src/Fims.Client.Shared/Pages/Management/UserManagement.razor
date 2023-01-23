@@ -20,9 +20,8 @@
                          Pageable="true"
                          PageSize="@PageSize"
                          ConfirmDelete="true"
-                         OnUpdate="@UpdateUser"
-                         OnDelete="@DeleteUser"
-                         OnCreate="@CreateItem">
+                         OnUpdate="@ChangeUserRole"
+                         OnDelete="@DeleteUser">
                 <GridToolBarTemplate>
                     <GridCommandButton OnClick="ShowAddUserDialog" Icon="@FontIcon.PlusCircle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="add-user-button"><strong>사용자 추가</strong></GridCommandButton>
                 </GridToolBarTemplate>
@@ -33,14 +32,23 @@
 
                 <GridColumns>
                     <GridColumn Field=@nameof(UserAuthInfoModel.HangulName) Width="80px" Title="이름" Editable="false" />
-                    <GridColumn Field=@nameof(UserAuthInfoModel.UserName) Width="200px" Title="ID" />
-                    <GridColumn Field=@nameof(UserAuthInfoModel.Password) Width="140px" Title="Password" />
-                    <GridColumn Field=@nameof(UserAuthInfoModel.Role) Width="160px" Title="권한" />
+                    <GridColumn Field=@nameof(UserAuthInfoModel.UserName) Width="100px" Title="ID" Editable="false" />
+                    <GridColumn Field=@nameof(UserAuthInfoModel.Email) Width="140px" Title="Email" Editable="false" />
+
+                    <GridColumn Field=@nameof(UserAuthInfoModel.Role) Width="80px" Title="권한">
+                        <EditorTemplate>
+                            @{
+                                var model = context as UserAuthInfoModel;
+                                <TelerikDropDownList Data="@UserRoleNames" @bind-Value="@model.Role" />
+                            }
+                        </EditorTemplate>
+                    </GridColumn>
 
                     <GridCommandColumn Width="250px">
-                        <GridCommandButton Command="Edit" Icon="@FontIcon.EditTools" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">수정</GridCommandButton>
-                        <GridCommandButton Command="Delete" Icon="@FontIcon.Trash">계정삭제</GridCommandButton>
-                        <GridCommandButton Command="Save" Icon="@FontIcon.Save" ShowInEdit="true">저장</GridCommandButton>
+                        <GridCommandButton Icon="@FontIcon.Lock" Command="Edit" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">권한변경</GridCommandButton>
+                        <GridCommandButton Icon="@FontIcon.ArrowRotateCcw" OnClick="@((args)=> ResetPassword(args.Item as UserAuthInfoModel))" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">암호초기화</GridCommandButton>
+                        <GridCommandButton Icon="@FontIcon.Trash" Command="Delete" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)">계정삭제</GridCommandButton>
+                        <GridCommandButton Command="Save" Icon="@FontIcon.Save" ShowInEdit="true">변경저장</GridCommandButton>
                         <GridCommandButton Command="Cancel" Icon="@FontIcon.Cancel" ShowInEdit="true">취소</GridCommandButton>
                     </GridCommandColumn>
                 </GridColumns>
