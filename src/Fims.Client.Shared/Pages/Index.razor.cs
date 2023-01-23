@@ -1,6 +1,11 @@
 ﻿using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Text;
+using System.Timers;
+using System.Collections.Generic;
+using System.Net.Http.Json;
+using System.Threading;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using static System.Net.Mime.MediaTypeNames;
@@ -22,9 +27,6 @@ using Fims.Common;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
-using System.Text;
-using System.Timers;
-using System.Collections.Generic;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -49,6 +51,7 @@ namespace Fims.Client.Shared.Pages
         public List<string> ToggleButtonsThemeColor { get; set; }
 
         private System.Timers.Timer TSheetSpecsSavingTimer;
+        private System.Threading.Timer? TSheetSpecsSavingTimer2;
 
         public bool IsLoadingSession { get; set; } = false;
         public bool IsSavingSession { get; set; } = false;
@@ -58,30 +61,39 @@ namespace Fims.Client.Shared.Pages
         {
             Layout.DocsTitle = Localizer["HumanCapital"];
 
-            TSheetSpecsSavingTimer = new();
-            TSheetSpecsSavingTimer.Interval = 1000 * 20; // every 60 secs
-            TSheetSpecsSavingTimer.Elapsed += async (object sender, ElapsedEventArgs e) =>
-            {
-                OnSaveSessionDataByTimer();
-                await InvokeAsync(StateHasChanged);
-                await Task.Delay(1); // for async
-            };
-            TSheetSpecsSavingTimer.Enabled = true;
+            //FIXME: Causing an Exception Now:
+            // TSheetSpecsSavingTimer = new();
+            // TSheetSpecsSavingTimer.Interval = 1000 * 20; // every 20 secs
+            // TSheetSpecsSavingTimer.Elapsed += async (object sender, ElapsedEventArgs e) =>
+            // {
+            //     OnSaveSessionDataByTimer();
+            //     await InvokeAsync(StateHasChanged);
+            //     await Task.Delay(1); // for async
+            // };
+            // TSheetSpecsSavingTimer.Enabled = true;
 
             base.OnInitialized();
         }
 
-        //FIXME  protected override async Task OnInitializedAsync()
-        //FIXME  {
-        //FIXME      // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
-        //FIXME      // So do it after rendering finished.
-        //FIXME
-        //FIXME      var state = await this.AuthState.GetAuthenticationStateAsync();
-        //FIXME      var user = state.User;
-        //FIXME      CurrentInspectorName = user.GetHangulName();
-        //FIXME  
-        //FIXME      ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
-        //FIXME  }
+        protected override async Task OnInitializedAsync()
+        {
+            //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
+            //FIXME    // So do it after rendering finished.
+            //FIXME    var state = await this.AuthState.GetAuthenticationStateAsync();
+            //FIXME    var user = state.User;
+            //FIXME    CurrentInspectorName = user.GetHangulName();
+            //FIXME    
+            //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
+
+            TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
+            {
+                OnSaveSessionDataByTimer();
+                // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
+                await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
+            }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
+
+            _ = base.OnInitializedAsync();
+        }
 
         protected override async Task OnParametersSetAsync()
         {
@@ -430,7 +442,7 @@ namespace Fims.Client.Shared.Pages
                 Icon = "caret-double-alt-up"
             });
 
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         public async void OnSaveSessionDataByTimer()
@@ -446,7 +458,7 @@ namespace Fims.Client.Shared.Pages
             bool result = await SaveSessionData();
 
             IsSavingSession = false;
-            StateHasChanged();
+            //StateHasChanged();
         }
 
         public async Task<bool> SaveSessionData()
