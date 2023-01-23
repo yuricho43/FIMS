@@ -1,4 +1,4 @@
-﻿@namespace Fims.Web.Client.Layouts
+﻿@namespace Fims.Client.MauiBlazor.Layouts
 @using Fims.Client.Shared.Shared.NavMenu
 @using Telerik.Blazor.Components.Common.Icon
 
@@ -22,11 +22,12 @@
             @{
                 if (!WindowWidthSmall)
                 {
-                    <SettingsChooser></SettingsChooser>
+                    <LoginDisplay></LoginDisplay>
                 }
             }
         </div>
     </div>
+
     <TelerikDrawer @ref="MenuDrawer"
                    Expanded="@DrawerExpanded"
                    ExpandedChanged="((bool newValue) => ExpandedChangedHandler(newValue))"
