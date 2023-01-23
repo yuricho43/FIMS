@@ -1,3 +1,14 @@
-﻿@attribute [Authorize]
+﻿@page "/account/logout"
+@inject IAuthClientService AuthClientService
+@inject NavigationManager NavigationManager
 
-<a class="dropdown-item" href="/" @onclick="Submit">Log out</a>
+
+@code {
+
+    protected override async Task OnInitializedAsync()
+    {
+        await AuthClientService.Logout();
+        NavigationManager.NavigateTo("/");
+    }
+
+}

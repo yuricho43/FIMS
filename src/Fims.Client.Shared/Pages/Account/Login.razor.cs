@@ -23,6 +23,7 @@ namespace Fims.Client.Shared.Pages.Account
                 this.ShowErrors = false;
                 //this.ToastService.ShowSuccess("You have successfully logged in");
                 this.NavigationManager.NavigateTo("/");
+                StateHasChanged();
             }
             else
             {

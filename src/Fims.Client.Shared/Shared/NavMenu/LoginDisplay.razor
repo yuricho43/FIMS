@@ -6,19 +6,29 @@
 @inject NavigationManager Navigation
 @*@inject SignOutSessionStateManager SignOutManager*@
 
-
 <AuthorizeView>
+    <Authorized>
+        [@context.User.Identity.Name]
+        <a href="/Account/Logout">로그아웃<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
+    </Authorized>
+    <NotAuthorized>
+        <a href="/Account/Login">로그인<span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></a>
+    </NotAuthorized>
+</AuthorizeView>
+
+
+@*<AuthorizeView>
     <Authorized>
         <TelerikButton Icon="@FontIcon.User" @onclick="BeginSignOut">Log out</TelerikButton>
         <img class="k-avatar-rounded" src="@HashEmailForGravatar(context.User.Identity.Name)" />
-        <a href="authentication/profile">@context.User.Identity.Name</a>
+        <a href="authentication/profile">[@context.User.Identity.Name]</a>
     </Authorized>
     <NotAuthorized>
         <a href="authentication/register">Register</a>
         <a href="authentication/login">Log in</a>
     </NotAuthorized>
 </AuthorizeView>
-
+*@
 
 @code{
     private void BeginSignOut(MouseEventArgs args)
