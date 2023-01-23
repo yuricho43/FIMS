@@ -19,7 +19,6 @@
                          Resizable="true"
                          Pageable="true"
                          PageSize="@PageSize"
-                         ConfirmDelete="true"
                          OnUpdate="@ChangeUserRole"
                          OnDelete="@DeleteUser">
                 <GridToolBarTemplate>
@@ -48,7 +47,7 @@
                         <GridCommandButton Icon="@FontIcon.Lock" Command="Edit" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">권한변경</GridCommandButton>
                         <GridCommandButton Icon="@FontIcon.ArrowRotateCcw" OnClick="@((args)=> ResetPassword(args.Item as UserAuthInfoModel))" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">암호초기화</GridCommandButton>
                         <GridCommandButton Icon="@FontIcon.Trash" Command="Delete" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)">계정삭제</GridCommandButton>
-                        <GridCommandButton Command="Save" Icon="@FontIcon.Save" ShowInEdit="true">변경저장</GridCommandButton>
+                        <GridCommandButton Command="Save" Icon="@FontIcon.Save" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" ShowInEdit="true">변경저장</GridCommandButton>
                         <GridCommandButton Command="Cancel" Icon="@FontIcon.Cancel" ShowInEdit="true">취소</GridCommandButton>
                     </GridCommandColumn>
                 </GridColumns>

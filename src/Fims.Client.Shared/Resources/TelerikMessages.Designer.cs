@@ -106,6 +106,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string AutoComplete_Cancel {
+            get {
+                return ResourceManager.GetString("AutoComplete_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string AutoComplete_Clear {
@@ -174,6 +183,177 @@ namespace Fims.Client.Shared.Resources {
         public static string Calendar_Today {
             get {
                 return ResourceManager.GetString("Calendar_Today", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Carousel_Next {
+            get {
+                return ResourceManager.GetString("Carousel_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Carousel_Previous {
+            get {
+                return ResourceManager.GetString("Carousel_Previous", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to A.
+        /// </summary>
+        public static string ColorAlpha_Label {
+            get {
+                return ResourceManager.GetString("ColorAlpha_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to B.
+        /// </summary>
+        public static string ColorBlue_Label {
+            get {
+                return ResourceManager.GetString("ColorBlue_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Alpha slider value.
+        /// </summary>
+        public static string ColorGradient_AlphaSlider_Label {
+            get {
+                return ResourceManager.GetString("ColorGradient_AlphaSlider_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hue slider value.
+        /// </summary>
+        public static string ColorGradient_HueSlider_Label {
+            get {
+                return ResourceManager.GetString("ColorGradient_HueSlider_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Toggle format..
+        /// </summary>
+        public static string ColorGradient_ToggleButton {
+            get {
+                return ResourceManager.GetString("ColorGradient_ToggleButton", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to G.
+        /// </summary>
+        public static string ColorGreen_Label {
+            get {
+                return ResourceManager.GetString("ColorGreen_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to HEX.
+        /// </summary>
+        public static string ColorHex_Label {
+            get {
+                return ResourceManager.GetString("ColorHex_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Hex Color.
+        /// </summary>
+        public static string ColorHex_Placeholder {
+            get {
+                return ResourceManager.GetString("ColorHex_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        public static string ColorPicker_Apply {
+            get {
+                return ResourceManager.GetString("ColorPicker_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string ColorPicker_Cancel {
+            get {
+                return ResourceManager.GetString("ColorPicker_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string ColorPicker_ClearTitle {
+            get {
+                return ResourceManager.GetString("ColorPicker_ClearTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Current Color.
+        /// </summary>
+        public static string ColorPicker_CurrentColor {
+            get {
+                return ResourceManager.GetString("ColorPicker_CurrentColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Gradient View.
+        /// </summary>
+        public static string ColorPicker_GradientViewTitle {
+            get {
+                return ResourceManager.GetString("ColorPicker_GradientViewTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string ColorPicker_Open {
+            get {
+                return ResourceManager.GetString("ColorPicker_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select Palette View.
+        /// </summary>
+        public static string ColorPicker_PaletteViewTitle {
+            get {
+                return ResourceManager.GetString("ColorPicker_PaletteViewTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Preview Color.
+        /// </summary>
+        public static string ColorPicker_PreviewColor {
+            get {
+                return ResourceManager.GetString("ColorPicker_PreviewColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to R.
+        /// </summary>
+        public static string ColorRed_Label {
+            get {
+                return ResourceManager.GetString("ColorRed_Label", resourceCulture);
             }
         }
         
@@ -250,6 +430,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string ComboBox_Cancel {
+            get {
+                return ResourceManager.GetString("ComboBox_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string ComboBox_Clear {
@@ -268,6 +457,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string ComboBox_Open {
+            get {
+                return ResourceManager.GetString("ComboBox_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The date format is not parsable. Please enter valid date..
         /// </summary>
         public static string DateInput_ParsingErrorMessage {
@@ -282,6 +480,51 @@ namespace Fims.Client.Shared.Resources {
         public static string DateInput_ValidationErrorMessage {
             get {
                 return ResourceManager.GetString("DateInput_ValidationErrorMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string DatePicker_Cancel {
+            get {
+                return ResourceManager.GetString("DatePicker_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string DatePicker_Open {
+            get {
+                return ResourceManager.GetString("DatePicker_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Set Date.
+        /// </summary>
+        public static string DatePicker_SetDate {
+            get {
+                return ResourceManager.GetString("DatePicker_SetDate", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string DateRangePicker_Cancel {
+            get {
+                return ResourceManager.GetString("DateRangePicker_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Confirm Selection.
+        /// </summary>
+        public static string DateRangePicker_ConfirmSelection {
+            get {
+                return ResourceManager.GetString("DateRangePicker_ConfirmSelection", resourceCulture);
             }
         }
         
@@ -322,6 +565,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string DateTimePicker_Open {
+            get {
+                return ResourceManager.GetString("DateTimePicker_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Set.
         /// </summary>
         public static string DateTimePicker_Set {
@@ -349,11 +601,29 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Dialog_Close {
+            get {
+                return ResourceManager.GetString("Dialog_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to OK.
         /// </summary>
         public static string Dialog_Ok {
             get {
                 return ResourceManager.GetString("Dialog_Ok", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string DropDownList_Cancel {
+            get {
+                return ResourceManager.GetString("DropDownList_Cancel", resourceCulture);
             }
         }
         
@@ -367,29 +637,47 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add column on the left.
+        ///   Looks up a localized string similar to Open.
         /// </summary>
-        public static string Editor_AddColumnLeft {
+        public static string DropDownList_Open {
             get {
-                return ResourceManager.GetString("Editor_AddColumnLeft", resourceCulture);
+                return ResourceManager.GetString("DropDownList_Open", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Add column on the right.
         /// </summary>
-        public static string Editor_AddColumnRight {
+        public static string Editor_AddColumnAfter {
             get {
-                return ResourceManager.GetString("Editor_AddColumnRight", resourceCulture);
+                return ResourceManager.GetString("Editor_AddColumnAfter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add column on the left.
+        /// </summary>
+        public static string Editor_AddColumnBefore {
+            get {
+                return ResourceManager.GetString("Editor_AddColumnBefore", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add row below.
+        /// </summary>
+        public static string Editor_AddRowAfter {
+            get {
+                return ResourceManager.GetString("Editor_AddRowAfter", resourceCulture);
             }
         }
         
         /// <summary>
         ///   Looks up a localized string similar to Add row above.
         /// </summary>
-        public static string Editor_AddRowAbove {
+        public static string Editor_AddRowBefore {
             get {
-                return ResourceManager.GetString("Editor_AddRowAbove", resourceCulture);
+                return ResourceManager.GetString("Editor_AddRowBefore", resourceCulture);
             }
         }
         
@@ -475,6 +763,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Create {0} table.
+        /// </summary>
+        public static string Editor_CreateTablePopup {
+            get {
+                return ResourceManager.GetString("Editor_CreateTablePopup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Delete column.
         /// </summary>
         public static string Editor_DeleteColumn {
@@ -498,6 +795,15 @@ namespace Fims.Client.Shared.Resources {
         public static string Editor_DialogCancel {
             get {
                 return ResourceManager.GetString("Editor_DialogCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Editor_DialogClose {
+            get {
+                return ResourceManager.GetString("Editor_DialogClose", resourceCulture);
             }
         }
         
@@ -691,6 +997,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Merge cells.
+        /// </summary>
+        public static string Editor_MergeCells {
+            get {
+                return ResourceManager.GetString("Editor_MergeCells", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Outdent.
         /// </summary>
         public static string Editor_Outdent {
@@ -705,6 +1020,24 @@ namespace Fims.Client.Shared.Resources {
         public static string Editor_Redo {
             get {
                 return ResourceManager.GetString("Editor_Redo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View HTML.
+        /// </summary>
+        public static string Editor_SetHtml {
+            get {
+                return ResourceManager.GetString("Editor_SetHtml", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Split cell.
+        /// </summary>
+        public static string Editor_SplitCell {
+            get {
+                return ResourceManager.GetString("Editor_SplitCell", resourceCulture);
             }
         }
         
@@ -763,11 +1096,353 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to View HTML.
+        ///   Looks up a localized string similar to Cancel.
         /// </summary>
-        public static string Editor_ViewHtml {
+        public static string FileManager_ConfirmDeleteCancel {
             get {
-                return ResourceManager.GetString("Editor_ViewHtml", resourceCulture);
+                return ResourceManager.GetString("FileManager_ConfirmDeleteCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string FileManager_ConfirmDeleteOk {
+            get {
+                return ResourceManager.GetString("FileManager_ConfirmDeleteOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete the file(s)?.
+        /// </summary>
+        public static string FileManager_ConfirmDeleteText {
+            get {
+                return ResourceManager.GetString("FileManager_ConfirmDeleteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string FileManager_ConfirmDeleteTitle {
+            get {
+                return ResourceManager.GetString("FileManager_ConfirmDeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string FileManager_ContextMenu_Delete {
+            get {
+                return ResourceManager.GetString("FileManager_ContextMenu_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string FileManager_ContextMenu_Download {
+            get {
+                return ResourceManager.GetString("FileManager_ContextMenu_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Rename.
+        /// </summary>
+        public static string FileManager_ContextMenu_Rename {
+            get {
+                return ResourceManager.GetString("FileManager_ContextMenu_Rename", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date created.
+        /// </summary>
+        public static string FileManager_DetailsPane_DateCreated {
+            get {
+                return ResourceManager.GetString("FileManager_DetailsPane_DateCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date modified.
+        /// </summary>
+        public static string FileManager_DetailsPane_DateModified {
+            get {
+                return ResourceManager.GetString("FileManager_DetailsPane_DateModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to No file selected.
+        /// </summary>
+        public static string FileManager_DetailsPane_NoFileSelected {
+            get {
+                return ResourceManager.GetString("FileManager_DetailsPane_NoFileSelected", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string FileManager_DetailsPane_Size {
+            get {
+                return ResourceManager.GetString("FileManager_DetailsPane_Size", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string FileManager_DetailsPane_Type {
+            get {
+                return ResourceManager.GetString("FileManager_DetailsPane_Type", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to items.
+        /// </summary>
+        public static string FileManager_FileView_Items {
+            get {
+                return ResourceManager.GetString("FileManager_FileView_Items", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date Created.
+        /// </summary>
+        public static string FileManager_Grid_DateCreatedColumnTitle {
+            get {
+                return ResourceManager.GetString("FileManager_Grid_DateCreatedColumnTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File Size.
+        /// </summary>
+        public static string FileManager_Grid_FileSizeColumnTitle {
+            get {
+                return ResourceManager.GetString("FileManager_Grid_FileSizeColumnTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string FileManager_Grid_NameColumnTitle {
+            get {
+                return ResourceManager.GetString("FileManager_Grid_NameColumnTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string FileManager_SearchBox_Placeholder {
+            get {
+                return ResourceManager.GetString("FileManager_SearchBox_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string FileManager_SearchBox_Title {
+            get {
+                return ResourceManager.GetString("FileManager_SearchBox_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to New Folder.
+        /// </summary>
+        public static string FileManager_ToolBar_CreateNewFolder {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_CreateNewFolder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Sort By.
+        /// </summary>
+        public static string FileManager_ToolBar_SortBy {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_SortBy", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date Created.
+        /// </summary>
+        public static string FileManager_ToolBar_SortByDateCreated {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_SortByDateCreated", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Date Modified.
+        /// </summary>
+        public static string FileManager_ToolBar_SortByDateModified {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_SortByDateModified", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Name.
+        /// </summary>
+        public static string FileManager_ToolBar_SortByName {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_SortByName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Size.
+        /// </summary>
+        public static string FileManager_ToolBar_SortBySize {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_SortBySize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Type.
+        /// </summary>
+        public static string FileManager_ToolBar_SortByType {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_SortByType", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload.
+        /// </summary>
+        public static string FileManager_ToolBar_Upload {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_Upload", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to View Details.
+        /// </summary>
+        public static string FileManager_ToolBar_ViewDetails {
+            get {
+                return ResourceManager.GetString("FileManager_ToolBar_ViewDetails", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string FileManager_UploadDialogCancel {
+            get {
+                return ResourceManager.GetString("FileManager_UploadDialogCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string FileManager_UploadDialogOk {
+            get {
+                return ResourceManager.GetString("FileManager_UploadDialogOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Upload files.
+        /// </summary>
+        public static string FileManager_UploadDialogTitle {
+            get {
+                return ResourceManager.GetString("FileManager_UploadDialogTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File type not allowed..
+        /// </summary>
+        public static string FileSelect_InvalidFileExtension {
+            get {
+                return ResourceManager.GetString("FileSelect_InvalidFileExtension", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File size too large..
+        /// </summary>
+        public static string FileSelect_InvalidMaxFileSize {
+            get {
+                return ResourceManager.GetString("FileSelect_InvalidMaxFileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to File size too small..
+        /// </summary>
+        public static string FileSelect_InvalidMinFileSize {
+            get {
+                return ResourceManager.GetString("FileSelect_InvalidMinFileSize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string FileSelect_Remove {
+            get {
+                return ResourceManager.GetString("FileSelect_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select files....
+        /// </summary>
+        public static string FileSelect_SelectFiles {
+            get {
+                return ResourceManager.GetString("FileSelect_SelectFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Expression.
+        /// </summary>
+        public static string Filter_AddExpression {
+            get {
+                return ResourceManager.GetString("Filter_AddExpression", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add Group.
+        /// </summary>
+        public static string Filter_AddGroup {
+            get {
+                return ResourceManager.GetString("Filter_AddGroup", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional Operator.
+        /// </summary>
+        public static string Filter_AdditionalOperator {
+            get {
+                return ResourceManager.GetString("Filter_AdditionalOperator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Additional value.
+        /// </summary>
+        public static string Filter_AdditionalValue {
+            get {
+                return ResourceManager.GetString("Filter_AdditionalValue", resourceCulture);
             }
         }
         
@@ -786,6 +1461,24 @@ namespace Fims.Client.Shared.Resources {
         public static string Filter_And {
             get {
                 return ResourceManager.GetString("Filter_And", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is equal to.
+        /// </summary>
+        public static string Filter_BooleanIsEqualTo {
+            get {
+                return ResourceManager.GetString("Filter_BooleanIsEqualTo", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Is not equal to.
+        /// </summary>
+        public static string Filter_BooleanIsNotEqualTo {
+            get {
+                return ResourceManager.GetString("Filter_BooleanIsNotEqualTo", resourceCulture);
             }
         }
         
@@ -925,6 +1618,33 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string Filter_FilterLabel {
+            get {
+                return ResourceManager.GetString("Filter_FilterLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter settings.
+        /// </summary>
+        public static string Filter_FilterSettings {
+            get {
+                return ResourceManager.GetString("Filter_FilterSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show records with value that.
+        /// </summary>
+        public static string Filter_Info {
+            get {
+                return ResourceManager.GetString("Filter_Info", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to is false.
         /// </summary>
         public static string Filter_IsFalse {
@@ -1024,11 +1744,29 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Operator.
+        /// </summary>
+        public static string Filter_Operator {
+            get {
+                return ResourceManager.GetString("Filter_Operator", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Or.
         /// </summary>
         public static string Filter_Or {
             get {
                 return ResourceManager.GetString("Filter_Or", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string Filter_Remove {
+            get {
+                return ResourceManager.GetString("Filter_Remove", resourceCulture);
             }
         }
         
@@ -1168,6 +1906,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Value.
+        /// </summary>
+        public static string Filter_Value {
+            get {
+                return ResourceManager.GetString("Filter_Value", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Clear.
         /// </summary>
         public static string Form_Clear {
@@ -1188,9 +1935,162 @@ namespace Fims.Client.Shared.Resources {
         /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
+        public static string Gantt_Cancel {
+            get {
+                return ResourceManager.GetString("Gantt_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Day.
+        /// </summary>
+        public static string Gantt_Day {
+            get {
+                return ResourceManager.GetString("Gantt_Day", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Gantt_Delete {
+            get {
+                return ResourceManager.GetString("Gantt_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Gantt_DialogClose {
+            get {
+                return ResourceManager.GetString("Gantt_DialogClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Task.
+        /// </summary>
+        public static string Gantt_Editor_EditorTitle {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_EditorTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End.
+        /// </summary>
+        public static string Gantt_Editor_End {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_End", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to End time must be after Start time..
+        /// </summary>
+        public static string Gantt_Editor_EndTimeValueValidationMessage {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_EndTimeValueValidationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Complete.
+        /// </summary>
+        public static string Gantt_Editor_PercentComplete {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_PercentComplete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        public static string Gantt_Editor_Start {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Start time must be before End time..
+        /// </summary>
+        public static string Gantt_Editor_StartTimeValueValidationMessage {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_StartTimeValueValidationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title.
+        /// </summary>
+        public static string Gantt_Editor_Title {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_Title", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Title is required..
+        /// </summary>
+        public static string Gantt_Editor_TitleRequiredValidationMessage {
+            get {
+                return ResourceManager.GetString("Gantt_Editor_TitleRequiredValidationMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Month.
+        /// </summary>
+        public static string Gantt_Month {
+            get {
+                return ResourceManager.GetString("Gantt_Month", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save.
+        /// </summary>
+        public static string Gantt_Save {
+            get {
+                return ResourceManager.GetString("Gantt_Save", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Week.
+        /// </summary>
+        public static string Gantt_Week {
+            get {
+                return ResourceManager.GetString("Gantt_Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Year.
+        /// </summary>
+        public static string Gantt_Year {
+            get {
+                return ResourceManager.GetString("Gantt_Year", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
         public static string Grid_Cancel {
             get {
                 return ResourceManager.GetString("Grid_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel changes.
+        /// </summary>
+        public static string Grid_CancelChanges {
+            get {
+                return ResourceManager.GetString("Grid_CancelChanges", resourceCulture);
             }
         }
         
@@ -1204,11 +2104,110 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Check all.
+        /// </summary>
+        public static string Grid_CheckAll {
+            get {
+                return ResourceManager.GetString("Grid_CheckAll", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Columns.
+        /// </summary>
+        public static string Grid_Columns {
+            get {
+                return ResourceManager.GetString("Grid_Columns", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Column settings.
+        /// </summary>
+        public static string Grid_ColumnSettings {
+            get {
+                return ResourceManager.GetString("Grid_ColumnSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this record?.
+        /// </summary>
+        public static string Grid_Confirmation {
+            get {
+                return ResourceManager.GetString("Grid_Confirmation", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Grid_ConfirmDelete {
+            get {
+                return ResourceManager.GetString("Grid_ConfirmDelete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Grid_ConfirmDeleteCancel {
+            get {
+                return ResourceManager.GetString("Grid_ConfirmDeleteCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string Grid_ConfirmDeleteOk {
+            get {
+                return ResourceManager.GetString("Grid_ConfirmDeleteOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this record?.
+        /// </summary>
+        public static string Grid_ConfirmDeleteText {
+            get {
+                return ResourceManager.GetString("Grid_ConfirmDeleteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string Grid_ConfirmDeleteTitle {
+            get {
+                return ResourceManager.GetString("Grid_ConfirmDeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add new record.
         /// </summary>
         public static string Grid_Create {
             get {
                 return ResourceManager.GetString("Grid_Create", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export to CSV.
+        /// </summary>
+        public static string Grid_Csv {
+            get {
+                return ResourceManager.GetString("Grid_Csv", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Data table.
+        /// </summary>
+        public static string Grid_DataTable {
+            get {
+                return ResourceManager.GetString("Grid_DataTable", resourceCulture);
             }
         }
         
@@ -1222,11 +2221,101 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Grid_DialogClose {
+            get {
+                return ResourceManager.GetString("Grid_DialogClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        public static string Grid_Done {
+            get {
+                return ResourceManager.GetString("Grid_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to items selected.
+        /// </summary>
+        public static string Grid_DragItems {
+            get {
+                return ResourceManager.GetString("Grid_DragItems", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Drag row.
+        /// </summary>
+        public static string Grid_DragRowLabel {
+            get {
+                return ResourceManager.GetString("Grid_DragRowLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string Grid_Edit {
             get {
                 return ResourceManager.GetString("Grid_Edit", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Export to Excel.
+        /// </summary>
+        public static string Grid_Excel {
+            get {
+                return ResourceManager.GetString("Grid_Excel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Filter.
+        /// </summary>
+        public static string Grid_Filter {
+            get {
+                return ResourceManager.GetString("Grid_Filter", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} column filter menu settings.
+        /// </summary>
+        public static string Grid_FilterMenuSettings {
+            get {
+                return ResourceManager.GetString("Grid_FilterMenuSettings", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} filter.
+        /// </summary>
+        public static string Grid_FilterRowLabel {
+            get {
+                return ResourceManager.GetString("Grid_FilterRowLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Grid group header.
+        /// </summary>
+        public static string Grid_GroupHeaderLabel {
+            get {
+                return ResourceManager.GetString("Grid_GroupHeaderLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Lock.
+        /// </summary>
+        public static string Grid_Lock {
+            get {
+                return ResourceManager.GetString("Grid_Lock", resourceCulture);
             }
         }
         
@@ -1240,11 +2329,56 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Remove.
+        /// </summary>
+        public static string Grid_Remove {
+            get {
+                return ResourceManager.GetString("Grid_Remove", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Save Changes.
+        /// </summary>
+        public static string Grid_SaveChanges {
+            get {
+                return ResourceManager.GetString("Grid_SaveChanges", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search....
         /// </summary>
         public static string Grid_Search {
             get {
                 return ResourceManager.GetString("Grid_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select.
+        /// </summary>
+        public static string Grid_Select {
+            get {
+                return ResourceManager.GetString("Grid_Select", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all rows.
+        /// </summary>
+        public static string Grid_SelectAllRows {
+            get {
+                return ResourceManager.GetString("Grid_SelectAllRows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a row.
+        /// </summary>
+        public static string Grid_SelectRow {
+            get {
+                return ResourceManager.GetString("Grid_SelectRow", resourceCulture);
             }
         }
         
@@ -1285,6 +2419,24 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Grid toolbar.
+        /// </summary>
+        public static string Grid_ToolbarLabel {
+            get {
+                return ResourceManager.GetString("Grid_ToolbarLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Unlock.
+        /// </summary>
+        public static string Grid_Unlock {
+            get {
+                return ResourceManager.GetString("Grid_Unlock", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Update.
         /// </summary>
         public static string Grid_Update {
@@ -1299,6 +2451,24 @@ namespace Fims.Client.Shared.Resources {
         public static string Group_Empty {
             get {
                 return ResourceManager.GetString("Group_Empty", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Apply.
+        /// </summary>
+        public static string MultiSelect_Apply {
+            get {
+                return ResourceManager.GetString("MultiSelect_Apply", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string MultiSelect_Cancel {
+            get {
+                return ResourceManager.GetString("MultiSelect_Cancel", resourceCulture);
             }
         }
         
@@ -1335,6 +2505,24 @@ namespace Fims.Client.Shared.Resources {
         public static string NumericTextBox_IncreaseValue {
             get {
                 return ResourceManager.GetString("NumericTextBox_IncreaseValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Optional.
+        /// </summary>
+        public static string Optional_Label {
+            get {
+                return ResourceManager.GetString("Optional_Label", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to All.
+        /// </summary>
+        public static string Pager_AllPages {
+            get {
+                return ResourceManager.GetString("Pager_AllPages", resourceCulture);
             }
         }
         
@@ -1420,11 +2608,20 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Page.
+        ///   Looks up a localized string similar to Page {0}.
         /// </summary>
         public static string Pager_PageDisplay {
             get {
                 return ResourceManager.GetString("Pager_PageDisplay", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a page.
+        /// </summary>
+        public static string Pager_PageInputLabel {
+            get {
+                return ResourceManager.GetString("Pager_PageInputLabel", resourceCulture);
             }
         }
         
@@ -1447,6 +2644,168 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Page navigation, page {0} of {1}.
+        /// </summary>
+        public static string Pager_WrapperLabel {
+            get {
+                return ResourceManager.GetString("Pager_WrapperLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string PdfViewer_Search_Close {
+            get {
+                return ResourceManager.GetString("PdfViewer_Search_Close", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Match case.
+        /// </summary>
+        public static string PdfViewer_Search_MatchCase {
+            get {
+                return ResourceManager.GetString("PdfViewer_Search_MatchCase", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to of.
+        /// </summary>
+        public static string PdfViewer_Search_MatchesOf {
+            get {
+                return ResourceManager.GetString("PdfViewer_Search_MatchesOf", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next match.
+        /// </summary>
+        public static string PdfViewer_Search_NextMatch {
+            get {
+                return ResourceManager.GetString("PdfViewer_Search_NextMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string PdfViewer_Search_Placeholder {
+            get {
+                return ResourceManager.GetString("PdfViewer_Search_Placeholder", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous match.
+        /// </summary>
+        public static string PdfViewer_Search_PreviousMatch {
+            get {
+                return ResourceManager.GetString("PdfViewer_Search_PreviousMatch", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Download.
+        /// </summary>
+        public static string PdfViewer_ToolBar_Download {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_Download", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string PdfViewer_ToolBar_Open {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable panning.
+        /// </summary>
+        public static string PdfViewer_ToolBar_Panning {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_Panning", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Print.
+        /// </summary>
+        public static string PdfViewer_ToolBar_Print {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_Print", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Search.
+        /// </summary>
+        public static string PdfViewer_ToolBar_Search {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Enable selection.
+        /// </summary>
+        public static string PdfViewer_ToolBar_TextSelection {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_TextSelection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Actual width.
+        /// </summary>
+        public static string PdfViewer_ToolBar_ZoomActualWidth {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_ZoomActualWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fit to page.
+        /// </summary>
+        public static string PdfViewer_ToolBar_ZoomFitToPage {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_ZoomFitToPage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Fit to width.
+        /// </summary>
+        public static string PdfViewer_ToolBar_ZoomFitToWidth {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_ZoomFitToWidth", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom in.
+        /// </summary>
+        public static string PdfViewer_ToolBar_ZoomIn {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_ZoomIn", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Zoom out.
+        /// </summary>
+        public static string PdfViewer_ToolBar_ZoomOut {
+            get {
+                return ResourceManager.GetString("PdfViewer_ToolBar_ZoomOut", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to all day.
         /// </summary>
         public static string Scheduler_AllDay {
@@ -1456,11 +2815,56 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to All events.
+        /// </summary>
+        public static string Scheduler_AllEvents {
+            get {
+                return ResourceManager.GetString("Scheduler_AllEvents", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Cancel.
         /// </summary>
         public static string Scheduler_Cancel {
             get {
                 return ResourceManager.GetString("Scheduler_Cancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string Scheduler_ConfirmDeleteCancel {
+            get {
+                return ResourceManager.GetString("Scheduler_ConfirmDeleteCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string Scheduler_ConfirmDeleteOk {
+            get {
+                return ResourceManager.GetString("Scheduler_ConfirmDeleteOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this event?.
+        /// </summary>
+        public static string Scheduler_ConfirmDeleteText {
+            get {
+                return ResourceManager.GetString("Scheduler_ConfirmDeleteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete event.
+        /// </summary>
+        public static string Scheduler_ConfirmDeleteTitle {
+            get {
+                return ResourceManager.GetString("Scheduler_ConfirmDeleteTitle", resourceCulture);
             }
         }
         
@@ -1479,6 +2883,15 @@ namespace Fims.Client.Shared.Resources {
         public static string Scheduler_Delete {
             get {
                 return ResourceManager.GetString("Scheduler_Delete", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string Scheduler_DialogClose {
+            get {
+                return ResourceManager.GetString("Scheduler_DialogClose", resourceCulture);
             }
         }
         
@@ -2005,6 +3418,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Timeline.
+        /// </summary>
+        public static string Scheduler_Timeline {
+            get {
+                return ResourceManager.GetString("Scheduler_Timeline", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Today.
         /// </summary>
         public static string Scheduler_Today {
@@ -2019,6 +3441,33 @@ namespace Fims.Client.Shared.Resources {
         public static string Scheduler_Week {
             get {
                 return ResourceManager.GetString("Scheduler_Week", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Clear.
+        /// </summary>
+        public static string Signature_Clear {
+            get {
+                return ResourceManager.GetString("Signature_Clear", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Maximize.
+        /// </summary>
+        public static string Signature_Maximize {
+            get {
+                return ResourceManager.GetString("Signature_Maximize", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Minimize.
+        /// </summary>
+        public static string Signature_Minimize {
+            get {
+                return ResourceManager.GetString("Signature_Minimize", resourceCulture);
             }
         }
         
@@ -2041,6 +3490,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string SplitButton_Open {
+            get {
+                return ResourceManager.GetString("SplitButton_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Off.
         /// </summary>
         public static string Switch_OffLabel {
@@ -2055,6 +3513,24 @@ namespace Fims.Client.Shared.Resources {
         public static string Switch_OnLabel {
             get {
                 return ResourceManager.GetString("Switch_OnLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Next Tabs.
+        /// </summary>
+        public static string TabStrip_ShowNextTabs {
+            get {
+                return ResourceManager.GetString("TabStrip_ShowNextTabs", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Show Previous Tabs.
+        /// </summary>
+        public static string TabStrip_ShowPreviousTabs {
+            get {
+                return ResourceManager.GetString("TabStrip_ShowPreviousTabs", resourceCulture);
             }
         }
         
@@ -2131,6 +3607,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Open.
+        /// </summary>
+        public static string TimePicker_Open {
+            get {
+                return ResourceManager.GetString("TimePicker_Open", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Quarter.
         /// </summary>
         public static string TimePicker_Quarter {
@@ -2203,6 +3688,42 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Cancel.
+        /// </summary>
+        public static string TreeList_ConfirmDeleteCancel {
+            get {
+                return ResourceManager.GetString("TreeList_ConfirmDeleteCancel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ok.
+        /// </summary>
+        public static string TreeList_ConfirmDeleteOk {
+            get {
+                return ResourceManager.GetString("TreeList_ConfirmDeleteOk", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Are you sure you want to delete this record?.
+        /// </summary>
+        public static string TreeList_ConfirmDeleteText {
+            get {
+                return ResourceManager.GetString("TreeList_ConfirmDeleteText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Delete.
+        /// </summary>
+        public static string TreeList_ConfirmDeleteTitle {
+            get {
+                return ResourceManager.GetString("TreeList_ConfirmDeleteTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Add new record.
         /// </summary>
         public static string TreeList_Create {
@@ -2221,6 +3742,15 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Close.
+        /// </summary>
+        public static string TreeList_DialogClose {
+            get {
+                return ResourceManager.GetString("TreeList_DialogClose", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Edit.
         /// </summary>
         public static string TreeList_Edit {
@@ -2230,11 +3760,38 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No records available..
+        /// </summary>
+        public static string TreeList_NoRecords {
+            get {
+                return ResourceManager.GetString("TreeList_NoRecords", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Search....
         /// </summary>
         public static string TreeList_Search {
             get {
                 return ResourceManager.GetString("TreeList_Search", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select all rows.
+        /// </summary>
+        public static string TreeList_SelectAllRows {
+            get {
+                return ResourceManager.GetString("TreeList_SelectAllRows", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Select a row.
+        /// </summary>
+        public static string TreeList_SelectRow {
+            get {
+                return ResourceManager.GetString("TreeList_SelectRow", resourceCulture);
             }
         }
         
@@ -2347,7 +3904,7 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove.
+        ///   Looks up a localized string similar to Press Delete to remove.
         /// </summary>
         public static string Upload_Remove {
             get {
@@ -2365,6 +3922,24 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to {0} file(s) {1}. Press Arrow Down to navigate..
+        /// </summary>
+        public static string Upload_SelectedFilesAriaLabel {
+            get {
+                return ResourceManager.GetString("Upload_SelectedFilesAriaLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to selected.
+        /// </summary>
+        public static string Upload_SelectedState {
+            get {
+                return ResourceManager.GetString("Upload_SelectedState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Select files....
         /// </summary>
         public static string Upload_SelectFiles {
@@ -2374,11 +3949,65 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to uploaded.
+        /// </summary>
+        public static string Upload_UploadedState {
+            get {
+                return ResourceManager.GetString("Upload_UploadedState", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Upload.
         /// </summary>
         public static string Upload_UploadFiles {
             get {
                 return ResourceManager.GetString("Upload_UploadFiles", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to {0} is not valid..
+        /// </summary>
+        public static string Validation_InvalidField {
+            get {
+                return ResourceManager.GetString("Validation_InvalidField", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Done.
+        /// </summary>
+        public static string Wizard_Done {
+            get {
+                return ResourceManager.GetString("Wizard_Done", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Next.
+        /// </summary>
+        public static string Wizard_Next {
+            get {
+                return ResourceManager.GetString("Wizard_Next", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Step {0} of {1} .
+        /// </summary>
+        public static string Wizard_Pager {
+            get {
+                return ResourceManager.GetString("Wizard_Pager", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Previous.
+        /// </summary>
+        public static string Wizard_Previous {
+            get {
+                return ResourceManager.GetString("Wizard_Previous", resourceCulture);
             }
         }
     }
