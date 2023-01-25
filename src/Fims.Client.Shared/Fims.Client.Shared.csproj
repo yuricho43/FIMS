@@ -37,6 +37,13 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Update="wwwroot\images\fimsapp.svg">
+      <Color>#C00CC0</Color>
+      <ForegroundFile>Resources\AppIcon\appiconfg.svg</ForegroundFile>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Update="Resources\TelerikMessages.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>TelerikMessages.Designer.cs</LastGenOutput>
