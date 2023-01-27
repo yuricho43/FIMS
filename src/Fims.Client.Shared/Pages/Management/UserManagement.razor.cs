@@ -106,6 +106,7 @@ namespace Fims.Client.Shared.Pages.Management
         {
             AddUserDialogVisible = false;
             await LoadData();
+            StateHasChanged();
         }
 
 
