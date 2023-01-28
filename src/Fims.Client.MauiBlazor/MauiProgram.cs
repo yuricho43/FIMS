@@ -51,7 +51,8 @@ namespace Fims.Client.MauiBlazor
             // For appsettings.json to be used as IConfiguration
             // JBH NOTE: make sure appsettings.json enrolled as "EmbeddedResource": On the file property, set [Build Action] to "Embedded resouce".
             var a = Assembly.GetExecutingAssembly();
-            using var appsettings_stream = a.GetManifestResourceStream("Fims.Client.MauiBlazor.appsettings.json");
+            var b = typeof(Fims.Client.Shared.Pages.discovery_stub).Assembly;
+            using var appsettings_stream = b.GetManifestResourceStream("Fims.Client.Shared.appsettings.json");
             var configuration = new ConfigurationBuilder()
                 .AddJsonStream(appsettings_stream)
                 .Build();
@@ -111,6 +112,7 @@ namespace Fims.Client.MauiBlazor
             builder.Services.AddLocalDevHttpClient(ClientName, serverUrl);
     #else
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
+            string serverUrl = configuration.GetValue<string>("Fims.Web.Server:remoteServerUrl");
             builder.Services.AddHttpClient(
                     ClientName,
                     client => client.BaseAddress = new Uri(serverUrl)
