@@ -51,7 +51,8 @@ namespace Fims.Web.Client
 
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
 
-            var baseAddress = builder.HostEnvironment.BaseAddress; // comes from applicationUrl@launchSettings.json
+            //var baseAddress = builder.HostEnvironment.BaseAddress; // comes from applicationUrl@launchSettings.json
+            var baseAddress = "http://localhost:5000";
             builder.Services.AddHttpClient(
                                 ClientName,
                                 client => client.BaseAddress = new Uri(baseAddress))

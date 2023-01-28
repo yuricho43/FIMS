@@ -15,8 +15,7 @@ namespace Fims.Client.MauiBlazor.Infrastructure.HttpDev
         /// Adds the <see cref="IHttpClientFactory"/> and related services to the <see cref="IServiceCollection"/> and configures
         /// a named <see cref="HttpClient"/> to use localhost or 10.0.2.2 and bypass certificate checking on Android.
         /// </summary>
-        /// <param name="name">name</param>
-        /// <param name="sslPort">Development server port</param>
+        /// <param name="clientName">name</param>
         /// <returns>The IServiceCollection</returns>
         /// <remarks>
         /// <para>
@@ -31,14 +30,13 @@ namespace Fims.Client.MauiBlazor.Infrastructure.HttpDev
         /// by https://gist.github.com/EdCharbeneau
         /// </para>
         /// </remarks>
-        public static IServiceCollection AddLocalDevHttpClient(this IServiceCollection services, string name, int sslPort)
+        public static IServiceCollection AddLocalDevHttpClient(this IServiceCollection services, string clientName, string localhostUrl)
         {
-            var devServerRootUrl = new UriBuilder("https", LocalDevHttpClientHelper.DevServerName, sslPort).Uri.ToString();
 
 #if WINDOWS
-            services.AddHttpClient(name, client =>
+            services.AddHttpClient(clientName, client =>
                 {
-                    client.BaseAddress = new UriBuilder("https", DevServerName, sslPort).Uri;
+                    client.BaseAddress = new Uri(localhostUrl);
                 })
                 .AddHttpMessageHandler<AuthenticationHeaderHandler>(); //JBH
             
@@ -46,9 +44,9 @@ namespace Fims.Client.MauiBlazor.Infrastructure.HttpDev
 #endif
 
 #if ANDROID
-            services.AddHttpClient(name, client =>
+            services.AddHttpClient(clientName, client =>
                 {
-                    client.BaseAddress = new UriBuilder("https", LocalDevHttpClientHelper.DevServerName, sslPort).Uri;
+                    client.BaseAddress = new Uri(localhostUrl);
                 })
                 .ConfigurePrimaryHttpMessageHandler(() =>
                 {
@@ -62,14 +60,6 @@ namespace Fims.Client.MauiBlazor.Infrastructure.HttpDev
 #endif
         }
 
-        public static string DevServerName =>
-#if WINDOWS
-        "localhost";
-#elif ANDROID
-        "10.0.2.2";
-#else
-        throw new PlatformNotSupportedException("Only Windows and Android currently supported.");
-#endif
 
 #if ANDROID        
         internal static CustomAndroidMessageHandler GetCustomAndroidMessageHandler()

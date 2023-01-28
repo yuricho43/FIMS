@@ -21,17 +21,14 @@ using Fims.Client.Shared.Shared.Layouts;
 
 using Fims.Client.MauiBlazor.Infrastructure.HttpDev;
 using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
+using Microsoft.Extensions.Configuration;
+using System.Reflection;
 
 namespace Fims.Client.MauiBlazor
 {
     public static class MauiProgram
     {
-#if JBH_USE_ORIGINAL
-        public static string Base = DeviceInfo.Platform == DevicePlatform.Android ? "https://10.0.2.2" : "https://localhost";
-        public static string BaseAddress = $"{Base}:5001/";
-#endif
-
-        private const string ClientName = "Fims.ServerAPI";
+        private const string ClientName = " Fims.Client.MauiBlazor";
 
         public static MauiApp CreateMauiApp()
         {
@@ -50,6 +47,18 @@ namespace Fims.Client.MauiBlazor
             builder.Services.AddMauiBlazorWebView();
 
             builder.Services.AddTelerikBlazor();
+
+            // For appsettings.json to be used as IConfiguration
+            // JBH NOTE: make sure appsettings.json enrolled as "EmbeddedResource": On the file property, set [Build Action] to "Embedded resouce".
+            var a = Assembly.GetExecutingAssembly();
+            using var appsettings_stream = a.GetManifestResourceStream("Fims.Client.MauiBlazor.appsettings.json");
+            var configuration = new ConfigurationBuilder()
+                .AddJsonStream(appsettings_stream)
+                .Build();
+            builder.Configuration.AddConfiguration(configuration);
+            var car = configuration.GetValue<string>("Fims.Web.Server:remoteServerUrl"); //debug
+            var dar = configuration.GetSection("Fims.Web.Server:remoteServerUrl"); //debug
+            var ear = configuration.GetValue<string>("Fims.Web.Server:environmentVariables:ASPNETCORE_ENVIRONMENT"); //debug
 
 
 #if JBH_USE_PLATFORM_NATIVE_SERVICE
@@ -89,23 +98,25 @@ namespace Fims.Client.MauiBlazor
 
 #if JBH_USE_ORIGINAL
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
+            string serverUrl = DeviceInfo.Platform == DevicePlatform.Android ? configuration.GetValue<string>("Fims.Web.Server:localServerUrl_android") : configuration.GetValue<string>("Fims.Web.Server:localServerUrl_windows");
             builder.Services.AddHttpClient(
                     ClientName,
-                    //JBH client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
-                    client => client.BaseAddress = new Uri(BaseAddress)
+                    client => client.BaseAddress = new Uri(serverUrl)
                 )
                 .AddHttpMessageHandler<AuthenticationHeaderHandler>();
 #else
-#if DEBUG
+    #if DEBUG
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
-            builder.Services.AddLocalDevHttpClient(ClientName, 5001);
-#else
+            string serverUrl = DeviceInfo.Platform == DevicePlatform.Android ? configuration.GetValue<string>("Fims.Web.Server:localServerUrl_android") : configuration.GetValue<string>("Fims.Web.Server:localServerUrl_windows");
+            builder.Services.AddLocalDevHttpClient(ClientName, serverUrl);
+    #else
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
-            builder.Services.AddHttpClient(ClientName, client =>
-            {
-                client.BaseAddress = new Uri($"https://{LocalDevHttpClientHelper.DevServerName}:5001");
-            });
-#endif
+            builder.Services.AddHttpClient(
+                    ClientName,
+                    client => client.BaseAddress = new Uri(serverUrl)
+                )
+                .AddHttpMessageHandler<AuthenticationHeaderHandler>();
+    #endif
 #endif
 
             builder.Services.AddScoped<MainLayoutState>();
