@@ -108,11 +108,29 @@ namespace Fims.Client.MauiBlazor
 #else
     #if DEBUG
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
-            string serverUrl = DeviceInfo.Platform == DevicePlatform.Android ? configuration.GetValue<string>("Fims.Web.Server:localServerUrl_android") : configuration.GetValue<string>("Fims.Web.Server:localServerUrl_windows");
+            string serverUrl;
+            string LocalOrRemote = configuration.GetValue<string>("Fims.Web.Server:LocalOrRemote");
+            if (LocalOrRemote == "Local")
+            {
+                serverUrl = DeviceInfo.Platform == DevicePlatform.Android ? configuration.GetValue<string>("Fims.Web.Server:localServerUrl_android") : configuration.GetValue<string>("Fims.Web.Server:localServerUrl_windows");
+            }
+            else
+            {
+                serverUrl = configuration.GetValue<string>("Fims.Web.Server:remoteServerUrl");
+            }
             builder.Services.AddLocalDevHttpClient(ClientName, serverUrl);
     #else
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
-            string serverUrl = configuration.GetValue<string>("Fims.Web.Server:remoteServerUrl");
+            string serverUrl;
+            string LocalOrRemote = configuration.GetValue<string>("Fims.Web.Server:LocalOrRemote");
+            if (LocalOrRemote == "Local")
+            {
+                serverUrl = DeviceInfo.Platform == DevicePlatform.Android ? configuration.GetValue<string>("Fims.Web.Server:localServerUrl_android") : configuration.GetValue<string>("Fims.Web.Server:localServerUrl_windows");
+            }
+            else
+            {
+                serverUrl = configuration.GetValue<string>("Fims.Web.Server:remoteServerUrl");
+            }
             builder.Services.AddHttpClient(
                     ClientName,
                     client => client.BaseAddress = new Uri(serverUrl)

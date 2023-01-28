@@ -7,13 +7,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="appsettings.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
-
 
   <ItemGroup>
     <SupportedPlatform Include="browser" />
