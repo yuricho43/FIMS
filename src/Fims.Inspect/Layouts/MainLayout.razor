@@ -1,0 +1,140 @@
+﻿@namespace Fims.Inspect.Layouts
+@using Fims.Client.Shared.Shared.NavMenu
+@using Telerik.Blazor.Components.Common.Icon
+
+@inherits LayoutComponentBase
+@inject ITelerikStringLocalizer Localizer
+@inject LocalStorageInterop LocalStorageInterop
+@*@inject ILocalStorageService LocalStorage*@
+@*@inject Services.PublicHttp Http*@
+@inject MainLayoutState Layout
+
+
+<TelerikRootComponent>
+    <div class="header">
+        <div class="nav-container" style="margin-right: 2em;">
+            <div class="menu-button">
+                <TelerikButton Icon="@FontIcon.Menu" OnClick="ToggleMenuDrawer" />
+            </div>
+            <div class="title">
+                <h1>@Localizer["Fims_Title"]</h1>
+            </div>
+            @{
+                if (!WindowWidthSmall)
+                {
+                    <LoginDisplay></LoginDisplay>
+                }
+            }
+        </div>
+    </div>
+
+    <TelerikDrawer @ref="MenuDrawer"
+                   Expanded="@DrawerExpanded"
+                   ExpandedChanged="((bool newValue) => ExpandedChangedHandler(newValue))"
+                   Width="190px" Data="DrawerItems" Mode="DrawerMode.Push" Position="DrawerPosition.Start" MiniMode="true">
+        <DrawerContent>
+            @Body
+        </DrawerContent>
+    </TelerikDrawer>
+</TelerikRootComponent>
+
+
+
+<TelerikMediaQuery Media="(max-width: 768px)" OnChange="((changed) => WindowWidthSmall = changed)"></TelerikMediaQuery>
+
+
+@code {
+    TelerikDrawer<DrawerItem> MenuDrawer { get; set; }
+
+    bool DrawerExpanded { get; set; }
+    bool SettingsExpanded { get; set; }
+    bool WindowWidthSmall {get; set; }
+
+    IEnumerable<DrawerItem> DrawerItems =>
+    new List<DrawerItem>
+    {
+        new DrawerItem{ Text = Localizer["Drawer_Home"], Icon = FontIcon.Grid, Url="/", Group = "home"},
+        new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = FontIcon.Gear, Url="/BarcodeScanner", Group = "app"},
+        new DrawerItem{ Text = Localizer["Drawer_Profile"], Icon = FontIcon.User, Url="/account/UserProfile", Group = "app"},
+        new DrawerItem{ Text = Localizer["Drawer_Info"], Icon = FontIcon.InfoCircle, Url="/Management/TSheetManagement", Group = "ext"},
+        new DrawerItem{ Text = "Spec Sheets", Icon = FontIcon.Upload, Url="/Management/TSheetSpecsManagement", Group = "ext"},
+        new DrawerItem{ Text = "사용자 관리", Icon = FontIcon.Myspace, Url="/Management/UserManagement", Group = "ext"},
+        new DrawerItem{ Text = "Test", Icon = FontIcon.Star, Url="/Management/fileselectevents", Group = "app"},
+        };
+      
+    async Task ToggleMenuDrawer()
+    {
+        if (DrawerExpanded)
+        {
+            await MenuDrawer.CollapseAsync();
+        }
+        else
+        {
+            await MenuDrawer.ExpandAsync();
+        }
+    }
+
+    async Task ExpandedChangedHandler(bool value)
+    {
+        DrawerExpanded = value;
+
+        //await LocalStorage.SetItemAsync("drawerState", value);
+        await LocalStorageInterop.SetItem("drawerState", value);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        //var hasKey = await LocalStorage.ContainKeyAsync("drawerState");
+        var hasKey = await LocalStorageInterop.ContainKey("drawerState");
+        if (hasKey)
+        {
+            //Expanded = await LocalStorage.GetItemAsync<bool>("drawerState");
+            DrawerExpanded = await LocalStorageInterop.GetItem<bool>("drawerState");
+        }
+        else
+        {
+            DrawerExpanded = false;
+        }
+
+        // Layout.LayoutStateChange = async () =>
+        // {
+        // };
+
+        // await InvokeAsync(Layout.LayoutStateChange);
+    }
+}
+
+
+<style>
+    .k-drawer-item {
+        align-items: center;
+    }
+
+    .k-drawer-container {
+        position: relative;
+        width: 100%;
+        height:90%;
+        //background-color: crimson;
+    }
+
+    .k-drawer-content {
+        padding: 15px;
+        //font-size: 18px;
+        //background-color: lightseagreen;
+    }
+
+    .k-drawer-content h6 {
+        margin-top: 15px;
+        //background-color: darksalmon;
+    }
+
+    .custom-toolbar {
+        width: 100%;
+        background-color: coral;
+        line-height: 10px;
+        border-bottom: inset;
+        border-bottom-width: 1px;
+        padding: 3px 8px;
+        color: #656565;
+    }
+</style>

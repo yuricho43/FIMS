@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fims.Web.Client", "Fims.Web
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fims.Web.Server", "Fims.Web\Server\Fims.Web.Server.csproj", "{33E73620-818B-4333-9687-30675BC4EE57}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fims.Client.MauiBlazor", "Fims.Client.MauiBlazor\Fims.Client.MauiBlazor.csproj", "{C062B261-B043-4F12-ACDE-FF03CDDD2650}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fims.Inspect", "Fims.Inspect\Fims.Inspect.csproj", "{C062B261-B043-4F12-ACDE-FF03CDDD2650}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharedMauiLib", "SharedMauiLib\SharedMauiLib.csproj", "{1BA4F00D-282E-47A0-87CD-81B1F6A6C965}"
 EndProject
@@ -23,7 +23,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ExcelMapper", "excel-mapper
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BlazorBarcodeScanner.ZXing.JS", "BlazorBarcodeScanner.ZXing.JS\BlazorBarcodeScanner.ZXing.JS.csproj", "{5105017A-109C-40DB-B968-D076899C94E7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fims.Client.MauiBlazorAdmin", "Fims.Client.MauiBlazorAdmin\Fims.Client.MauiBlazorAdmin.csproj", "{DABC6113-2510-4EEC-8599-34BDD2BE7DD1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Fims.Admin", "Fims.Admin\Fims.Admin.csproj", "{DABC6113-2510-4EEC-8599-34BDD2BE7DD1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
