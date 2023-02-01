@@ -152,6 +152,9 @@
 
 
 @code {
+    [CascadingParameter]
+    public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
     public string UserName { get; set; }
     public List<MenuItem> MenuItems { get; set; }
 
@@ -164,11 +167,11 @@
 
     protected override async Task OnInitializedAsync()
     {
-        var state = await this.AuthState.GetAuthenticationStateAsync();
-        var user = state.User;
+        // var state = await this.AuthState.GetAuthenticationStateAsync();
+        // var user = state.User;
+        var authState = await AuthenticationStateTask;
+        var user = authState.User;
         UserName = user.GetUserName();
-
-
 
         MenuItems = new List<MenuItem>()
         {
