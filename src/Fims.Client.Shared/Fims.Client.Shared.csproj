@@ -40,7 +40,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\images\fimsapp.svg">
+    <Content Update="wwwroot\images\fimsinspect.svg">
       <Color>#C00CC0</Color>
       <ForegroundFile>Resources\AppIcon\appiconfg.svg</ForegroundFile>
     </Content>

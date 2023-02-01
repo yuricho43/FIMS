@@ -59,7 +59,6 @@
     <ItemGroup>
       <ProjectReference Include="..\Fims.Client.Shared\Fims.Client.Shared.csproj" />
       <ProjectReference Include="..\Fims.Common\Fims.Common.csproj" />
-      <ProjectReference Include="..\SharedMauiLib\SharedMauiLib.csproj" />
     </ItemGroup>
 
 	<PropertyGroup>

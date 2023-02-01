@@ -28,7 +28,7 @@ namespace Fims.Inspect
 {
     public static class MauiProgram
     {
-        private const string ClientName = " Fims.Inspect";
+        private const string ClientName = "Fims.Inspect";
 
         public static MauiApp CreateMauiApp()
         {

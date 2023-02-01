@@ -6,13 +6,13 @@
   xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
   IgnorableNamespaces="uap rescap">
 
-  <Identity Name="maui-package-name-placeholder" Publisher="CN=User Name" Version="0.0.0.0" />
+  <Identity Name="fims.inspect" Publisher="CN=fims" Version="1.0.0.0" />
 
   <mp:PhoneIdentity PhoneProductId="6E5AFB40-67B9-4EA4-B29A-7CFF9C4ED89C" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>$placeholder$</DisplayName>
-    <PublisherDisplayName>User Name</PublisherDisplayName>
+    <DisplayName>fims.inspect</DisplayName>
+    <PublisherDisplayName>fims</PublisherDisplayName>
     <Logo>$placeholder$.png</Logo>
   </Properties>
 

@@ -59,20 +59,20 @@
     <ItemGroup>
       <ProjectReference Include="..\Fims.Client.Shared\Fims.Client.Shared.csproj" />
       <ProjectReference Include="..\Fims.Common\Fims.Common.csproj" />
-      <ProjectReference Include="..\SharedMauiLib\SharedMauiLib.csproj" />
     </ItemGroup>
 
 	<PropertyGroup>
 		<AndroidHttpClientHandlerType>DangerousAndroidMessageHandler, DangerousAndroidMessageHandler</AndroidHttpClientHandlerType>
-		<GenerateAppInstallerFile>True</GenerateAppInstallerFile>
+		<GenerateAppInstallerFile>False</GenerateAppInstallerFile>
 		<AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
 		<PackageCertificateThumbprint>4911F41BEE6B1F6A8E026553805753302432D04D</PackageCertificateThumbprint>
 		<AppxPackageSigningTimestampDigestAlgorithm>SHA256</AppxPackageSigningTimestampDigestAlgorithm>
-		<AppxAutoIncrementPackageRevision>True</AppxAutoIncrementPackageRevision>
+		<AppxAutoIncrementPackageRevision>False</AppxAutoIncrementPackageRevision>
 		<AppxSymbolPackageEnabled>False</AppxSymbolPackageEnabled>
 		<GenerateTestArtifacts>True</GenerateTestArtifacts>
 		<AppInstallerUri>D:\tmp</AppInstallerUri>
 		<HoursBetweenUpdateChecks>0</HoursBetweenUpdateChecks>
+		<DefaultLanguage>ko</DefaultLanguage>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net7.0-android|AnyCPU'">
