@@ -17,6 +17,8 @@ namespace Fims.Client.Shared.Shared.NavMenu
 
         protected override async Task OnInitializedAsync()
         {
+            // var state = await this.AuthState.GetAuthenticationStateAsync();
+            // var user = state.User;
             var authState = await AuthenticationStateTask;
             if (authState.User.Identity.IsAuthenticated)
             {

@@ -14,5 +14,11 @@
 
         public const string FimsTSheetSpecsInProgressRepoPath   = "./FimsTSheetSpecsInProgressRepository";
         public const string FimsTSheetSpecsInProgressFileNameBase = "FimsTSheetSpecsInProgress";
+
+        public const string FimsTReportSpecsRepoPath = "./FimsTReportSpecsRepository";
+        public const string FimsTReportSpecsFileNameBase = "FimsTReportSpecs";
+
+        public const string FimsTReportOutputRepoPath = "./FimsTReportOutputRepository";
+        public const string FimsTReportOutputFileNameBase = "FimsTReportOutput";
     }
 }

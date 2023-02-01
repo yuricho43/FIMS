@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="FastExcel" Version="3.0.13" />
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.2" />
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.26.0" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.26.0" />
@@ -14,6 +15,10 @@
   <ItemGroup>
     <ProjectReference Include="..\excel-mapper\ExcelMapper.csproj" />
     <ProjectReference Include="..\Fims.Data\Fims.Data.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="TReports\" />
   </ItemGroup>
 
 </Project>
