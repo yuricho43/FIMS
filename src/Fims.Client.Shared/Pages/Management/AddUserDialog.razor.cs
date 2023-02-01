@@ -26,12 +26,15 @@ using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Client.Shared.ClientServices.Authentication;
-
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Fims.Client.Shared.Pages.Management
 {
     public partial class AddUserDialog
     {
+        [CascadingParameter]
+        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
         [Parameter]
         public EventCallback<RegisterRequestModel> AddUserFinished { get; set; }
 
@@ -53,6 +56,8 @@ namespace Fims.Client.Shared.Pages.Management
         //{
         //    var state = await this.AuthState.GetAuthenticationStateAsync();
         //    var user = state.User;
+        //    var authState = await AuthenticationStateTask;
+        //    var user = authState.User;
         //
         //    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
         //}

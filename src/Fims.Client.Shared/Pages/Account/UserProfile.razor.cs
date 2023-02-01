@@ -4,11 +4,16 @@ using System.Threading.Tasks;
 
 using Fims.Client.Shared.Infrastructure.Extensions;
 using Fims.Data.Models.Identity;
+using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components;
 
 namespace Fims.Client.Shared.Pages.Account
 {
     public partial class UserProfile
     {
+        [CascadingParameter]
+        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
         private readonly ChangeUserProfileRequestModel model = new ChangeUserProfileRequestModel();
 
         private string email;
@@ -41,9 +46,11 @@ namespace Fims.Client.Shared.Pages.Account
 
         private async Task LoadDataAsync()
         {
-            var state = await this.AuthState.GetAuthenticationStateAsync();
-            var user = state.User;
-            
+            // var state = await this.AuthState.GetAuthenticationStateAsync();
+            // var user = state.User;
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+
             this.email = user.GetEmail();
             this.model.HangulName  = user.GetHangulName();
             this.model.EnglishName = user.GetEnglishName();

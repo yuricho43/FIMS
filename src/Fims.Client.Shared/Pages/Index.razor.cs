@@ -27,11 +27,15 @@ using Fims.Common;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
+using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Fims.Client.Shared.Pages
 {
     public partial class Index
     {
+        [CascadingParameter]
+        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
         private List<string>                   ProductSerials { get; set; } = new List<string>();
         private Dictionary<string, TSheetSpec> ProductSerialToTSheetSpecDict { get; set; } = new Dictionary<string, TSheetSpec>();
         private Dictionary<string, bool>       ProductSerialsSelected { get; set; } = new Dictionary<string, bool>();
@@ -79,9 +83,11 @@ namespace Fims.Client.Shared.Pages
         {
             //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
             //FIXME    // So do it after rendering finished.
-            //FIXME    var state = await this.AuthState.GetAuthenticationStateAsync();
-            //FIXME    var user = state.User;
-            //FIXME    CurrentInspectorName = user.GetHangulName();
+            // var state = await this.AuthState.GetAuthenticationStateAsync();
+            // var user = state.User;
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+            CurrentInspectorName = user.GetHangulName();
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
@@ -111,9 +117,11 @@ namespace Fims.Client.Shared.Pages
             // So do it here after rendering finished.
             if (firstRender)
             {
-                var state = await this.AuthState.GetAuthenticationStateAsync();
-                var user = state.User;
-                CurrentInspectorName   = user.GetHangulName();
+                // var state = await this.AuthState.GetAuthenticationStateAsync();
+                // var user = state.User;
+                var authState = await AuthenticationStateTask;
+                var user = authState.User;
+                CurrentInspectorName = user.GetHangulName();
                 CurrentInspectorUserId = user.GetUserId();
 
                 ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();

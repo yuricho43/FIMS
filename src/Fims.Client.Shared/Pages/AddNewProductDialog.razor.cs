@@ -7,6 +7,7 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.TSheetSpecs;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,9 @@ namespace Fims.Client.Shared.Pages
 {
     public partial class AddNewProductDialog
     {
+        [CascadingParameter]
+        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+
         [Parameter]
         public EventCallback<TProductSpec> ProductAdded { get; set; }
 
@@ -51,8 +55,10 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            //var state = await this.AuthState.GetAuthenticationStateAsync();
-            //var user = state.User;
+            // var state = await this.AuthState.GetAuthenticationStateAsync();
+            // var user = state.User;
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
 
             //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
         }
