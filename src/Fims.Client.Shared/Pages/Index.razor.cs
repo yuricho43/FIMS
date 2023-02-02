@@ -85,9 +85,9 @@ namespace Fims.Client.Shared.Pages
             //FIXME    // So do it after rendering finished.
             // var state = await this.AuthState.GetAuthenticationStateAsync();
             // var user = state.User;
-            var authState = await AuthenticationStateTask;
-            var user = authState.User;
-            CurrentInspectorName = user.GetHangulName();
+            // var authState = await AuthenticationStateTask;
+            // var user = authState.User;
+            // CurrentInspectorName = user.GetHangulName();
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 

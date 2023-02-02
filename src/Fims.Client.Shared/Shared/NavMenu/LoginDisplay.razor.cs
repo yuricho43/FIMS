@@ -17,12 +17,36 @@ namespace Fims.Client.Shared.Shared.NavMenu
 
         protected override async Task OnInitializedAsync()
         {
-            // var state = await this.AuthState.GetAuthenticationStateAsync();
-            // var user = state.User;
-            var authState = await AuthenticationStateTask;
-            if (authState.User.Identity.IsAuthenticated)
+            //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
+            //FIXME    // So do it after rendering finished.
+            //FIXME    // var state = await this.AuthState.GetAuthenticationStateAsync();
+            //FIXME    // var user = state.User;
+            //FIXME    var authState = await AuthenticationStateTask;
+            //FIXME    if (authState.User.Identity.IsAuthenticated)
+            //FIXME    {
+            //FIXME        UserName = authState.User.GetUserName();
+            //FIXME    }
+        }
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            /////////////////////////////////////////////////////////////////////////////////////////////
+            /// All JavaScript tasks should be done HERE!
+            /// DO NOT at OnInitializedAsync().
+            /////////////////////////////////////////////////////////////////////////////////////////////
+
+            // Accessing LocalStorage at the initializing phase is not allowed. JSRuntime out of WebView.
+            // So do it here after rendering finished.
+            if (firstRender)
             {
-                UserName = authState.User.GetUserName();
+                // var state = await this.AuthState.GetAuthenticationStateAsync();
+                // var user = state.User;
+                var authState = await AuthenticationStateTask;
+                if (authState.User.Identity.IsAuthenticated)
+                {
+                    UserName = authState.User.GetUserName();
+                }
+                StateHasChanged();
             }
         }
 
