@@ -121,8 +121,12 @@ namespace Fims.Client.Shared.Pages
                 // var user = state.User;
                 var authState = await AuthenticationStateTask;
                 var user = authState.User;
+
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                //JBH FIXME: null upon right after logged in. why?
                 CurrentInspectorName = user.GetHangulName();
                 CurrentInspectorUserId = user.GetUserId();
+                //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
             }
@@ -374,6 +378,12 @@ namespace Fims.Client.Shared.Pages
         public async void OnLoadSessionData()
         {
             IsLoadingSession = true;
+
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+            CurrentInspectorName = user.GetHangulName();
+            CurrentInspectorUserId = user.GetUserId();
+
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
 
             var userIdRx = tSheetSpecsInProgressDto.UserId;
@@ -475,6 +485,11 @@ namespace Fims.Client.Shared.Pages
             {
                 return false;
             }
+
+            var authState = await AuthenticationStateTask;
+            var user = authState.User;
+            CurrentInspectorName = user.GetHangulName();
+            CurrentInspectorUserId = user.GetUserId();
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressDto
             {
