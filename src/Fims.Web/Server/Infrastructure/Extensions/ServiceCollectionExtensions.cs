@@ -129,7 +129,7 @@ namespace Fims.Web.Server.Infrastructure.Extensions
         {
             //JBH: add/register all my application services to the DI container.
             //     "all my application services" --> all services under the directory "Fims.Services",
-            //     such as "ProductService", "ShoppingCartService", "IdentityService", ...
+            //     such as "TSheetsService", "TSheetSpecsService", "IdentityService", ...
             var serviceInterfaceType = typeof(IService);
             var singletonServiceInterfaceType = typeof(ISingletonService);
             var scopedServiceInterfaceType = typeof(IScopedService);

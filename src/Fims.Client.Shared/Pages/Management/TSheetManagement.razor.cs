@@ -13,11 +13,11 @@ using Telerik.DataSource;
 
 using AutoMapper;
 
-using Fims.Client.Shared.ClientServices.TSheetSpecs;
+using Fims.Client.Shared.ClientServices.TReports;
 using Fims.Common;
 using Fims.Data.Entities;
 using Fims.Data.Models;
-using Fims.Data.Models.TSheetSpecs;
+using Fims.Data.Models.TReports;
 
 namespace Fims.Client.Shared.Pages.Management
 {
@@ -27,6 +27,8 @@ namespace Fims.Client.Shared.Pages.Management
 
         public IEnumerable<TSheet> TSheets { get; set; } = Enumerable.Empty<TSheet>();
         public IEnumerable<TSheet> SelectedTSheets { get; set; } = Enumerable.Empty<TSheet>();
+
+        public TReportDto TReportGenerated { get; set; } = new TReportDto();
 
 
         int filterDebounceDelay { get; set; } = 200;
@@ -54,10 +56,20 @@ namespace Fims.Client.Shared.Pages.Management
             this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
         }
 
-        public void GenerateReportHandler(GridCommandEventArgs args)
+        public async void GenerateReportHandler(GridCommandEventArgs args)
         {
             var tSheet = (TSheet)args.Item;
-            this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
+            TReportDto reportRequest = new TReportDto
+            {
+                TSheetId = tSheet.Id,
+                TReportTemplateFile = "FimsTReportSpecs_CHILLER 검사 성적서_20221226.xlsx",
+                TReportOutputFile = "FimsReport_CHILLER 검사 성적서_20221226.xlsx",
+                IsSuccess = false,
+            };
+
+            TReportGenerated  = await TReportsClientService.GenerateTReport(reportRequest);
+
+            int cool = 7;
         }
 
         public void DeleteTSheetHandler(GridCommandEventArgs args)

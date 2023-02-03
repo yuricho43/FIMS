@@ -15,6 +15,7 @@ using Fims.Client.Shared.Infrastructure; //for ApiAuthenticationStateProvider
 using Fims.Client.Shared.ClientServices.Authentication;
 using Fims.Client.Shared.ClientServices.TSheets;
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
+using Fims.Client.Shared.ClientServices.TReports;
 
 using Fims.Client.Shared.Localization;
 using Fims.Client.Shared.Shared.Layouts;
@@ -23,6 +24,7 @@ using Fims.Admin.Infrastructure.HttpDev;
 using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
 using Microsoft.Extensions.Configuration;
 using System.Reflection;
+using Fims.Client.Shared.ClientServices.TReports;
 
 namespace Fims.Admin
 {
@@ -96,6 +98,7 @@ namespace Fims.Admin
             builder.Services.AddTransient<ITSheetsClientService, TSheetsClientService>();
             builder.Services.AddTransient<ITSheetSpecsClientService, TSheetSpecsClientService>();
             builder.Services.AddTransient<ITSheetSpecsInProgressClientService, TSheetSpecsInProgressClientService>();
+            builder.Services.AddTransient<ITReportsClientService, TReportsClientService>();
 
 #if JBH_USE_ORIGINAL
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
@@ -106,7 +109,7 @@ namespace Fims.Admin
                 )
                 .AddHttpMessageHandler<AuthenticationHeaderHandler>();
 #else
-    #if DEBUG
+#if DEBUG
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
             string serverUrl;
             string LocalOrRemote = configuration.GetValue<string>("Fims.Web.Server:LocalOrRemote");

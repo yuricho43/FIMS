@@ -14,7 +14,7 @@ using OfficeOpenXml;
 
 using Fims.Common;
 using Fims.Data.Utils;
-using Fims.Data.Models.TSheetSpecsInProgress;
+using Fims.Data.Models.TReports;
 using Fims.Data.Models;
 using Fims.Services.TSheets;
 using Fims.Data.Entities;
@@ -38,23 +38,23 @@ namespace Fims.Services.TReports
             TSheetsService = tSheetsService;
         }
 
-        public async Task<bool> GenerateTReportAsync(int tSheetId, string tReportSpecsFilePath, string outTReportFilePath)
+        public async Task<TReportDto> GenerateTReportAsync(TReportDto tReportRequest)
         {
             if (!Directory.Exists(Constants.FimsTReportOutputRepoPath))
             {
                 Directory.CreateDirectory(Constants.FimsTReportOutputRepoPath);
             }
 
-            TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tSheetId);
+            TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tReportRequest.TSheetId);
 
 
-            if (File.Exists(outTReportFilePath))
+            if (File.Exists(tReportRequest.TReportOutputFile))
             {
-                File.Delete(outTReportFilePath);
+                File.Delete(tReportRequest.TReportOutputFile);
             }
 
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-            using ExcelPackage package = new ExcelPackage(new FileInfo(tReportSpecsFilePath));
+            using ExcelPackage package = new ExcelPackage(new FileInfo(tReportRequest.TReportTemplateFile));
 
             foreach (var ws in package.Workbook.Worksheets)
             {
@@ -76,20 +76,18 @@ namespace Fims.Services.TReports
                 }
             }
 
-            await package.SaveAsAsync(new FileInfo(outTReportFilePath));
+            await package.SaveAsAsync(new FileInfo(tReportRequest.TReportOutputFile));
 
             Console.WriteLine();
             Console.WriteLine("Read workbook sample complete");
             Console.WriteLine();
 
-
-            bool result = true;
-
-            // this controller always returns a success, unless an exception is thrown
-            return result;
+            tReportRequest.IsSuccess = true;
+            return tReportRequest;
         }
 
 
+        /*
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
@@ -142,5 +140,6 @@ namespace Fims.Services.TReports
             filePaths.ToList().ForEach(filePath => File.Delete(filePath));
             return (filePaths.Length > 0) ? productSerial : null;
         }
+        */
     }
 }
