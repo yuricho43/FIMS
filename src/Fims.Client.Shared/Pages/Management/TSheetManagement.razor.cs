@@ -54,6 +54,12 @@ namespace Fims.Client.Shared.Pages.Management
             this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
         }
 
+        public void GenerateReportHandler(GridCommandEventArgs args)
+        {
+            var tSheet = (TSheet)args.Item;
+            this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
+        }
+
         public void DeleteTSheetHandler(GridCommandEventArgs args)
         {
             // ProductService.DeleteProduct((ProductDto)args.Item);

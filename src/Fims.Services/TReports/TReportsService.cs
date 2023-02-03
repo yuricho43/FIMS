@@ -9,6 +9,8 @@ using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
 using ExcelMapper;
+using OfficeOpenXml;
+
 
 using Fims.Common;
 using Fims.Data.Utils;
@@ -16,7 +18,7 @@ using Fims.Data.Models.TSheetSpecsInProgress;
 using Fims.Data.Models;
 using Fims.Services.TSheets;
 using Fims.Data.Entities;
-using FastExcel;
+using System.ComponentModel;
 
 namespace Fims.Services.TReports
 {
@@ -27,6 +29,7 @@ namespace Fims.Services.TReports
     {
         public string FimsTSheetSpecsInProgressFileName { get; set; }
         public string FimsTSheetSpecsInProgressFileFullPath { get; set; }
+
 
         public ITSheetsService TSheetsService { get; set; }
 
@@ -50,41 +53,35 @@ namespace Fims.Services.TReports
                 File.Delete(outTReportFilePath);
             }
 
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            using ExcelPackage package = new ExcelPackage(new FileInfo(tReportSpecsFilePath));
 
-            var tReportSpecsFileInfo = new FileInfo(tReportSpecsFilePath);
-
-            // Create an instance of Fast Excel
-            using (FastExcel.FastExcel fastExcel = new FastExcel.FastExcel(new FileInfo(tReportSpecsFilePath), true))
-            using (FastExcel.FastExcel newFastExcel = new FastExcel.FastExcel(new FileInfo(tReportSpecsFilePath), new FileInfo(outTReportFilePath)))
+            foreach (var ws in package.Workbook.Worksheets)
             {
-                foreach (var worksheet in fastExcel.Worksheets)
+                var ws2 = ws as ExcelWorksheet;
+                var wsname = ws.Name;
+                var ws2name = ws2.Name;
+
+
+                foreach (var cell in ws.Cells)
                 {
-                    // Console.WriteLine(string.Format("Worksheet Name:{0}, Index:{1}", worksheet.Name, worksheet.Index));
-                    // 
-                    // //To read the rows call read
-                    // worksheet.Read();
-                    // var rows = worksheet.Rows.ToArray();
-                    // //Do something with rows
-                    // Console.WriteLine(string.Format("Worksheet Rows:{0}", rows.Count()));
+                    var cval = cell.Value;
+                    string cvalstr = cval?.ToString() ?? "";
 
-                    worksheet.Read(); //to read the rows
-                    foreach (var row in worksheet.Rows)
+                    if ((cvalstr.Length > 0) && (cvalstr.StartsWith("$!$-")))
                     {
-                        foreach (var cell in row.Cells)
-                        {
-                            var cellValue = cell.Value;
-                            var cellName = cell.CellName;
-                            var cellNames = cell.CellNames;
-                            var cellColumnName = cell.ColumnName;
-                            var cellColumnNumber = cell.ColumnNumber;
-                            var cellRowNumber = cell.RowNumber;
-                            var cellType = cell.GetType();
-                        }
+                        var cadr = cell.Address;
+                        cell.Value = $"X@X-{cadr}";
                     }
-
-                    newFastExcel.Write(worksheet, worksheet.Name);
                 }
             }
+
+            await package.SaveAsAsync(new FileInfo(outTReportFilePath));
+
+            Console.WriteLine();
+            Console.WriteLine("Read workbook sample complete");
+            Console.WriteLine();
+
 
             bool result = true;
 

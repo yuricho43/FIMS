@@ -69,8 +69,9 @@
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
                     <GridCommandColumn Width="100px">
-                        <GridCommandButton OnClick="@ShowDetailsHandler" Icon="@FontIcon.ZoomIn">상세보기</GridCommandButton>
-                        <GridCommandButton Command="Delete" Icon="@FontIcon.Trash">Delete</GridCommandButton>
+                        <GridCommandButton OnClick="@ShowDetailsHandler" Icon="@FontIcon.ZoomIn" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">상세보기</GridCommandButton>
+                        <GridCommandButton OnClick="@GenerateReportHandler" Icon="@FontIcon.FileReport" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">성적서 작성</GridCommandButton>
+                        <GridCommandButton Command="Delete" Icon="@FontIcon.Trash" ThemeColor="@ThemeConstants.Button.ThemeColor.Warning">Delete</GridCommandButton>
                     </GridCommandColumn>
                 </GridColumns>
             </TelerikGrid>
