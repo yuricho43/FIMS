@@ -36,6 +36,7 @@ namespace Fims.Services.TReports
         public TReportsService(ITSheetsService tSheetsService)
         {
             TSheetsService = tSheetsService;
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
 
         public async Task<TReportDto> GenerateTReportAsync(TReportDto tReportRequest)
@@ -45,16 +46,16 @@ namespace Fims.Services.TReports
                 Directory.CreateDirectory(Constants.FimsTReportOutputRepoPath);
             }
 
-            TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tReportRequest.TSheetId);
-
-
-            if (File.Exists(tReportRequest.TReportOutputFile))
+            string reportFilePath = Path.Combine(Constants.FimsTReportOutputRepoPath, tReportRequest.TReportOutputFile);
+            if (File.Exists(reportFilePath))
             {
-                File.Delete(tReportRequest.TReportOutputFile);
+                File.Delete(reportFilePath);
             }
 
-            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
-            using ExcelPackage package = new ExcelPackage(new FileInfo(tReportRequest.TReportTemplateFile));
+            TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tReportRequest.TSheetId);
+
+            string specFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, tReportRequest.TReportTemplateFile);
+            using ExcelPackage package = new ExcelPackage(new FileInfo(specFilePath));
 
             foreach (var ws in package.Workbook.Worksheets)
             {
@@ -70,17 +71,44 @@ namespace Fims.Services.TReports
 
                     if ((cvalstr.Length > 0) && (cvalstr.StartsWith("$!$-")))
                     {
-                        var cadr = cell.Address;
-                        cell.Value = $"X@X-{cadr}";
+                        int tItemNo = 0;
+                        string ch = "Ch1";
+
+                        // cvalstr: "$!$-1002", "$!$-1007-Ch3", ...
+                        var markers = cvalstr.Split('-').ToList();
+
+                        try
+                        {
+                            tItemNo = Int32.Parse(markers[1]);
+                        }
+                        catch
+                        {
+                            tItemNo = 0;
+                        }
+
+                        ch = (markers.Count > 2) ? markers[2].ToString() : "Ch1";
+
+                        var tItem = tsheet.TItems.First(t => t.TestNo == tItemNo);
+                        if (tItem != null)
+                        {
+                            switch (ch)
+                            {
+                                case "Ch1": cell.Value = tItem.Ch1Data; break;
+                                case "Ch2": cell.Value = tItem.Ch2Data; break;
+                                case "Ch3": cell.Value = tItem.Ch3Data; break;
+                                case "Ch4": cell.Value = tItem.Ch4Data; break;
+                                default:    cell.Value = tItem.Ch1Data; break;
+                            }
+                        }
+                        else
+                        {
+                            cell.Value = "NODATA";
+                        }
                     }
                 }
             }
 
-            await package.SaveAsAsync(new FileInfo(tReportRequest.TReportOutputFile));
-
-            Console.WriteLine();
-            Console.WriteLine("Read workbook sample complete");
-            Console.WriteLine();
+            await package.SaveAsAsync(new FileInfo(reportFilePath));
 
             tReportRequest.IsSuccess = true;
             return tReportRequest;

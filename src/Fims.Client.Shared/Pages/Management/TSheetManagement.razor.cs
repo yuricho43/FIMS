@@ -67,7 +67,8 @@ namespace Fims.Client.Shared.Pages.Management
                 IsSuccess = false,
             };
 
-            TReportGenerated  = await TReportsClientService.GenerateTReport(reportRequest);
+            //TReportGenerated  = await TReportsClientService.GenerateTReport(reportRequest);
+            var treport = await TReportsClientService.GenerateTReport(reportRequest);
 
             int cool = 7;
         }

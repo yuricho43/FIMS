@@ -55,11 +55,13 @@
                                 DefaultFilterOperator="@FilterOperator.Contains" />
                     <GridColumn Field=@nameof(TSheet.InspectionStartDateTime)
                                 Title="시작시간"
+                                DisplayFormat="{0:yyyy-MM-dd-hh:mm}"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
                     <GridColumn Field=@nameof(TSheet.InspectionEndDateTime)
                                 Title="완료시간"
+                                DisplayFormat="{0:yyyy-MM-dd-hh:mm}"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
