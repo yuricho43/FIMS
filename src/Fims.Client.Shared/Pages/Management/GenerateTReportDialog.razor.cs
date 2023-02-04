@@ -28,6 +28,9 @@ using Fims.Data.Models.TSheetSpecs;
 using Fims.Client.Shared.ClientServices.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
 using Fims.Data.Models.TReports;
+using Azure;
+using Microsoft.JSInterop;
+using Telerik.SvgIcons;
 
 namespace Fims.Client.Shared.Pages.Management
 {
@@ -92,29 +95,42 @@ namespace Fims.Client.Shared.Pages.Management
                 IsSuccess = false,
             };
 
-            var tReportGenerated = await TReportsClientService.GenerateTReport(newReportRequest);
+            var newTReportResponse = await TReportsClientService.GenerateTReport(newReportRequest);
 
-
-            if (tReportGenerated.IsSuccess)
+            if (!newTReportResponse.IsSuccessStatusCode)
             {
-                this.ShowErrors = false;
-
-                GenerateTReportNotificationComponent.Show(new NotificationModel
-                {
-                    Text = "성적서 생성 성공",
-                    ThemeColor = "error",
-                    CloseAfter = 3000
-                });
-
-                await GenerateTReportFinished.InvokeAsync(NewTReportRequestDto.TReportOutputFile); // pass Param to parent, by calling EventCallback
-                //this.NavigationManager.NavigateTo("/account/login");
+                await JS.InvokeVoidAsync("alert", "File not found.");
             }
             else
             {
-                //this.Errors = result.Errors;
-                this.ShowErrors = true;
+                var fileStream = newTReportResponse.Content.ReadAsStream();
+                using var streamRef = new DotNetStreamReference(stream: fileStream);
+                await JS.InvokeVoidAsync("downloadFileFromStream", tReportOutputFile, streamRef);
             }
 
+
+            // if (tReportGenerated.IsSuccess)
+            // {
+            //     this.ShowErrors = false;
+            // 
+            //     GenerateTReportNotificationComponent.Show(new NotificationModel
+            //     {
+            //         Text = "성적서 생성 성공",
+            //         ThemeColor = "error",
+            //         CloseAfter = 3000
+            //     });
+            // 
+            //     await GenerateTReportFinished.InvokeAsync(NewTReportRequestDto.TReportOutputFile); // pass Param to parent, by calling EventCallback
+            //     //this.NavigationManager.NavigateTo("/account/login");
+            // }
+            // else
+            // {
+            //     //this.Errors = result.Errors;
+            //     this.ShowErrors = true;
+            // }
+
+            await GenerateTReportFinished.InvokeAsync(NewTReportRequestDto.TReportOutputFile); // pass Param to parent, by calling EventCallback
+            this.ShowErrors = false;
             ValidSubmit = false;
 
             StateHasChanged();

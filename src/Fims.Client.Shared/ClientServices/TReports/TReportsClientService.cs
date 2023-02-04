@@ -29,12 +29,15 @@ namespace Fims.Client.Shared.ClientServices.TReports
             return response;
         }
 
-        public async Task<TReportDto> GenerateTReport(TReportDto tReportRequest)
+        public async Task<HttpResponseMessage> GenerateTReport(TReportDto tReportRequest)
         {
             var path = $"{TReportsPath}/{nameof(this.GenerateTReport)}"; // "api/treports/GenerateTReport"
             var response = await this.http.PostAsJsonAsync(path, tReportRequest);
-            var tReportResponse = await response.Content.ReadFromJsonAsync<TReportDto>();
-            return tReportResponse;
+            return response;
+            //tReportRequest.IsSuccess = true;
+            //return tReportRequest;
+            ////var tReportResponse = await response.Content.ReadFromJsonAsync<TReportDto>();
+            ////return tReportResponse;
         }
 
         /*

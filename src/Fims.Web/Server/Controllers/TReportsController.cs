@@ -13,6 +13,7 @@ using Fims.Data.Entities;
 using Fims.Web.Server.Infrastructure.Services;
 using Fims.Web.Server.Infrastructure.Extensions;
 using static Fims.Common.Constants;
+using System.IO;
 
 
 namespace Fims.Web.Server.Controllers
@@ -62,8 +63,9 @@ namespace Fims.Web.Server.Controllers
         [HttpPost(nameof(GenerateTReport))]
         public async Task<ActionResult> GenerateTReport(TReportDto tReportRequest)
         {
-            var tReportGenerated = await this.tReportsService.GenerateTReportAsync(tReportRequest);
-            return Created(nameof(this.GenerateTReport), tReportGenerated);
+            Stream tReportStream = await this.tReportsService.GenerateTReportAsync(tReportRequest);
+            return File(tReportStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", tReportRequest.TReportOutputFile);
+            //return Created(nameof(this.GenerateTReport), tReportStream);
         }
 
         /*

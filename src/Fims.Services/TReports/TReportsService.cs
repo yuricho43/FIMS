@@ -60,7 +60,7 @@ namespace Fims.Services.TReports
         }
 
 
-        public async Task<TReportDto> GenerateTReportAsync(TReportDto tReportRequest)
+        public async Task<Stream> GenerateTReportAsync(TReportDto tReportRequest)
         {
             if (!Directory.Exists(Constants.FimsTReportOutputRepoPath))
             {
@@ -109,7 +109,7 @@ namespace Fims.Services.TReports
 
                         ch = (markers.Count > 2) ? markers[2].ToString() : "Ch1";
 
-                        var tItem = tsheet.TItems.First(t => t.TestNo == tItemNo);
+                        var tItem = tsheet.TItems.FirstOrDefault(t => t.TestNo == tItemNo); //make sure using FirstOrDefault(), instead of First() which seems to cause an Exception!
                         if (tItem != null)
                         {
                             switch (ch)
@@ -131,8 +131,20 @@ namespace Fims.Services.TReports
 
             await package.SaveAsAsync(new FileInfo(reportFilePath));
 
-            tReportRequest.IsSuccess = true;
-            return tReportRequest;
+            Stream memoryStream = new MemoryStream();
+
+            try
+            {
+                await package.SaveAsAsync(memoryStream);
+                memoryStream.Position = 0;
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+            }
+
+            // tReportRequest.IsSuccess = true;
+            return memoryStream;
         }
 
         /*
