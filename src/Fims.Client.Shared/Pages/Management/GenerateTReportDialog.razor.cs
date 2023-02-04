@@ -27,31 +27,38 @@ using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Client.Shared.ClientServices.Authentication;
 using Microsoft.AspNetCore.Components.Authorization;
+using Fims.Data.Models.TReports;
 
 namespace Fims.Client.Shared.Pages.Management
 {
-    public partial class AddUserDialog
+    public partial class GenerateTReportDialog
     {
         [CascadingParameter]
         public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         [Parameter]
-        public EventCallback<RegisterRequestModel> AddUserFinished { get; set; }
+        public List<string> TReportSpecs { get; set; }
 
-        public RegisterRequestModel NewUserRegisterRequestModel { get; set; } = new RegisterRequestModel();
-        private List<string> Roles { get; set; } = new List<string> { "Admin", "Inspector", "Reporter", "Manager"};
+        [Parameter]
+        public int TSheetId { get; set; }
 
-        public TelerikForm AddUserFormRef { get; set; }
-        public TelerikNotification AddUserNotificationComponent { get; set; }
+        [Parameter]
+        public EventCallback<string> GenerateTReportFinished { get; set; }
+
+        public TReportDto NewTReportRequestDto { get; set; } = new TReportDto();
+
+        public TelerikForm GenerateTReportFormRef { get; set; }
+        public TelerikNotification GenerateTReportNotificationComponent { get; set; }
         public bool ShowErrors { get; set; }
         public IEnumerable<string> Errors { get; set; }
 
 
-        //protected override void OnInitialized()
-        //{
-        //    base.OnInitialized();
-        //}
-        //
+        protected override void OnInitialized()
+        {
+            NewTReportRequestDto.TSheetId = TSheetId;
+            base.OnInitialized();
+        }
+        
         //protected override async Task OnInitializedAsync()
         //{
         //    var state = await this.AuthState.GetAuthenticationStateAsync();
@@ -75,25 +82,36 @@ namespace Fims.Client.Shared.Pages.Management
         {
             ValidSubmit = true;
 
-            var result = await this.AuthClientService.Register(this.NewUserRegisterRequestModel);
+            var tReportSpecBase = NewTReportRequestDto.TReportSpec.Split('_').ToList()[0]; // remove date from "CHILLER 검사 성적서_20221226"
+            var tReportOutputFile = $"FimsReport_T{TSheetId}_{tReportSpecBase}_{DateTime.Now:yyyyMMddhhmmss}.xlsx";
+            TReportDto newReportRequest = new TReportDto
+            {
+                TSheetId = TSheetId,
+                TReportSpec =       $"FimsTReportSpecs_{NewTReportRequestDto.TReportSpec}.xlsx",
+                TReportOutputFile = tReportOutputFile,
+                IsSuccess = false,
+            };
 
-            if (result.Succeeded)
+            var tReportGenerated = await TReportsClientService.GenerateTReport(newReportRequest);
+
+
+            if (tReportGenerated.IsSuccess)
             {
                 this.ShowErrors = false;
 
-                AddUserNotificationComponent.Show(new NotificationModel
+                GenerateTReportNotificationComponent.Show(new NotificationModel
                 {
-                    Text = "사용자 등록 성공",
+                    Text = "성적서 생성 성공",
                     ThemeColor = "error",
                     CloseAfter = 3000
                 });
 
-                await AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
+                await GenerateTReportFinished.InvokeAsync(NewTReportRequestDto.TReportOutputFile); // pass Param to parent, by calling EventCallback
                 //this.NavigationManager.NavigateTo("/account/login");
             }
             else
             {
-                this.Errors = result.Errors;
+                //this.Errors = result.Errors;
                 this.ShowErrors = true;
             }
 
@@ -112,10 +130,10 @@ namespace Fims.Client.Shared.Pages.Management
             //ValidSubmit = false;
         }
 
-        void OnAddUserDialogCancel()
+        void OnGenerateTReportDialogCancel()
         {
             //ValidSubmit = false;
-            AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
+            GenerateTReportFinished.InvokeAsync(NewTReportRequestDto.TReportOutputFile); // pass Param to parent, by calling EventCallback
         }
 
 

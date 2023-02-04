@@ -18,6 +18,7 @@ using Fims.Common;
 using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.TReports;
+using Fims.Data.Models.Identity;
 
 namespace Fims.Client.Shared.Pages.Management
 {
@@ -27,8 +28,9 @@ namespace Fims.Client.Shared.Pages.Management
 
         public IEnumerable<TSheet> TSheets { get; set; } = Enumerable.Empty<TSheet>();
         public IEnumerable<TSheet> SelectedTSheets { get; set; } = Enumerable.Empty<TSheet>();
+        public TSheet CurrentTSheet { get; set; }
 
-
+        public bool GenerateTReportDialogVisible { get; set; } = false;
         public List<string> TReportSpecs { get; set; } = new List<string>();
         public TReportDto TReportGenerated { get; set; } = new TReportDto();
 
@@ -50,6 +52,7 @@ namespace Fims.Client.Shared.Pages.Management
         protected override async Task OnInitializedAsync()
         {
             TSheets = await TSheetsClientService.AllTSheetsAsync();
+            TReportSpecs = await TReportsClientService.AllTReportSpecs();
         }
 
         public void ShowDetailsHandler(GridCommandEventArgs args)
@@ -58,24 +61,18 @@ namespace Fims.Client.Shared.Pages.Management
             this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
         }
 
-
-        public async void GetTReportSpecsHandler(GridCommandEventArgs args)
+        private void OnGenerateTReportFinished(string fileGenerated)
         {
-            TReportSpecs = await TReportsClientService.AllTReportSpecs();
+            GenerateTReportDialogVisible = false;
+            //await LoadData();
+            //StateHasChanged();
         }
 
-        public async void GenerateReportHandler(GridCommandEventArgs args)
+        public void GenerateReportHandler(GridCommandEventArgs args)
         {
-            var tSheet = (TSheet)args.Item;
-            TReportDto reportRequest = new TReportDto
-            {
-                TSheetId = tSheet.Id,
-                TReportTemplateFile = "FimsTReportSpecs_CHILLER 검사 성적서_20221226.xlsx",
-                TReportOutputFile = "FimsReport_CHILLER 검사 성적서_20221226.xlsx",
-                IsSuccess = false,
-            };
-
-            TReportGenerated  = await TReportsClientService.GenerateTReport(reportRequest);
+            CurrentTSheet = (TSheet)args.Item;
+            GenerateTReportDialogVisible = true;
+            //StateHasChanged();
         }
 
         public void DeleteTSheetHandler(GridCommandEventArgs args)

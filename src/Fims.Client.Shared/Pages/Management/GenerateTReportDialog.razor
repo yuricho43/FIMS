@@ -1,13 +1,13 @@
-﻿@page "/Management/AddUserDialog"
+﻿@page "/Management/GenerateTReportDialog"
 
-@using RegisterRequestModel = Fims.Data.Models.Identity.RegisterRequestModel
+@using TReportDto = Fims.Data.Models.TReports.TReportDto
 
 
-<TelerikDialog Visible="true" Title="사용자 추가" Width="700px">
+<TelerikDialog Visible="true" Title="성적서 생성" Width="700px">
     <DialogContent>
 
-        <TelerikForm Model="@NewUserRegisterRequestModel"
-                     @ref="@AddUserFormRef"
+        <TelerikForm Model="@NewTReportRequestDto"
+                     @ref="@GenerateTReportFormRef"
                      OnValidSubmit="@HandleValidSubmit"
                      OnInvalidSubmit="@HandleInvalidSubmit"
                      Orientation="FormOrientation.Horizontal">
@@ -15,46 +15,34 @@
                 <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
+
             <FormItems>
-                <FormItem Field="@nameof(RegisterRequestModel.UserName)">
+                <FormItem Field="@nameof(TReportDto.TSheetId)">
                     <Template>
-                        <label for="fname" class="k-label k-form-label">ID*:</label>
-                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.UserName"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.UserName)"></TelerikValidationMessage>
+                        <label for="fname" class="k-label k-form-label">검사번호*:</label>
+                        <TelerikNumericTextBox Id="fname" @bind-Value="NewTReportRequestDto.TSheetId" Enabled="false"></TelerikNumericTextBox>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(RegisterRequestModel.Password)">
+
+                <FormItem Field="@nameof(TReportDto.TReportSpec)">
                     <Template>
-                        <label for="pass" class="k-label k-form-label">Password*:</label>
-                        <TelerikTextBox Id="pass" @bind-Value="@NewUserRegisterRequestModel.Password" Password="true"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.Password)"></TelerikValidationMessage>
+                        <label for="role" class="k-label k-form-label">성적서 양식*:</label>
+                        <TelerikDropDownList Id="role" Data="@TReportSpecs" @bind-Value="NewTReportRequestDto.TReportSpec"></TelerikDropDownList>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(RegisterRequestModel.Role)">
+
+@*                <FormItem Field="@nameof(TReportDto.TReportOutputFile)">
                     <Template>
-                        <label for="role" class="k-label k-form-label">권한*:</label>
-                        <TelerikDropDownList Id="role" Data="@Roles" @bind-Value="NewUserRegisterRequestModel.Role"></TelerikDropDownList>
+                        <label for="fname" class="k-label k-form-label">파일 이름*:</label>
+                        <TelerikTextBox Id="fname" @bind-Value="NewTReportRequestDto.TReportSpec"></TelerikTextBox>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(RegisterRequestModel.HangulName)">
-                    <Template>
-                        <label for="fname" class="k-label k-form-label">이름*:</label>
-                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.HangulName"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.HangulName)"></TelerikValidationMessage>
-                    </Template>
-                </FormItem>
-                <FormItem Field="@nameof(RegisterRequestModel.Email)">
-                    <Template>
-                        <label for="mail" class="k-label k-form-label">Email*:</label>
-                        <TelerikTextBox Id="mail" @bind-Value="@NewUserRegisterRequestModel.Email" InputMode="email" PlaceHolder="example@domain.com"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.Email)"></TelerikValidationMessage>
-                    </Template>
-                </FormItem>
+*@
             </FormItems>
 
             <FormButtons>
-                <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">등록</TelerikButton>
-                <TelerikButton ButtonType="ButtonType.Button" OnClick="@OnAddUserDialogCancel">취소</TelerikButton>
+                <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">생성</TelerikButton>
+                <TelerikButton ButtonType="ButtonType.Button" OnClick="@OnGenerateTReportDialogCancel">취소</TelerikButton>
            </FormButtons>
 
         </TelerikForm>
@@ -70,7 +58,7 @@
 
 
 <div class="notification-parent">
-    <TelerikNotification @ref="AddUserNotificationComponent"
+    <TelerikNotification @ref="GenerateTReportNotificationComponent"
                          Class="MyTelerikNotification"
                          HorizontalPosition="@NotificationHorizontalPosition.Center"
                          VerticalPosition="@NotificationVerticalPosition.Top"></TelerikNotification>

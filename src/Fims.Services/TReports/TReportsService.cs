@@ -75,7 +75,7 @@ namespace Fims.Services.TReports
 
             TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tReportRequest.TSheetId);
 
-            string specFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, tReportRequest.TReportTemplateFile);
+            string specFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, tReportRequest.TReportSpec);
             using ExcelPackage package = new ExcelPackage(new FileInfo(specFilePath));
 
             foreach (var ws in package.Workbook.Worksheets)
