@@ -19,6 +19,7 @@ using Fims.Data.Models;
 using Fims.Services.TSheets;
 using Fims.Data.Entities;
 using System.ComponentModel;
+using Fims.Data.Models.TSheetSpecsInProgress;
 
 namespace Fims.Services.TReports
 {
@@ -38,6 +39,26 @@ namespace Fims.Services.TReports
             TSheetsService = tSheetsService;
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
+
+
+        public async Task<List<string>> AllTReportSpecsAsync()
+        {
+            string searchPattern = Constants.FimsTReportSpecsFileNameBase + "_" + "*" + ".xlsx";
+            string[] filePaths = Directory.GetFiles(Constants.FimsTReportSpecsRepoPath, searchPattern);
+
+            List<string> tReportSpecsList = new List<string>();
+
+            foreach (var filePath in filePaths)
+            {
+                //filePath: ".\\FimsTReportSpecs_CHILLER 검사 성적서_20221226.xlsx"
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                fileName = fileName["FimsTReportSpecs_".Length..];
+                tReportSpecsList.Add(fileName);
+            }
+
+            return tReportSpecsList;
+        }
+
 
         public async Task<TReportDto> GenerateTReportAsync(TReportDto tReportRequest)
         {
@@ -114,7 +135,6 @@ namespace Fims.Services.TReports
             return tReportRequest;
         }
 
-
         /*
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
@@ -170,4 +190,4 @@ namespace Fims.Services.TReports
         }
         */
     }
-}
+    }

@@ -9,6 +9,8 @@ namespace Fims.Services.TReports
 {
     public interface ITReportsService : IService
     {
+        Task<List<string>> AllTReportSpecsAsync();
+
         Task<TReportDto> GenerateTReportAsync(TReportDto tReportRequest);
 
         // public Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto);

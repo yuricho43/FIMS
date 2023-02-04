@@ -7,6 +7,7 @@ namespace Fims.Client.Shared.ClientServices.TReports
 {
     public interface ITReportsClientService
     {
+        Task<List<string>> AllTReportSpecs();
         Task<TReportDto> GenerateTReport(TReportDto tReportRequest);
 
         /*

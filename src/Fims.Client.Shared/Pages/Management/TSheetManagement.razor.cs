@@ -28,6 +28,8 @@ namespace Fims.Client.Shared.Pages.Management
         public IEnumerable<TSheet> TSheets { get; set; } = Enumerable.Empty<TSheet>();
         public IEnumerable<TSheet> SelectedTSheets { get; set; } = Enumerable.Empty<TSheet>();
 
+
+        public List<string> TReportSpecs { get; set; } = new List<string>();
         public TReportDto TReportGenerated { get; set; } = new TReportDto();
 
 
@@ -56,6 +58,12 @@ namespace Fims.Client.Shared.Pages.Management
             this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
         }
 
+
+        public async void GetTReportSpecsHandler(GridCommandEventArgs args)
+        {
+            TReportSpecs = await TReportsClientService.AllTReportSpecs();
+        }
+
         public async void GenerateReportHandler(GridCommandEventArgs args)
         {
             var tSheet = (TSheet)args.Item;
@@ -67,10 +75,7 @@ namespace Fims.Client.Shared.Pages.Management
                 IsSuccess = false,
             };
 
-            //TReportGenerated  = await TReportsClientService.GenerateTReport(reportRequest);
-            var treport = await TReportsClientService.GenerateTReport(reportRequest);
-
-            int cool = 7;
+            TReportGenerated  = await TReportsClientService.GenerateTReport(reportRequest);
         }
 
         public void DeleteTSheetHandler(GridCommandEventArgs args)

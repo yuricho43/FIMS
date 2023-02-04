@@ -38,15 +38,6 @@ namespace Fims.Web.Server.Controllers
         }
 
         /*
-        [HttpGet]
-        //[HttpGet(Name = "TSheets")] //JBH
-        [AllowAnonymous] //JBH
-        public async Task<IEnumerable<TSheet>> All()
-        {
-            var data = await this.tSheetsService.AllTSheetsAsync();
-            return data;
-        }
-
         [HttpGet("FindTSheetWithTItems/{id}")]
         [AllowAnonymous] //JBH
         public async Task<ActionResult<TSheet>> FindTSheetWithTItems(int id)
@@ -59,8 +50,16 @@ namespace Fims.Web.Server.Controllers
         //     => await this.tSheetsService.ComplexSearchAsync(searchRequest);
         */
 
+        [HttpGet(nameof(AllTReportSpecs))]
+        [AllowAnonymous]
+        public async Task<List<string>> AllTReportSpecs()
+        {
+            var data = await this.tReportsService.AllTReportSpecsAsync();
+            return data;
+        }
+
+
         [HttpPost(nameof(GenerateTReport))]
-        //[HttpPost]
         public async Task<ActionResult> GenerateTReport(TReportDto tReportRequest)
         {
             var tReportGenerated = await this.tReportsService.GenerateTReportAsync(tReportRequest);
