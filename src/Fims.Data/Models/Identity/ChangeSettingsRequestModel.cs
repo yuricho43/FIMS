@@ -9,17 +9,11 @@ namespace Fims.Data.Models.Identity
     public class ChangeUserProfileRequestModel
     {
         [Required]
-        [StringLength(
-            MaxNameLength,
-            ErrorMessage = StringLengthErrorMessage,
-            MinimumLength = MinNameLength)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength, ErrorMessage = NameLengthErrorMessage)]
         public string HangulName { get; set; }
 
         [Required]
-        [StringLength(
-            MaxNameLength,
-            ErrorMessage = StringLengthErrorMessage,
-            MinimumLength = MinNameLength)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength, ErrorMessage = NameLengthErrorMessage)]
         public string EnglishName { get; set; }
     }
 }

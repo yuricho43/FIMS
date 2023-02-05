@@ -10,32 +10,26 @@ namespace Fims.Data.Models.Identity
     public class RegisterRequestModel
     {
         [Required]
-        [StringLength(MaxUserNameLength,
-                      ErrorMessage = StringLengthErrorMessage,
-                      MinimumLength = MinUserNameLength)]
+        [StringLength(MaxUserNameLength, MinimumLength = MinUserNameLength, ErrorMessage = IdLengthErrorMessage)]
         public string UserName { get; set; } //login name
 
         [Required]
-        [MinLength(MinPasswordLength)]
+        [MinLength(MinPasswordLength, ErrorMessage = PasswordLengthErrorMessage)]
         [DataType(DataType.Password)]
         public string Password { get; set; }
 
         [Required]
-        [StringLength(MaxRoleNameLength,
-                      ErrorMessage = StringLengthErrorMessage,
-                      MinimumLength = MinRoleNameLength)]
+        [StringLength(MaxRoleNameLength, MinimumLength = MinRoleNameLength, ErrorMessage = StringLengthErrorMessage)]
         public string Role { get; set; }
 
         [Required]
-        [EmailAddress]
-        [MinLength(MinEmailLength)]
-        [MaxLength(MaxEmailLength)]
+        [EmailAddress(ErrorMessage= EmailFormatErrorMessage)]
+        //[MinLength(MinEmailLength)]
+        //[MaxLength(MaxEmailLength)]
         public string Email { get; set; }
 
         [Required]
-        [StringLength(MaxNameLength,
-                      ErrorMessage = StringLengthErrorMessage,
-                      MinimumLength = MinNameLength)]
+        [StringLength(MaxNameLength, MinimumLength = MinNameLength, ErrorMessage = NameLengthErrorMessage)]
         public string HangulName { get; set; }
 
         ////[Required]

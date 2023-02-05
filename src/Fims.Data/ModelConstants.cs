@@ -5,18 +5,18 @@
         public class Common
         {
             public const int MinNameLength = 2;
-            public const int MaxNameLength = 50;
+            public const int MaxNameLength = 20;
         }
 
         public class Identity
         {
-            public const int MinUserNameLength = 2;
-            public const int MaxUserNameLength = 50;
+            public const int MinUserNameLength = 3;
+            public const int MaxUserNameLength = 20;
             public const int MinEmailLength = 3;
             public const int MaxEmailLength = 50;
-            public const int MinPasswordLength = 4;
-            public const int MinRoleNameLength = 2;
-            public const int MaxRoleNameLength = 50;
+            public const int MinPasswordLength = 6;
+            public const int MinRoleNameLength = 3;
+            public const int MaxRoleNameLength = 20;
         }
 
         public class Address
