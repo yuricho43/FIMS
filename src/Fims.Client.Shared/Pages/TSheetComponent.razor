@@ -30,7 +30,14 @@
                 <div>
                     <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>
                     @*&nbsp;*@
-                    <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory]-TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                    @if (MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory] > 0)
+                    {
+                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                    }
+                    else
+                    {
+                        <span class="badge badge-success" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                    }
                 </div>
             </HeaderTemplate>
             <Content>

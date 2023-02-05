@@ -139,6 +139,18 @@ namespace Fims.Client.Shared.Pages
             //StateHasChanged();
         }
 
+        private int GetTItemSpecsNotCompletedCount()
+        {
+            int notCompletedCount = 0;
+
+            foreach (var cat in TItemSpecsInCategoryCompletedCountDict)
+            {
+                notCompletedCount += MyTSheetSpec.CategoryTItemsCountDict[cat.Key] - TItemSpecsInCategoryCompletedCountDict[cat.Key];
+            }
+
+            return notCompletedCount;
+        }
+
         private IMapper CreateAutoMapperFromTItemSpecToTItem()
         {
             var config = new MapperConfiguration(cfg => cfg.CreateMap<TItemSpec, TItem>()
@@ -192,6 +204,16 @@ namespace Fims.Client.Shared.Pages
             //  // update the grid with the data from the service
             //  List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
             //  MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
+
+            int notCompletedCount = GetTItemSpecsNotCompletedCount();
+            if (notCompletedCount > 0)
+            {
+                bool confirmed = await Dialogs.ConfirmAsync("아직 입력되지 않은 항목들이 있습니다. 그래도 DB에 저장할까요?", "Database 저장");
+                if (!confirmed)
+                {
+                    return;
+                }
+            }
 
             CollectTItemSpecsFinal();
 
