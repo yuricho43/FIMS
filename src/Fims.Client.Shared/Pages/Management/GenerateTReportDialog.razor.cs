@@ -134,6 +134,12 @@ namespace Fims.Client.Shared.Pages.Management
             ValidSubmit = false;
 
             StateHasChanged();
+
+            /*
+             * A Downloaded File goes inside of 
+             *      - MauiApp(WebView): the %USERPROFILE%\Downloads directory
+             *      - WebApp:           the %USERPROFILE%\Downloads directory or the download directory set by user.
+             */
         }
 
         void HandleInvalidSubmit()
