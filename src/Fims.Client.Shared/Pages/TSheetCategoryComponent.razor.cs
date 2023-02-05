@@ -18,15 +18,15 @@ namespace Fims.Client.Shared.Pages
     public partial class TSheetCategoryComponent
     {
         [Parameter]
-        public ObservableCollection<TItemSpec> MyCategoryTItemSpecs { get; set; }
+        public ObservableCollection<TItemSpec> TItemSpecsInCategory { get; set; }
 
         public int MaxChannels { get; set; }
 
-        private List<TItemSpec> PristineItems { get; set; } = new List<TItemSpec>();
-        public IEnumerable<TItemSpec> SelectedItems { get; set; } = Enumerable.Empty<TItemSpec>();
+        private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
+        public IEnumerable<TItemSpec> TItemSpecsSelected { get; set; } = Enumerable.Empty<TItemSpec>();
 
-        public bool GridIsDirty => MyCategoryTItemSpecs.ToList().Exists(itm => itm.IsDirty);
-        public bool SelectionIsDirty => SelectedItems.ToList().Exists(itm => itm.IsDirty);
+        public bool GridIsDirty => TItemSpecsInCategory.ToList().Exists(item => item.IsDirty);
+        public bool SelectionIsDirty => TItemSpecsSelected.ToList().Exists(item => item.IsDirty);
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
@@ -41,7 +41,7 @@ namespace Fims.Client.Shared.Pages
 
         protected override void OnInitialized()
         {
-            MaxChannels = MyCategoryTItemSpecs.Select(x => x.Channels).Max();
+            MaxChannels = TItemSpecsInCategory.Select(x => x.Channels).Max();
             Layout.DocsTitle = Localizer["HumanCapital"];
             base.OnInitialized();
         }
@@ -482,11 +482,11 @@ namespace Fims.Client.Shared.Pages
 
             if (!itemspec.IsDirty)
             {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, itemspec);
+                TItemSpec pristineItem = GetItemFromCollection(TItemSpecsPristine, itemspec);
                 if (pristineItem == null)
                 {
                     //add only the first time a field is edited, later it is no longer pristine
-                    PristineItems.Add(GetItemFromCollection(MyCategoryTItemSpecs, itemspec));
+                    TItemSpecsPristine.Add(GetItemFromCollection(TItemSpecsInCategory, itemspec));
                 }
             }
 
@@ -499,9 +499,9 @@ namespace Fims.Client.Shared.Pages
         public void CreateHandler(GridCommandEventArgs args)
         {
             TItemSpec item = (TItemSpec)args.Item;
-            item.TestNo = MyCategoryTItemSpecs.Max(model => model.TestNo) + 1;
+            item.TestNo = TItemSpecsInCategory.Max(model => model.TestNo) + 1;
             item.IsNew = true;
-            MyCategoryTItemSpecs.Insert(0, item);
+            TItemSpecsInCategory.Insert(0, item);
         }
 
         public void DeleteHandler(GridCommandEventArgs args)
@@ -715,31 +715,31 @@ namespace Fims.Client.Shared.Pages
         #region Grid Toolbar commands
         public void DeleteSelected()
         {
-            foreach (TItemSpec item in SelectedItems)
+            foreach (TItemSpec item in TItemSpecsSelected)
             {
                 DeleteItem(item);
             }
 
-            SelectedItems = new List<TItemSpec>();
+            TItemSpecsSelected = new List<TItemSpec>();
         }
 
         public void RevertSelected()
         {
-            foreach (TItemSpec item in SelectedItems)
+            foreach (TItemSpec item in TItemSpecsSelected)
             {
                 RevertItem(item);
             }
 
-            SelectedItems = new List<TItemSpec>();
+            TItemSpecsSelected = new List<TItemSpec>();
         }
 
         public void RevertAllChanges()
         {
-            for (int i = MyCategoryTItemSpecs.Count - 1; i >= 0; i--)
+            for (int i = TItemSpecsInCategory.Count - 1; i >= 0; i--)
             {
-                if (MyCategoryTItemSpecs[i].IsDirty)
+                if (TItemSpecsInCategory[i].IsDirty)
                 {
-                    RevertItem(MyCategoryTItemSpecs[i]);
+                    RevertItem(TItemSpecsInCategory[i]);
                 }
             }
             StateHasChanged();
@@ -750,7 +750,7 @@ namespace Fims.Client.Shared.Pages
         #region Button events in the Changes colum   
         public void RestoreItem(TItemSpec item)
         {
-            TItemSpec localItem = GetItemFromCollection(MyCategoryTItemSpecs, item);
+            TItemSpec localItem = GetItemFromCollection(TItemSpecsInCategory, item);
             if (localItem != null)
             {
                 localItem.IsDeleted = false;
@@ -761,7 +761,7 @@ namespace Fims.Client.Shared.Pages
         {
             if (item.IsNew)
             {
-                MyCategoryTItemSpecs.Remove(item);
+                TItemSpecsInCategory.Remove(item);
             }
             if (item.IsDeleted)
             {
@@ -770,11 +770,11 @@ namespace Fims.Client.Shared.Pages
             }
             if (item.IsChanged)
             {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, item);
+                TItemSpec pristineItem = GetItemFromCollection(TItemSpecsPristine, item);
                 if (pristineItem != null)
                 {
                     ChangeLocalItem(pristineItem);
-                    PristineItems.Remove(pristineItem);
+                    TItemSpecsPristine.Remove(pristineItem);
                     pristineItem.DirtyFields = new List<string>();
                 }
             }
@@ -782,7 +782,7 @@ namespace Fims.Client.Shared.Pages
 
         public void DeleteItem(TItemSpec itmToDelete)
         {
-            TItemSpec localItem = GetItemFromCollection(MyCategoryTItemSpecs, itmToDelete);
+            TItemSpec localItem = GetItemFromCollection(TItemSpecsInCategory, itmToDelete);
             if (localItem != null)
             {
                 if (localItem.IsDeleted)
@@ -791,7 +791,7 @@ namespace Fims.Client.Shared.Pages
                 }
                 else if (localItem.IsNew)
                 {
-                    MyCategoryTItemSpecs.Remove(localItem);
+                    TItemSpecsInCategory.Remove(localItem);
                 }
                 else
                 {
@@ -802,28 +802,28 @@ namespace Fims.Client.Shared.Pages
         #endregion
 
         #region Helpers
-        private void ChangeLocalItem(TItemSpec item)
+        private void ChangeLocalItem(TItemSpec itemspec)
         {
-            var index = MyCategoryTItemSpecs.ToList().FindIndex(i => i.TestNo == item.TestNo);
+            var index = TItemSpecsInCategory.ToList().FindIndex(i => i.TestNo == itemspec.TestNo);
 
             if (index != -1)
             {
-                var existingItem = MyCategoryTItemSpecs[index];
+                var existingItem = TItemSpecsInCategory[index];
 
-                if (SelectedItems.Contains(existingItem))
+                if (TItemSpecsSelected.Contains(existingItem))
                 {
-                    var tempSelectedItems = SelectedItems.ToList();
+                    var tempSelectedItems = TItemSpecsSelected.ToList();
 
                     tempSelectedItems.Remove(existingItem);
-                    tempSelectedItems.Add(item);
+                    tempSelectedItems.Add(itemspec);
 
-                    MyCategoryTItemSpecs[index] = item;
+                    TItemSpecsInCategory[index] = itemspec;
 
-                    SelectedItems = new List<TItemSpec>(tempSelectedItems);
+                    TItemSpecsSelected = new List<TItemSpec>(tempSelectedItems);
                 }
                 else
                 {
-                    MyCategoryTItemSpecs[index] = item;
+                    TItemSpecsInCategory[index] = itemspec;
                 }
             }
         }
@@ -843,17 +843,17 @@ namespace Fims.Client.Shared.Pages
         #region Batch Saving
         public async Task SaveAllChanges()
         {
-            List<TItemSpec> deletedItems = MyCategoryTItemSpecs.Where(itm => itm.IsDeleted == true).ToList();
-            List<TItemSpec> newItems = MyCategoryTItemSpecs.Where(itm => itm.IsNew == true).ToList();
-            List<TItemSpec> updatedItems = MyCategoryTItemSpecs.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
+            List<TItemSpec> deletedItems = TItemSpecsInCategory.Where(item => item.IsDeleted == true).ToList();
+            List<TItemSpec> newItems = TItemSpecsInCategory.Where(item => item.IsNew == true).ToList();
+            List<TItemSpec> updatedItems = TItemSpecsInCategory.Where(item => item.IsChanged == true && item.IsDeleted == false).ToList();
 
             // clean up current data and selection
-            MyCategoryTItemSpecs.Clear();
-            SelectedItems = Enumerable.Empty<TItemSpec>();
+            TItemSpecsInCategory.Clear();
+            TItemSpecsSelected = Enumerable.Empty<TItemSpec>();
 
             // update the grid with the data from the service
             List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            MyCategoryTItemSpecs = new ObservableCollection<TItemSpec>(newData);
+            TItemSpecsInCategory = new ObservableCollection<TItemSpec>(newData);
         }
 
         private List<TItemSpec> Data { get; set; }
