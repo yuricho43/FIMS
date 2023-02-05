@@ -30,11 +30,11 @@
                 <div>
                     <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>
                     @*&nbsp;*@
-                    <span class="badge badge-warning" style="width: 30px">@MyTSheetSpec.CategoryTItemsCountDict[TCategory]</span>
+                    <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory]-TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
                 </div>
             </HeaderTemplate>
             <Content>
-                <TSheetCategoryComponent TItemSpecsInCategory="MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory]"></TSheetCategoryComponent>
+                <TSheetCategoryComponent TItemSpecsInCategory="MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory]" TItemSpecsInCategoryCompletedCountChanged="OnTItemSpecsInCategoryCompletedCountChanged"></TSheetCategoryComponent>
             </Content>
         </TabStripTab>
     }

@@ -2,6 +2,7 @@
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
 using Fims.Common;
 using Fims.Data.Models;
+using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.IdentityModel.Tokens;
@@ -20,6 +21,9 @@ namespace Fims.Client.Shared.Pages
         [Parameter]
         public ObservableCollection<TItemSpec> TItemSpecsInCategory { get; set; }
 
+        [Parameter]
+        public EventCallback<string> TItemSpecsInCategoryCompletedCountChanged { get; set; }
+
         public int MaxChannels { get; set; }
 
         private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
@@ -27,6 +31,8 @@ namespace Fims.Client.Shared.Pages
 
         public bool GridIsDirty => TItemSpecsInCategory.ToList().Exists(item => item.IsDirty);
         public bool SelectionIsDirty => TItemSpecsSelected.ToList().Exists(item => item.IsDirty);
+
+        public int TItemSpecsInCategoryCompletedCount { get; set; } = 0;
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
@@ -42,6 +48,10 @@ namespace Fims.Client.Shared.Pages
         protected override void OnInitialized()
         {
             MaxChannels = TItemSpecsInCategory.Select(x => x.Channels).Max();
+
+            TItemSpecsInCategoryCompletedCount = TItemSpecsInCategory.Where(x => x.Completed==true).Count();
+            CalculateTItemSpecsInputCompletedCount();
+
             Layout.DocsTitle = Localizer["HumanCapital"];
             base.OnInitialized();
         }
@@ -493,7 +503,11 @@ namespace Fims.Client.Shared.Pages
             itemspec.IsChanged = true;
             itemspec.DirtyFields.Add(args.Field);
 
+            itemspec.Completed = CheckAllChannelDataEntered(itemspec);
+
             ChangeLocalItem(itemspec);
+
+            CalculateTItemSpecsInputCompletedCount();
         }
 
         public void CreateHandler(GridCommandEventArgs args)
@@ -802,6 +816,26 @@ namespace Fims.Client.Shared.Pages
         #endregion
 
         #region Helpers
+        private bool CheckAllChannelDataEntered(TItemSpec itemspec)
+        {
+            var ch1 = itemspec.IsCh1DataEnabled ? (itemspec.IsCh1DataEntered ? true : false) : true;
+            var ch2 = itemspec.IsCh2DataEnabled ? (itemspec.IsCh2DataEntered ? true : false) : true;
+            var ch3 = itemspec.IsCh3DataEnabled ? (itemspec.IsCh3DataEntered ? true : false) : true;
+            var ch4 = itemspec.IsCh4DataEnabled ? (itemspec.IsCh4DataEntered ? true : false) : true;
+
+            return ch1 && ch2 && ch3 && ch4;
+        }
+
+        private void CalculateTItemSpecsInputCompletedCount()
+        {
+            var compeletedCount = TItemSpecsInCategory.Where(x => x.Completed == true).Count();
+            if (compeletedCount != TItemSpecsInCategoryCompletedCount)
+            {
+                TItemSpecsInCategoryCompletedCount = compeletedCount;
+                TItemSpecsInCategoryCompletedCountChanged.InvokeAsync($"{TItemSpecsInCategory[0].Category}:{compeletedCount}"); // notify pass Param to parent, by calling EventCallback
+            }
+        }
+
         private void ChangeLocalItem(TItemSpec itemspec)
         {
             var index = TItemSpecsInCategory.ToList().FindIndex(i => i.TestNo == itemspec.TestNo);

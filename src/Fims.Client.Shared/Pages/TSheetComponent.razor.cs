@@ -4,6 +4,7 @@ using Fims.Common;
 using Fims.Common.Mapping;
 using Fims.Data.Entities;
 using Fims.Data.Models;
+using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.EntityFrameworkCore;
@@ -60,6 +61,8 @@ namespace Fims.Client.Shared.Pages
 
         TelerikNotification TSheetComponentNotificationComponent { get; set; }
 
+        public Dictionary<string,int> TItemSpecsInCategoryCompletedCountDict { get; set; } = new Dictionary<string,int>();
+
 
         protected override void OnInitialized()
         {
@@ -69,6 +72,12 @@ namespace Fims.Client.Shared.Pages
         protected override async Task OnInitializedAsync()
         {
             this.Mapper = CreateAutoMapperFromTItemSpecToTItem();
+
+            foreach(var cat in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            {
+                TItemSpecsInCategoryCompletedCountDict.Add(cat.Key, 0);
+            }
+
             await base.OnInitializedAsync();
         }
 
@@ -115,6 +124,19 @@ namespace Fims.Client.Shared.Pages
             };
 
             return tSheet;
+        }
+
+        private void OnTItemSpecsInCategoryCompletedCountChanged(string categoryCompletedCount)
+        {
+            var pair = categoryCompletedCount.Split(':');
+            var category = pair[0];
+
+            int completedCount = 0;
+            try { completedCount = Int32.Parse(pair[1]); } catch { }
+
+            TItemSpecsInCategoryCompletedCountDict[category] = completedCount;
+
+            //StateHasChanged();
         }
 
         private IMapper CreateAutoMapperFromTItemSpecToTItem()
