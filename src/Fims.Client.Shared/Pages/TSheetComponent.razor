@@ -2,7 +2,7 @@
 
 
 <div class="toolbar-row">
-<TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%" Height="40px">
+<TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%" Height="30px">
     <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Stretch" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px" Width="100%">
         <div class="toolbar-block">제품SN:&nbsp;<strong>@MyTSheetSpec.ProductSerial</strong></div>
         <div class="toolbar-block">모델:&nbsp;<strong>@MyTSheetSpec.ProductModel</strong></div>
@@ -28,11 +28,13 @@
                 @*                  <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>*@
                 @*                    <div style="background-color:orange;color:@SelectedColor;padding:20px;"><span class="fa fa-temperature-high"></span><strong>@TCategory</strong></div>*@
                 <div>
-                    <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>
-                    @*&nbsp;*@
+                    @*<span class="fa fa-temperature-high"></span><strong>@TCategory</strong>*@
+                    <span style="color:white"><strong>@TCategory</strong></span>
+ 
+                    <span>&nbsp;</span>
                     @if (MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory] > 0)
                     {
-                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                        <span class="badge badge-danger" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
                     }
                     else
                     {
@@ -63,9 +65,9 @@
     }
 
     .toolbar-block {
-        color: white
+        color: white;
         width: 200px;
-        //background-color:cadetblue;
+       /*background-color:cadetblue;*/
     }
 </style>
 
@@ -80,6 +82,7 @@
         margin-right: 5px;
         color: white;
         background: cornflowerblue;
+        height: 30px;
     }
 
     .tab-parent .k-tabstrip-items li.k-active {
@@ -90,6 +93,6 @@
 
 <style>
     .save-button {
-        height: 30px;
+        height: 26px;
     }
 </style>

@@ -56,7 +56,7 @@ namespace Fims.Client.Shared.Pages
         private IMapper Mapper { get; set; }
 
 
-        public int ActiveCategoryTabIndex { get; set; } = 2;
+        public int ActiveCategoryTabIndex { get; set; } = 0;
         public bool IsSaveEnabled { get; set; } = true;
 
         TelerikNotification TSheetComponentNotificationComponent { get; set; }

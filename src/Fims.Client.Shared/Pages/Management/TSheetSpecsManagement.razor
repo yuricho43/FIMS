@@ -5,62 +5,34 @@
 
 <TelerikCard>
     <CardHeader>
-        <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>Spec Sheets 관리</strong></h2></CardTitle>
+        <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>검사스펙 관리</strong></h2></CardTitle>
         <CardSubTitle>교체(Replace)</CardSubTitle>
     </CardHeader>
 
     <CardBody>
-
         <div class="k-form k-form-horizontal">
-            @if (string.IsNullOrEmpty(SuccessMessage))
-            {
-                <EditForm EditContext="@MyEditContext" OnValidSubmit="@HandleValidSubmit" OnInvalidSubmit="@HandleInvalidSubmit">
-                    <DataAnnotationsValidator />
+            <h2 class="demo-alert demo-alert-error">
+                <span>검사스펙 교체는 CRITICAL한 작업입니다.</span>
+                <br/>
+                <span>업로드할 검사스펙 파일을 신중하게 선택하세요</span>
+            </h2>
 
-                    <h2 class="demo-alert demo-alert-error">
-                        <span>Spec Sheets 교체는 CRITICAL한 작업입니다.</span>
-                        <br/>
-                        <span>업로드할 Spec Sheets 파일을 신중하게 선택하세요</span>
-                    </h2>
-
-                    <div class="k-form-field">
-                        <div class="k-form-field-wrap">
-                            <TelerikUpload SaveUrl="@SaveUrl"
-                                       RemoveUrl="@RemoveUrl"
-                                       AllowedExtensions="@( new List<string>() { ".xlsx" } )"
-                                       OnSelect="@OnSelectHandler"
-                                       OnRemove="@OnRemoveHandler"
-                                       OnSuccess="@OnSuccessHandler"
-                                       OnError="@OnErrorHandler"
-                                       OnCancel="@OnCancelHandler">
-                            </TelerikUpload>
-                            <br/>
-                            <div class="k-form-hint">Spec Sheets 파일포멧: <strong>FimsTSheetSpecs_YYYYMMDD.xlsx</strong></div>
-                        </div>
-                    </div>
-
-                    @if (NotValid)
-                    {
-                        <div class="demo-alert demo-alert-error">
-                            <ValidationSummary />
-                        </div>
-                    }
-
-                    <br />
-                    <br />
-                    <div class="text-center">
-                        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">Spec Sheets 업로드</TelerikButton>
-                    </div>
-                </EditForm>
-            }
-            else
-            {
-                <div class="demo-alert demo-alert-success" role="alert">
-                    @SuccessMessage
-                    <br />
-                    <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@BackToForm">Go back</TelerikButton>
+            <div class="k-form-field">
+                <div class="k-form-field-wrap">
+                    <TelerikFileSelect
+                            AllowedExtensions="@AllowedExtensions"
+                            OnSelect="@OnFileSelected">
+                    </TelerikFileSelect>
+                    <br/>
+                    <div class="k-form-hint">검사스펙 파일포멧: <strong>FimsTSheetSpecs_YYYYMMDD.xlsx</strong></div>
                 </div>
-            }
+            </div>
+
+            <br />
+            <br />
+            <div class="text-center">
+                <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@OnUploadSpec">검사스펙 업로드</TelerikButton>
+            </div>
         </div>
     </CardBody>
 
@@ -69,24 +41,26 @@
     </CardFooter>
 </TelerikCard>
 
-@*<style>
-    .k-upload-files {
-        max-height: 200px;
-        overflow-y: auto;
-    }
 
-    .k-form-hint {
-        display: block;
-        margin-top: 1em;
-    }
 
-    .demo-section > .kd-demo-heading {
-        padding-bottom: 0;
-        margin-bottom: 1em;
-    }
+<TelerikNotification @ref="@UploadTSheetSpecsNotificationComponent"
+                     Class="TSeetSpecsNotification"
+                     VerticalPosition="NotificationVerticalPosition.Top"
+                     HorizontalPosition="NotificationHorizontalPosition.Center">
+</TelerikNotification>
 
+
+
+<style>
+    .TSeetSpecsNotification .k-notification-container .k-notification-wrap {
+        width: 300px;
+        height: 50px;
+        font-size: 1.5em;
+        text-align: center;
+        align-items: center;
+    }
 </style>
-*@
+
 
 <style>
     .k-grid td {

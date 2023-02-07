@@ -51,7 +51,7 @@ namespace Fims.Client.Shared.Pages
 
         public int Page { get; set; } = 1;
 
-        TelerikNotification IndexNotificationComponent { get; set; }
+        TelerikNotification LoadSessionNotificationComponent { get; set; }
         public List<string> ToggleButtonsThemeColor { get; set; }
 
         private System.Timers.Timer TSheetSpecsSavingTimer;
@@ -392,7 +392,7 @@ namespace Fims.Client.Shared.Pages
             if (serialToTSheetSpecPairs.Count == 0)
             {
                 IsLoadingSession = false;
-                IndexNotificationComponent.Show(new NotificationModel()
+                LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "저장된 진행목록이 없습니다.",
                     ThemeColor = "warning",
@@ -423,7 +423,7 @@ namespace Fims.Client.Shared.Pages
 
             StateHasChanged();
 
-            IndexNotificationComponent.Show(new NotificationModel()
+            LoadSessionNotificationComponent.Show(new NotificationModel()
             {
                 Text = "진행목록이 성공적으로 로딩되었습니다.",
                 ThemeColor = "primary",
@@ -439,7 +439,7 @@ namespace Fims.Client.Shared.Pages
             if (ProductSerialToTSheetSpecDict.Count == 0)
             {
                 IsSavingSession = false;
-                IndexNotificationComponent.Show(new NotificationModel()
+                LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "진행목록이 비어 있습니다.",
                     ThemeColor = "warning",
@@ -452,7 +452,7 @@ namespace Fims.Client.Shared.Pages
             bool result = await SaveSessionData();
             IsSavingSession = false;
 
-            IndexNotificationComponent.Show(new NotificationModel()
+            LoadSessionNotificationComponent.Show(new NotificationModel()
             {
                 Text = "진행목록이 성공적으로 저장되었습니다.",
                 ThemeColor = "success",

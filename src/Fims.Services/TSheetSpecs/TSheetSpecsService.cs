@@ -132,10 +132,10 @@ namespace Fims.Services.TSheetSpecs
             // backup the current SpecSheet file.
             string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
             string[] specFiles = Directory.GetFiles(Constants.FimsTSheetSpecsRepoPath, specsFilePattern);
-            string currentSpecFilePath = (specFiles.Length > 0) ? specFiles[0] : null;
-            if (currentSpecFilePath != null)
+            string prevSpecFilePath = (specFiles.Length > 0) ? specFiles[0] : null;
+            if (prevSpecFilePath != null)
             {
-                File.Move(currentSpecFilePath, currentSpecFilePath + ".BACKUP");
+                File.Move(prevSpecFilePath, prevSpecFilePath + ".BACKUP");
             }
 
 
@@ -162,9 +162,9 @@ namespace Fims.Services.TSheetSpecs
             if (buildresult != "SUCCESS")
             {
                 //restore the current
-                if (currentSpecFilePath != null)
+                if (prevSpecFilePath != null)
                 {
-                    File.Move(currentSpecFilePath + ".BACKUP", currentSpecFilePath);
+                    File.Move(prevSpecFilePath + ".BACKUP", prevSpecFilePath);
                 }
 
                 //delete the new

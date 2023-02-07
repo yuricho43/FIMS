@@ -44,6 +44,17 @@
 <TelerikMediaQuery Media="(max-width: 768px)" OnChange="((changed) => WindowWidthSmall = changed)"></TelerikMediaQuery>
 
 
+<style>
+    /* most styles for header are defined in main.css */
+
+    .header {
+        height: 60px;
+        background-color: cornflowerblue
+    }
+
+</style>
+
+
 @code {
     TelerikDrawer<DrawerItem> MenuDrawer { get; set; }
 
@@ -54,14 +65,14 @@
     IEnumerable<DrawerItem> DrawerItems =>
     new List<DrawerItem>
     {
-        new DrawerItem{ Text = Localizer["Drawer_Home"], Icon = FontIcon.Grid, Url="/", Group = "home"},
-        new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = FontIcon.Gear, Url="/BarcodeScanner", Group = "app"},
-        new DrawerItem{ Text = Localizer["Drawer_Profile"], Icon = FontIcon.User, Url="/account/UserProfile", Group = "app"},
-        new DrawerItem{ Text = Localizer["Drawer_Info"], Icon = FontIcon.InfoCircle, Url="/Management/TSheetManagement", Group = "ext"},
-        new DrawerItem{ Text = "Spec Sheets", Icon = FontIcon.Upload, Url="/Management/TSheetSpecsManagement", Group = "ext"},
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+        // new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = FontIcon.Gear, Url="/BarcodeScanner", Group = "app"},
+        // new DrawerItem{ Text = Localizer["Drawer_Profile"], Icon = FontIcon.User, Url="/account/UserProfile", Group = "app"},
+        new DrawerItem{ Text = "검사서 관리", Icon = FontIcon.GridLayout, Url="/Management/TSheetManagement", Group = "ext"},
+        new DrawerItem{ Text = "검사스펙 관리", Icon = FontIcon.Upload, Url="/Management/TSheetSpecsManagement", Group = "ext"},
         new DrawerItem{ Text = "사용자 관리", Icon = FontIcon.Myspace, Url="/Management/UserManagement", Group = "ext"},
-        new DrawerItem{ Text = "Test", Icon = FontIcon.Star, Url="/Management/fileselectevents", Group = "app"},
-        };
+        // new DrawerItem{ Text = "Test", Icon = FontIcon.Star, Url="/Management/fileselectevents", Group = "app"},
+    };
       
     async Task ToggleMenuDrawer()
     {

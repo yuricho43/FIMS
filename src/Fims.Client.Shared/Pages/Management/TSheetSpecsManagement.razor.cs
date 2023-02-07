@@ -22,149 +22,88 @@ using Fims.Common;
 using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.TSheetSpecs;
+using System.Net.Http.Json;
+using Telerik.Blazor.Components.FileSelect;
 
 namespace Fims.Client.Shared.Pages.Management
 {
     public partial class TSheetSpecsManagement
     {
-        // setup upload endpoints
-        public string SaveUrl => ToAbsoluteUrl("api/TSheetSpecs/save");
-        public string RemoveUrl => ToAbsoluteUrl("api/TSheetSpecs/remove");
+        public List<string> AllowedExtensions { get; set; } = new List<string>() { ".xlsx" };
+        public List<FileSelectFileInfo> FileSelectFileInfos { get; set; } = new List<FileSelectFileInfo>();
+        TelerikNotification UploadTSheetSpecsNotificationComponent { get; set; }
 
-        public string ToAbsoluteUrl(string url)
-        {
-            return $"{NavigationManager.BaseUri}{url}";
-        }
-
-        // setup validation, this is a workaround because file validation does not exist in the framework
-        // see more here https://github.com/dotnet/aspnetcore/issues/18821
-        JobApplicationForm currentForm { get; set; }
-        protected EditContext MyEditContext { get; set; }
-
-        private bool NotValid => MyEditContext.GetValidationMessages().Any();
-        Dictionary<string, bool> FilesValidationInfo { get; set; } = new Dictionary<string, bool>();
 
         protected override void OnInitialized()
         {
-            currentForm = new JobApplicationForm();
-            MyEditContext = new EditContext(currentForm);
         }
 
-        void OnSelectHandler(UploadSelectEventArgs e)
+        private void OnFileSelected(FileSelectEventArgs args)
         {
-            foreach (var item in e.Files)
+            FileSelectFileInfos = args.Files;
+        }
+
+        public async Task OnUploadSpec()
+        {
+            await UploadSpecFiles();
+        }
+
+        private List<string> FileNamesToUpload = new();
+
+        private async Task UploadSpecFiles()
+        {
+            //if (FileSelectFileInfos.Count < 1) return;
+
+            foreach (var file in FileSelectFileInfos)
             {
-                if (!FilesValidationInfo.Keys.Contains(item.Id))
+                if (!file.InvalidExtension)
                 {
-                    // nothing is assumed to be valid until the server returns an OK
-                    FilesValidationInfo.Add(item.Id, IsSelectedFileValid(item));
-                }
-            }
+                    using var content = new MultipartFormDataContent();
+                    var fileContent = new StreamContent(file.Stream);
+                    //fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                    FileNamesToUpload.Add(file.Name);
+                    content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
+                    var response = await Http.PostAsync("api/TSheetSpecs/save", content);
+                    var uploadResult = await response.Content.ReadAsStringAsync();
 
-            UpdateValidationModel();
-        }
+                    if (uploadResult.StartsWith("SUCCESS"))
+                    {
+                        UploadTSheetSpecsNotificationComponent.Show(new NotificationModel()
+                        {
+                            Text = "Inspection Spec 파일이 성공적으로 교체되었습니다.",
+                            ThemeColor = "primary",
+                            ShowIcon = true,
+                            Icon = "caret-double-alt-down"
+                        });
+                    }
+                    else
+                    {
+                        _ = ActivateAlert("교체 실패", uploadResult);
+                    }
 
-        void OnSuccessHandler(UploadSuccessEventArgs e)
-        {
-            if (e.Operation == UploadOperationType.Upload)
-            {
-                if (FilesValidationInfo.Keys.Contains(e.Files[0].Id))
-                {
-                    // only when the server got the file, saved it and confirmed it is OK do we update client validation
-                    FilesValidationInfo[e.Files[0].Id] = true;
-                }
-            }
-            else
-            {
-                RemoveFailedFilesFromList(e.Files);
-            }
-
-            UpdateValidationModel();
-        }
-
-        void OnRemoveHandler(UploadEventArgs e)
-        {
-            RemoveFailedFilesFromList(e.Files);
-            UpdateValidationModel();
-        }
-
-        void OnErrorHandler(UploadErrorEventArgs e)
-        {
-            RemoveFailedFilesFromList(e.Files);
-            UpdateValidationModel();
-        }
-
-        void OnCancelHandler(UploadCancelEventArgs e)
-        {
-            RemoveFailedFilesFromList(e.Files);
-            UpdateValidationModel();
-        }
-
-        void RemoveFailedFilesFromList(List<UploadFileInfo> files)
-        {
-            foreach (var file in files)
-            {
-                if (FilesValidationInfo.Keys.Contains(file.Id))
-                {
-                    FilesValidationInfo.Remove(file.Id);
                 }
             }
         }
 
-        bool IsSelectedFileValid(UploadFileInfo file)
+        public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();
+        private async Task ReadFile(FileSelectFileInfo file)
         {
-            return !(file.InvalidExtension || file.InvalidMaxFileSize || file.InvalidMinFileSize);
-        }
-
-        void UpdateValidationModel()
-        {
-            bool areAllUploadedFilesValid = false;
-
-            if (FilesValidationInfo.Keys.Count > 0 &&
-                !FilesValidationInfo.Values.Contains(false))
-            {
-                areAllUploadedFilesValid = true;
-            }
-
-            currentForm.IsSpecFileValid = areAllUploadedFilesValid;
-
-            // we update the validation state out of the standard form cycle and events
-            // so we need an EditContext that we can call upon to re-evaluate the validation
-            MyEditContext.Validate();
+            Tokens.Add(file.Id, new CancellationTokenSource());
+            var byteArray = new byte[file.Size];
+            await using MemoryStream ms = new MemoryStream(byteArray);
+            await file.Stream.CopyToAsync(ms, Tokens[file.Id].Token);
         }
 
 
-        // sample model
-        public class JobApplicationForm
+        [CascadingParameter]
+        public DialogFactory Dialogs { get; set; }
+        public async Task ActivateAlert(string title, string message)
         {
-            //[Required(ErrorMessage = "Enter your name")]
-            //public string Name { get; set; }
+            if (string.IsNullOrWhiteSpace(title)) title = "Warning!";
+            if (string.IsNullOrWhiteSpace(message)) message = "Something went wrong!";
 
-            //[Required(ErrorMessage = "Enter your email")]
-            //[EmailAddress(ErrorMessage = "Please provide a valid email address.")]
-            //public string Email { get; set; }
-
-            [Required(ErrorMessage = "FimsTSheetSpecs_YYYYMMDD.xlsx 형식의 파일을 선택하세요")]
-            [Range(typeof(bool), "true", "true", ErrorMessage = "FimsTSheetSpecs_YYYYMMDD.xlsx 형식의 파일을 선택하세요")]
-            public bool IsSpecFileValid { get; set; }
+            await Dialogs.AlertAsync(message, title);
         }
 
-        // UI for the demo to showcase changes to the form validation and success
-        string SuccessMessage = string.Empty;
-
-        void HandleValidSubmit()
-        {
-            SuccessMessage = "Spec Sheets 파일을 성공적으로 교체하였습니다.";
-        }
-
-        void HandleInvalidSubmit()
-        {
-            SuccessMessage = string.Empty;
-        }
-
-        async Task BackToForm()
-        {
-            await JsInterop.InvokeVoidAsync("window.location.reload");
-        }
     }
 }
