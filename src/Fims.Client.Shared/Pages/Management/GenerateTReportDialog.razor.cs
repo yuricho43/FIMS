@@ -61,11 +61,12 @@ namespace Fims.Client.Shared.Pages.Management
             NewTReportRequestDto.TSheetId = TSheetId;
             base.OnInitialized();
         }
-        
+
         //protected override async Task OnInitializedAsync()
         //{
         //    var state = await this.AuthState.GetAuthenticationStateAsync();
-        //    var user = state.User;
+        //    var user1 = state.User;
+        //    var name1 = user1.GetHangulName();
         //    var authState = await AuthenticationStateTask;
         //    var user = authState.User;
         //

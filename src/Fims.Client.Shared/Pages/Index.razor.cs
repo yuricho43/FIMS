@@ -83,7 +83,8 @@ namespace Fims.Client.Shared.Pages
             //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
             //FIXME    // So do it after rendering finished.
             // var state = await this.AuthState.GetAuthenticationStateAsync();
-            // var user = state.User;
+            // var user1 = state.User;
+            // var name1 = user1.GetHangulName();
             // var authState = await AuthenticationStateTask;
             // var user = authState.User;
             // CurrentInspectorName = user.GetHangulName();
@@ -116,8 +117,10 @@ namespace Fims.Client.Shared.Pages
             // So do it here after rendering finished.
             if (firstRender)
             {
-                // var state = await this.AuthState.GetAuthenticationStateAsync();
-                // var user = state.User;
+                var state = await this.AuthState.GetAuthenticationStateAsync();
+                var user1 = state.User;
+                var name1 = user1.GetHangulName();
+
                 var authState = await AuthenticationStateTask;
                 var user = authState.User;
 
@@ -392,6 +395,9 @@ namespace Fims.Client.Shared.Pages
         {
             IsLoadingSession = true;
 
+            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var user1 = state.User;
+            var name = user1.GetHangulName();
             var authState = await AuthenticationStateTask;
             var user = authState.User;
             CurrentInspectorName = user.GetHangulName();
@@ -498,6 +504,10 @@ namespace Fims.Client.Shared.Pages
             {
                 return false;
             }
+
+            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var user1 = state.User;
+            var name1 = user1.GetHangulName();
 
             var authState = await AuthenticationStateTask;
             var user = authState.User;

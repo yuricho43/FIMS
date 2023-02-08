@@ -55,7 +55,8 @@ namespace Fims.Client.Shared.Pages.Management
         //protected override async Task OnInitializedAsync()
         //{
         //    var state = await this.AuthState.GetAuthenticationStateAsync();
-        //    var user = state.User;
+        //    var user1 = state.User;
+        //    var name1 = user1.GetHangulName();
         //    var authState = await AuthenticationStateTask;
         //    var user = authState.User;
         //

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Fims.Client.Shared.ClientModels;
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
+using Fims.Client.Shared.Infrastructure.Extensions;
 using Fims.Common;
 using Fims.Common.Mapping;
 using Fims.Data.Entities;
@@ -55,10 +56,13 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            // var state = await this.AuthState.GetAuthenticationStateAsync();
-            // var user = state.User;
+            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var user1 = state.User;
+            var name1 = user1.GetHangulName();
+
             var authState = await AuthenticationStateTask;
             var user = authState.User;
+            var name = user.GetHangulName();
 
             //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
         }

@@ -19,8 +19,9 @@ namespace Fims.Client.Shared.Shared.NavMenu
         {
             //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
             //FIXME    // So do it after rendering finished.
-            //FIXME    // var state = await this.AuthState.GetAuthenticationStateAsync();
-            //FIXME    // var user = state.User;
+            //FIXME    var state = await this.AuthState.GetAuthenticationStateAsync();
+            //FIXME    var user1 = state.User;
+            //FIXME    var name1 = user1.GetHangulName();
             //FIXME    var authState = await AuthenticationStateTask;
             //FIXME    if (authState.User.Identity.IsAuthenticated)
             //FIXME    {
@@ -39,8 +40,10 @@ namespace Fims.Client.Shared.Shared.NavMenu
             // So do it here after rendering finished.
             if (firstRender)
             {
-                //var state = await this.AuthState.GetAuthenticationStateAsync();
-                //var user = state.User;
+                var state = await this.AuthState.GetAuthenticationStateAsync();
+                var user1 = state.User;
+                var name1 = user1.GetHangulName();
+
                 var authState = await AuthenticationStateTask;
                 if (authState.User.Identity.IsAuthenticated)
                 {
