@@ -42,7 +42,6 @@ namespace Fims.Client.Shared.Pages
 
         private List<string> ProductModels { get; set; } = new List<string>();
 
-        private string     CurrentProductSerial { get; set; }
         private TSheetSpec CurrentTSheetSpec { get; set; }
         private string     CurrentInspectorName { get; set; }
         private string     CurrentInspectorUserId { get; set; }
@@ -148,9 +147,24 @@ namespace Fims.Client.Shared.Pages
             var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
             ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
 
-            TSheetSpecsInProgressClientService.DeleteTSheetSpecsInProgressByUserIdProductSerial(productSerial); 
+            TSheetSpecsInProgressClientService.DeleteTSheetSpecsInProgressByUserIdProductSerial(productSerial);
 
-            //StateHasChanged();
+            ProductSerials.Remove(productSerial);
+            ProductSerialsSelected.Remove(productSerial);
+            ProductSerialToTSheetSpecDict.Remove(productSerial);
+
+            var firstEntry = ProductSerialToTSheetSpecDict.FirstOrDefault();
+            if (firstEntry.Key != null)
+            {
+                SetProductSerialAsCurrent(firstEntry.Key);
+            }
+            else
+            {
+                // Products empty, so no display of TSheetComponent
+                CurrentTSheetSpec = null;
+            }
+
+            StateHasChanged();
         }
 
         private async Task<bool> AddTProduct(TProductSpec tProductSpec)
@@ -196,7 +210,6 @@ namespace Fims.Client.Shared.Pages
         private void SetProductSerialAsCurrent(string productSerial)
         {
             CurrentTSheetSpec = ProductSerialToTSheetSpecDict[productSerial] as TSheetSpec;
-            CurrentProductSerial = productSerial;
 
             ProductSerialsSelected.Keys.ToList().ForEach(serial =>{ProductSerialsSelected[serial] = false;});
             ProductSerialsSelected[productSerial] = true;

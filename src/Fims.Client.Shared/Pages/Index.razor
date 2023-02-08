@@ -23,7 +23,6 @@
                 <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
                     @foreach (string productSerial in ProductSerials)
                     {
-                        var cool = ProductSerialsSelected[productSerial];
                         <ButtonGroupToggleButton @bind-Selected="@ProductSerialsSelected[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))" Enabled="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? false: true)" ThemeColor="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? ThemeConstants.Button.ThemeColor.Error: ThemeConstants.Button.ThemeColor.Base)" Class="serial-button">
                             <strong>@productSerial</strong>
                             &nbsp;
