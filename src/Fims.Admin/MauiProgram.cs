@@ -1,9 +1,12 @@
 ﻿using System;
 using System.Net.Http;
+using System.Reflection;
+
 //using Microsoft.AspNetCore.Components.WebAssembly.Hosting; //JBH: should not use for MauiBlazor!!
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 using Telerik.Blazor.Services;
 
@@ -22,9 +25,6 @@ using Fims.Client.Shared.Shared.Layouts;
 
 using Fims.Admin.Infrastructure.HttpDev;
 using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
-using Microsoft.Extensions.Configuration;
-using System.Reflection;
-using Fims.Client.Shared.ClientServices.TReports;
 
 namespace Fims.Admin
 {
