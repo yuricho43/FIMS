@@ -73,12 +73,35 @@ namespace Fims.Client.Shared.Pages
         {
             this.Mapper = CreateAutoMapperFromTItemSpecToTItem();
 
-            foreach(var cat in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            autoFillTItemSpecs();
+
+            foreach (var cat in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
             {
                 TItemSpecsInCategoryCompletedCountDict.Add(cat.Key, 0);
             }
 
             await base.OnInitializedAsync();
+        }
+
+        private void autoFillTItemSpecs()
+        {
+            var tItem1001 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1001); //ProductSerial
+            tItem1001.Ch1Data = MyTSheetSpec.ProductSerial;
+            tItem1001.IsCh1DataEnabled = true;
+            tItem1001.IsCh1DataEntered = true;
+            tItem1001.IsCh1DataValid = true;
+
+            var tItem1002 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1002); //Date
+            tItem1002.Ch1Data = MyTSheetSpec.InspectionStartDateTime.ToString("yyyy-MM-dd-HH:mm");
+            tItem1002.IsCh1DataEnabled = true;
+            tItem1002.IsCh1DataEntered = true;
+            tItem1002.IsCh1DataValid = true;
+
+            var tItem1003 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1003); //Inspector
+            tItem1003.Ch1Data = MyTSheetSpec.InspectorName;
+            tItem1003.IsCh1DataEnabled = true;
+            tItem1003.IsCh1DataEntered = true;
+            tItem1003.IsCh1DataValid = true;
         }
 
         public void CollectTItemSpecsFinal()

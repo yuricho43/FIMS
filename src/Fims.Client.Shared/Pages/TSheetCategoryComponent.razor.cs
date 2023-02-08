@@ -62,8 +62,6 @@ namespace Fims.Client.Shared.Pages
         //    MyTItemSpecs = new ObservableCollection<TItemSpec>(MyTSheetSpec.TItemSpecs);
         //}
 
-
-
         FilterDescriptor SingleTeamDescriptor() => new FilterDescriptor("TeamId", FilterOperator.IsEqualTo, 3);
 
 

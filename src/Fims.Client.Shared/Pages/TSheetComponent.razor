@@ -34,7 +34,7 @@
                     <span>&nbsp;</span>
                     @if (MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory] > 0)
                     {
-                        <span class="badge badge-primary" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
                     }
                     else
                     {
@@ -72,21 +72,24 @@
 </style>
 
 <style>
-    .tab-parent{
-        color: green;
-        background: white;
+    .tab-parent .k-tabstrip-items-wrapper .k-item:active, .k-tabstrip-items-wrapper .k-item.k-active, .k-tabstrip-items-wrapper .k-item.k-selected {
+        border-color: cornflowerblue;
+        border-width: 0;
+        color: orange;
+        background-color: cornflowerblue;
     }
 
-    .tab-parent .k-tabstrip-items li {
+    .tab-parent .k-tabstrip-items-wrapper li {
         margin-left: 5px;
         margin-right: 5px;
-        color: white;
+        border-color: silver;
+        color: purple;
         background: silver;
         height: 30px;
     }
 
-    .tab-parent .k-tabstrip-items li.k-active {
-        color: black;
+    .tab-parent .k-tabstrip-items-wrapper li.k-active {
+        color: forestgreen;
         background: cornflowerblue;
     }
 </style>
