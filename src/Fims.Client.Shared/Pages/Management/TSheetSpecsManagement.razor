@@ -24,7 +24,7 @@
                             OnSelect="@OnFileSelected">
                     </TelerikFileSelect>
                     <br/>
-                    <div class="k-form-hint">검사스펙 파일포멧: <strong>FimsTSheetSpecs_YYYYMMDD.xlsx</strong></div>
+                    <div class="k-form-hint">검사스펙 파일이름 형식:&nbsp;<strong style="color:orangered;">FimsTSheetSpecs_YYYYMMDD.xlsx</strong></div>
                 </div>
             </div>
 
@@ -63,12 +63,27 @@
 
 
 <style>
-    .k-grid td {
+    .k-grid td, .k-grid tr {
         background-color: #E0E0E0;
         color: black;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
+
+    .k-grid-header-wrap th {
+        background-color: teal;
+        color: white;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
+    }
+
+    /*
+        .k-grid-header {
+            color: whitesmoke;
+            background-color: teal;
+        }
+    */
+
 
     /*
          * JBH NOTE:
@@ -84,16 +99,16 @@
         //border-radius: 8px;
     }
 
-        .k-grid-header th.k-sorted {
-            background-color: white;
-            color: teal;
-            border: 2px solid teal;
-        }
+    .k-grid-header th.k-sorted {
+        background-color: white;
+        color: teal;
+        border: 2px solid teal;
+    }
 
-        .k-grid-header th .k-i-sort-asc-small,
-        .k-grid-header th .k-i-sort-desc-small {
-            color: teal;
-        }
+    .k-grid-header th .k-i-sort-asc-small,
+    .k-grid-header th .k-i-sort-desc-small {
+        color: teal;
+    }
 
     /*
         .k-grid-header {

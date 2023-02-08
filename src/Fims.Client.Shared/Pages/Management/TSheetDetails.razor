@@ -43,7 +43,6 @@
 
                 <TelerikGrid Data=@TSheetWithTItems.TItems
                             @ref="@TItemGrid"
-                            Height="540px"
                             Pageable="true"
                             Resizable="true"
                             @bind-PageSize="@PageSize"
@@ -103,33 +102,36 @@
                 </TelerikGrid>
             </CardBody>
 
-            <CardFooter Class="k-hbox justify-space-between">
+@*            <CardFooter Class="k-hbox justify-space-between">
                 <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
             </CardFooter>
+*@
         </TelerikCard>
     </div>
 }
 
 <style>
-    .k-grid td {
+    .k-grid td, .k-grid tr {
         background-color: #E0E0E0;
         color: black;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
     .k-grid-header-wrap th {
         background-color: teal;
         color: white;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
-    /*    .k-grid-header {
-                        color: whitesmoke;
-                        background-color: teal;
-                    }
-                */
+    /*
+        .k-grid-header {
+            color: whitesmoke;
+            background-color: teal;
+        }
+     */
+
     .k-grid .k-focused-cell {
         background-color: cornflowerblue;
     }
