@@ -16,7 +16,7 @@
 </TelerikStackLayout>
 </div>
 
-<div style="background:white;height: 10px;"></div>
+<div style="background:Gainsboro;height: 10px;"></div>
 
 <TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
@@ -81,13 +81,13 @@
         margin-left: 5px;
         margin-right: 5px;
         color: white;
-        background: cornflowerblue;
+        background: silver;
         height: 30px;
     }
 
     .tab-parent .k-tabstrip-items li.k-active {
         color: black;
-        background: orange;
+        background: cornflowerblue;
     }
 </style>
 

@@ -3,7 +3,7 @@
 @using RegisterRequestModel = Fims.Data.Models.Identity.RegisterRequestModel
 
 
-<TelerikDialog Visible="true" Title="사용자 추가" Width="700px">
+<TelerikDialog Visible="true" Title="사용자 추가" Width="700px" Class="dialog-background">
     <DialogContent>
 
         <TelerikForm Model="@NewUserRegisterRequestModel"
@@ -76,6 +76,12 @@
                          VerticalPosition="@NotificationVerticalPosition.Top"></TelerikNotification>
 </div>
 
+
+<style>
+    .dialog-background {
+        background-color: silver;
+    }
+</style>
 
 <style>
     .MyTelerikNotification .k-notification-container .k-notification-wrap {

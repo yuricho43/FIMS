@@ -73,7 +73,7 @@ namespace Fims.Client.Shared.Pages.Management
                             Text = "Inspection Spec 파일이 성공적으로 교체되었습니다.",
                             ThemeColor = "primary",
                             ShowIcon = true,
-                            Icon = "caret-double-alt-down"
+                            Icon = "caret-double-alt-up"
                         });
                     }
                     else

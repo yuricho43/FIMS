@@ -4,7 +4,7 @@
 @inject IJSRuntime JS
 
 
-<TelerikDialog Visible="true" Title="성적서 출력" Width="700px">
+<TelerikDialog Visible="true" Title="성적서 출력" Width="700px" Class="dialog-background">
     <DialogContent>
 
         <TelerikForm Model="@NewTReportRequestDto"
@@ -58,6 +58,13 @@
 </TelerikDialog>
 
 
+<style>
+    .dialog-background {
+        background-color: silver;
+    }
+</style>
+
+
 <div class="notification-parent">
     <TelerikNotification @ref="GenerateTReportNotificationComponent"
                          Class="MyTelerikNotification"
@@ -69,7 +76,7 @@
 <style>
     .MyTelerikNotification .k-notification-container .k-notification-wrap {
         width: 300px;
-        height: 50px;
+        height:200px;
         font-size: 1.5em;
         text-align: center;
         align-items: center;
