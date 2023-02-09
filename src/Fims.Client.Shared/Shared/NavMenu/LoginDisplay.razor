@@ -15,7 +15,8 @@
         <Authorized>
             <img src="_content/Fims.Client.Shared/images/user.svg" />
             <div>
-                <a href="/Account/UserProfile" class="username">@UserName</a>
+                @*<a href="/Account/UserProfile" class="username">@UserName</a>*@ 
+                <a href="/Account/UserProfile" class="username">@context.User.Identity.Name</a>
             </div>
             &nbsp;
             <div>
