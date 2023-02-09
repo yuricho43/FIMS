@@ -47,12 +47,10 @@ namespace Fims.Client.Shared.Pages.Account
         private async Task LoadDataAsync()
         {
             var state = await this.AuthState.GetAuthenticationStateAsync();
-            var user1 = state.User;
-            var name1 = user1.GetHangulName();
+            var user = state.User;
+            //var authState = await AuthenticationStateTask;
+            //var user = authState.User;
 
-            var authState = await AuthenticationStateTask;
-            var user = authState.User;
-            var name = user.GetHangulName();
             this.email = user.GetEmail();
             this.model.HangulName  = user.GetHangulName();
             this.model.EnglishName = user.GetEnglishName();
