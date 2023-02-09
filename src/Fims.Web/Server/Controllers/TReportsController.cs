@@ -14,7 +14,7 @@ using Fims.Web.Server.Infrastructure.Services;
 using Fims.Web.Server.Infrastructure.Extensions;
 using static Fims.Common.Constants;
 using System.IO;
-
+using Microsoft.AspNetCore.Http;
 
 namespace Fims.Web.Server.Controllers
 {
@@ -66,6 +66,16 @@ namespace Fims.Web.Server.Controllers
             Stream tReportStream = await this.tReportsService.GenerateTReportAsync(tReportRequest);
             return File(tReportStream, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", tReportRequest.TReportOutputFile);
             //return Created(nameof(this.GenerateTReport), tReportStream);
+        }
+
+
+        [HttpPost(nameof(Save))]
+        [AllowAnonymous]
+        public async Task<string> Save(IEnumerable<IFormFile> files)
+        {
+            var specFormFile = files.First();
+            var result = await this.tReportsService.ReplaceAsync(specFormFile);
+            return result;
         }
 
         /*

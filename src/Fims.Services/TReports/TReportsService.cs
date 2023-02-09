@@ -20,6 +20,8 @@ using Fims.Services.TSheets;
 using Fims.Data.Entities;
 using System.ComponentModel;
 using Fims.Data.Models.TSheetSpecsInProgress;
+using Microsoft.AspNetCore.Http;
+using System.Net.Http.Headers;
 
 namespace Fims.Services.TReports
 {
@@ -147,6 +149,48 @@ namespace Fims.Services.TReports
             return memoryStream;
         }
 
+        public async Task<string> ReplaceAsync(IFormFile specFormFile)
+        {
+            var newSpecFileContent = ContentDispositionHeaderValue.Parse(specFormFile.ContentDisposition);
+
+            // Some browsers send file names with full path.
+            // We are only interested in the file name.
+            var newSpecFileName = Path.GetFileName(newSpecFileContent.FileName.ToString().Trim('"'));
+            var newSpecFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, newSpecFileName);
+            if (File.Exists(newSpecFilePath))
+            {
+                //File.Delete(newSpecFilePath);
+                //backup the prev
+                File.Move(newSpecFilePath, newSpecFilePath + ".BACKUP");
+            }
+
+            // await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+            using (var newSpecFileStream = new FileStream(newSpecFilePath, FileMode.Create))
+            {
+                await specFormFile.CopyToAsync(newSpecFileStream);
+            }
+
+            // verify the new spec file is valid
+            //string buildresult = BuildTReportSpecsFromExcelSpecFile(newSpecFilePath) ?? string.Empty;
+            string buildresult = "SUCCESS";
+
+            if (buildresult != "SUCCESS")
+            {
+                //delete the new
+                File.Delete(newSpecFilePath);
+
+                //restore the prev
+                File.Move(newSpecFilePath + ".BACKUP", newSpecFilePath);
+
+            }
+
+            // instead mock async operation
+            await Task.Yield();
+
+            return buildresult;
+        }
+
+
         /*
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
@@ -202,4 +246,4 @@ namespace Fims.Services.TReports
         }
         */
     }
-    }
+}

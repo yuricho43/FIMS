@@ -52,7 +52,6 @@ namespace Fims.Client.Shared.Pages.Management
         protected override async Task OnInitializedAsync()
         {
             TSheets = await TSheetsClientService.AllTSheetsAsync();
-            TReportSpecs = await TReportsClientService.AllTReportSpecs();
         }
 
         public void ShowDetailsHandler(GridCommandEventArgs args)
@@ -68,8 +67,9 @@ namespace Fims.Client.Shared.Pages.Management
             //StateHasChanged();
         }
 
-        public void GenerateReportHandler(GridCommandEventArgs args)
+        public async void GenerateReportHandler(GridCommandEventArgs args)
         {
+            TReportSpecs = await TReportsClientService.AllTReportSpecs();
             CurrentTSheet = (TSheet)args.Item;
             GenerateTReportDialogVisible = true;
             //StateHasChanged();

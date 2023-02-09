@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System.Net.Http.Json;
+using System.Collections;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -14,24 +15,21 @@ using Telerik.Blazor;
 using Telerik.Blazor.Components;
 using Telerik.Blazor.Components.Upload;
 using Telerik.DataSource;
+using Telerik.Blazor.Components.FileSelect;
 
 using AutoMapper;
 
-using Fims.Client.Shared.ClientServices.TSheetSpecs;
 using Fims.Common;
 using Fims.Data.Entities;
 using Fims.Data.Models;
-using Fims.Data.Models.TSheetSpecs;
-using System.Net.Http.Json;
-using Telerik.Blazor.Components.FileSelect;
 
 namespace Fims.Client.Shared.Pages.Management
 {
-    public partial class TSheetSpecsManagement
+    public partial class TReportManagement
     {
         public List<string> AllowedExtensions { get; set; } = new List<string>() { ".xlsx" };
         public List<FileSelectFileInfo> FileSelectFileInfos { get; set; } = new List<FileSelectFileInfo>();
-        TelerikNotification UploadTSheetSpecsNotificationComponent { get; set; }
+        TelerikNotification UploadTReportNotificationComponent { get; set; }
 
 
         protected override void OnInitialized()
@@ -63,18 +61,20 @@ namespace Fims.Client.Shared.Pages.Management
                     //fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
                     FileNamesToUpload.Add(file.Name);
                     content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
-                    var response = await Http.PostAsync("api/TSheetSpecs/save", content);
+                    var response = await Http.PostAsync("api/TReports/save", content);
                     var uploadResult = await response.Content.ReadAsStringAsync();
 
                     if (uploadResult.StartsWith("SUCCESS"))
                     {
-                        UploadTSheetSpecsNotificationComponent.Show(new NotificationModel()
+                        UploadTReportNotificationComponent.Show(new NotificationModel()
                         {
-                            Text = "검사서스펙 파일이 성공적으로 교체되었습니다.",
+                            Text = "성적서스펙 파일이 성공적으로 교체되었습니다.",
                             ThemeColor = "primary",
                             ShowIcon = true,
                             Icon = "caret-double-alt-up"
                         });
+
+                        StateHasChanged();
                     }
                     else
                     {

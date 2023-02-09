@@ -1,0 +1,181 @@
+﻿@page "/Management/TReportManagement"
+
+@inject IJSRuntime JsInterop
+
+
+<TelerikCard>
+    <CardHeader>
+        <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>성적서스펙 관리</strong></h2></CardTitle>
+        <CardSubTitle>업로드 및 교체 (Upload & Replace)</CardSubTitle>
+    </CardHeader>
+
+    <CardBody>
+        <div class="k-form k-form-horizontal">
+            <h2 class="demo-alert demo-alert-error">
+                <span>성적서스펙 업로드/교체는 CRITICAL한 작업입니다.</span>
+                <br/>
+                <span>업로드할 성적서스펙 파일을 신중하게 선택하세요</span>
+            </h2>
+
+            <div class="k-form-field">
+                <div class="k-form-field-wrap">
+                    <TelerikFileSelect
+                            AllowedExtensions="@AllowedExtensions"
+                            OnSelect="@OnFileSelected">
+                    </TelerikFileSelect>
+                    <br/>
+                    <div class="k-form-hint">성적서스펙 파일이름 형식:&nbsp;<strong style="color:orangered;">FimsTReportSpecs_성적서스펙 이름_YYYYMMDD.xlsx</strong></div>
+                </div>
+            </div>
+
+            <br />
+            <br />
+            <div class="text-center">
+                <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@OnUploadSpec">성적서스펙 업로드/교체</TelerikButton>
+            </div>
+        </div>
+    </CardBody>
+
+    <CardFooter Class="k-hbox justify-space-between">
+        <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
+    </CardFooter>
+</TelerikCard>
+
+
+
+<TelerikNotification @ref="@UploadTReportNotificationComponent"
+                     Class="TReportNotification"
+                     VerticalPosition="NotificationVerticalPosition.Top"
+                     HorizontalPosition="NotificationHorizontalPosition.Center">
+</TelerikNotification>
+
+
+
+<style>
+    .TReportNotification .k-notification-container .k-notification-wrap {
+        width: 300px;
+        height:200px;
+        font-size: 1.5em;
+        text-align: center;
+        align-items: center;
+    }
+</style>
+
+
+<style>
+    .k-grid td, .k-grid tr {
+        background-color: #E0E0E0;
+        color: black;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
+    }
+
+    .k-grid-header-wrap th {
+        background-color: teal;
+        color: white;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
+    }
+
+    /*
+        .k-grid-header {
+            color: whitesmoke;
+            background-color: teal;
+        }
+    */
+
+
+    /*
+         * JBH NOTE:
+         * if "k-grid-header th" defined --> header weired upon Sorting
+         * if "k-grid-header"    defined --> header border not shown
+         */
+
+
+    .k-grid-header th {
+        color: white;
+        background-color: teal;
+        border: 1px solid white;
+        //border-radius: 8px;
+    }
+
+    .k-grid-header th.k-sorted {
+        background-color: white;
+        color: teal;
+        border: 2px solid teal;
+    }
+
+    .k-grid-header th .k-i-sort-asc-small,
+    .k-grid-header th .k-i-sort-desc-small {
+        color: teal;
+    }
+
+    /*
+        .k-grid-header {
+            color: white;
+            background-color: teal;
+            border: 1px solid white;
+            //border-radius: 8px;
+        }
+        */
+
+    .k-grid .k-focused-cell {
+        background-color: cornflowerblue;
+    }
+
+    .k-grid .k-disabled-cell {
+        background-color: #CACACA;
+    }
+
+    .k-grid .userinput-empty {
+        //color: dodgerblue;
+        background-color: #E0FAFA;
+        //font-weight: bold;
+    }
+
+    .k-grid .userinput-valid {
+        color: dodgerblue;
+        background-color: #C0D8DA;
+        font-weight: bold;
+    }
+
+    .k-grid .userinput-invalid {
+        color: red !important;
+        background-color: sandybrown;
+        font-weight: bold !important;
+        //opacity: 0.7;
+    }
+
+    /* CENTER */
+    /* non-sortable headers */
+    .k-grid th.center-me {
+        text-align: center;
+    }
+
+    /* sortable headers */
+    th.center-me .k-cell-inner > .k-link {
+        justify-content: center;
+    }
+
+    /* RIGHT */
+    /* non-sortable headers */
+    .k-grid th.align-right {
+        text-align: right;
+    }
+
+    /* sortable headers */
+    th.align-right .k-cell-inner > .k-link {
+        justify-content: right;
+    }
+
+    /* unbound and non-filterable columns */
+    .k-grid-header th.align-right.right-padding {
+        padding-right: 12px;
+    }
+
+        /* filterable grid, sortable non-filterable columns */
+        .k-grid-header th.align-right.right-padding > .k-cell-inner {
+            margin-right: 0;
+        }
+</style>
+
