@@ -31,11 +31,10 @@ bld/
 [Ll]og/
 [Ll]ogs/
 
-# Operation-In-Progress Savings
-FimsTSheetSpecsInProgress_*.json
-
-# Reports Generated
-FimsReport*.xlsx
+# JBH: Operation-In-Progress Savings
+FimsTSheetSpecsInProgressRepository/
+FimsTReportOutputRepository/
+*.BACKUP
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/

@@ -75,9 +75,10 @@ namespace Fims.Client.Shared.Pages
 
             autoFillTItemSpecs();
 
-            foreach (var cat in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
             {
-                TItemSpecsInCategoryCompletedCountDict.Add(cat.Key, 0);
+                int completed = catItems.Value.Where(a => a.Completed==true).Count();
+                TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completed);
             }
 
             await base.OnInitializedAsync();
@@ -90,18 +91,21 @@ namespace Fims.Client.Shared.Pages
             tItem1001.IsCh1DataEnabled = true;
             tItem1001.IsCh1DataEntered = true;
             tItem1001.IsCh1DataValid = true;
+            tItem1001.Completed = true;
 
             var tItem1002 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1002); //Date
             tItem1002.Ch1Data = MyTSheetSpec.InspectionStartDateTime.ToString("yyyy-MM-dd-HH:mm");
             tItem1002.IsCh1DataEnabled = true;
             tItem1002.IsCh1DataEntered = true;
             tItem1002.IsCh1DataValid = true;
+            tItem1002.Completed = true;
 
             var tItem1003 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1003); //Inspector
             tItem1003.Ch1Data = MyTSheetSpec.InspectorName;
             tItem1003.IsCh1DataEnabled = true;
             tItem1003.IsCh1DataEntered = true;
             tItem1003.IsCh1DataValid = true;
+            tItem1003.Completed = true;
         }
 
         public void CollectTItemSpecsFinal()
