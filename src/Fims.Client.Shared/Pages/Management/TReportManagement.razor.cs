@@ -29,6 +29,8 @@ namespace Fims.Client.Shared.Pages.Management
     {
         public List<string> AllowedExtensions { get; set; } = new List<string>() { ".xlsx" };
         public List<FileSelectFileInfo> FileSelectFileInfos { get; set; } = new List<FileSelectFileInfo>();
+
+        public TelerikFileSelect TReportFileSelector { get; set; }
         TelerikNotification UploadTReportNotificationComponent { get; set; }
 
 
@@ -38,7 +40,13 @@ namespace Fims.Client.Shared.Pages.Management
 
         private void OnFileSelected(FileSelectEventArgs args)
         {
-            FileSelectFileInfos = args.Files;
+            foreach (var file in args.Files)
+            {
+                if (!file.InvalidExtension && file.Name.StartsWith("FimsTReportSpecs_"))
+                {
+                    FileSelectFileInfos.Add(file);
+                }
+            }
         }
 
         public async Task OnUploadSpec()
@@ -50,7 +58,7 @@ namespace Fims.Client.Shared.Pages.Management
 
         private async Task UploadSpecFiles()
         {
-            //if (FileSelectFileInfos.Count < 1) return;
+            if (FileSelectFileInfos.Count < 1) return;
 
             foreach (var file in FileSelectFileInfos)
             {
@@ -83,6 +91,11 @@ namespace Fims.Client.Shared.Pages.Management
 
                 }
             }
+
+            //await RemoveSecondFile();
+
+            FileSelectFileInfos.Clear(); //remove from the selected files list
+            int cool = 7;
         }
 
         public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();

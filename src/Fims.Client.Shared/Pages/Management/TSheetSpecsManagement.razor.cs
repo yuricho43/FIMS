@@ -40,7 +40,13 @@ namespace Fims.Client.Shared.Pages.Management
 
         private void OnFileSelected(FileSelectEventArgs args)
         {
-            FileSelectFileInfos = args.Files;
+            foreach (var file in args.Files)
+            {
+                if (!file.InvalidExtension && file.Name.StartsWith("FimsTSheetSpecs_"))
+                {
+                    FileSelectFileInfos.Add(file);
+                }
+            }
         }
 
         public async Task OnUploadSpec()
@@ -52,7 +58,7 @@ namespace Fims.Client.Shared.Pages.Management
 
         private async Task UploadSpecFiles()
         {
-            //if (FileSelectFileInfos.Count < 1) return;
+            if (FileSelectFileInfos.Count < 1) return;
 
             foreach (var file in FileSelectFileInfos)
             {
@@ -83,6 +89,9 @@ namespace Fims.Client.Shared.Pages.Management
 
                 }
             }
+
+            FileSelectFileInfos.Clear(); //remove from the selected files list
+
         }
 
         public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();

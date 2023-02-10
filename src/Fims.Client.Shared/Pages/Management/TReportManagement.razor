@@ -19,7 +19,7 @@
 
             <div class="k-form-field">
                 <div class="k-form-field-wrap">
-                    <TelerikFileSelect
+                    <TelerikFileSelect @ref=@TReportFileSelector
                             AllowedExtensions="@AllowedExtensions"
                             OnSelect="@OnFileSelected">
                     </TelerikFileSelect>
@@ -49,6 +49,30 @@
                      HorizontalPosition="NotificationHorizontalPosition.Center">
 </TelerikNotification>
 
+
+<style>
+    .k-upload.button-only {
+        /* remove component border */
+        border-width: 0;
+        /* prevent expansion to 100% */
+        display: inline-block;
+    }
+
+    .k-upload.button-only .k-dropzone {
+        /* remove space around button */
+        padding: 0;
+        /* remove background around button */
+        /* use if Upload status below is NOT hidden */
+        background-color: transparent;
+    }
+
+    /* hide selected files */
+    .k-upload.button-only .k-upload-files,
+    /* hide Upload status */
+    .k-upload.button-only .k-upload-status {
+        display: none;
+    }
+</style>
 
 
 <style>
@@ -179,3 +203,21 @@
         }
 </style>
 
+@inject IJSRuntime _js
+
+@* move this script to a correct location it's here as ahack to make the snippet shorter and easy to copy  *@
+<script suppress-error="BL9992">
+    function removeSecondFile() {
+        var deleteButtons = document.querySelectorAll("li.k-file button span.k-delete");
+        if (deleteButtons && deleteButtons.length > 1) {
+            deleteButtons[1].click();
+        }
+    }
+</script>
+
+@code {
+    async Task RemoveSecondFile()
+    {
+        await _js.InvokeVoidAsync("removeSecondFile");
+    }
+}
