@@ -260,6 +260,10 @@ namespace Fims.Client.Shared.Pages
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch1Time = null;
+                    }
                 }
                 else
                 {
@@ -319,13 +323,17 @@ namespace Fims.Client.Shared.Pages
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch2Time = null;
+                    }
                 }
                 else
                 {
                     valid = true;
                     if (itemspec.ExpressionMode == "String/Input(Time)")
                     {
-                        itemspec.Ch1Time = DateTime.Now;
+                        itemspec.Ch2Time = DateTime.Now;
                     }
                 }
             }
@@ -378,13 +386,17 @@ namespace Fims.Client.Shared.Pages
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch3Time = null;
+                    }
                 }
                 else
                 {
                     valid = true;
                     if (itemspec.ExpressionMode == "String/Input(Time)")
                     {
-                        itemspec.Ch1Time = DateTime.Now;
+                        itemspec.Ch3Time = DateTime.Now;
                     }
                 }
             }
@@ -437,13 +449,17 @@ namespace Fims.Client.Shared.Pages
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch4Time = null;
+                    }
                 }
                 else
                 {
                     valid = true;
                     if (itemspec.ExpressionMode == "String/Input(Time)")
                     {
-                        itemspec.Ch1Time = DateTime.Now;
+                        itemspec.Ch4Time = DateTime.Now;
                     }
                 }
             }

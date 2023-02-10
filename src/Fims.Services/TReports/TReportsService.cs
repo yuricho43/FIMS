@@ -96,8 +96,9 @@ namespace Fims.Services.TReports
                     {
                         int tItemNo = 0;
                         string ch = "Ch1";
+                        bool isTime = false;
 
-                        // cvalstr: "$!$-1002", "$!$-1007-Ch3", ...
+                        // cvalstr: "$!$-1002", "$!$-1007-Ch3", "$!$-5003-Ch1-T", ...
                         var markers = cvalstr.Split('-').ToList();
 
                         try
@@ -111,16 +112,18 @@ namespace Fims.Services.TReports
 
                         ch = (markers.Count > 2) ? markers[2].ToString() : "Ch1";
 
+                        isTime = (markers.Count > 3) ? (markers[3].ToString()=="T" ? true : false) : false;     // "$!$-5003-Ch1-T"
+
                         var tItem = tsheet.TItems.FirstOrDefault(t => t.TestNo == tItemNo); //make sure using FirstOrDefault(), instead of First() which seems to cause an Exception!
                         if (tItem != null)
                         {
                             switch (ch)
                             {
-                                case "Ch1": cell.Value = tItem.Ch1Data; break;
-                                case "Ch2": cell.Value = tItem.Ch2Data; break;
-                                case "Ch3": cell.Value = tItem.Ch3Data; break;
-                                case "Ch4": cell.Value = tItem.Ch4Data; break;
-                                default:    cell.Value = tItem.Ch1Data; break;
+                                case "Ch1": cell.Value = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
+                                case "Ch2": cell.Value = (isTime) ? tItem.Ch2Time?.ToString("HH:mm:ss") : tItem.Ch2Data; break;
+                                case "Ch3": cell.Value = (isTime) ? tItem.Ch3Time?.ToString("HH:mm:ss") : tItem.Ch3Data; break;
+                                case "Ch4": cell.Value = (isTime) ? tItem.Ch4Time?.ToString("HH:mm:ss") : tItem.Ch4Data; break;
+                                default:    cell.Value = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
                             }
                         }
                         else

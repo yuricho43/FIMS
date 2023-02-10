@@ -75,6 +75,13 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch1Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch1Data"))" Title="CH1" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH1</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch1Data + " (" + tItem.Ch1Time?.ToString("HH:mm:ss") + ")" : tItem.Ch1Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
 
@@ -82,6 +89,13 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch2Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch2Data"))" Title="CH2" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH2</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch2Data + " (" + tItem.Ch2Time?.ToString("HH:mm:ss") + ")" : tItem.Ch2Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
 
@@ -89,6 +103,13 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch3Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch3Data"))" Title="CH3" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH3</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch3Data + " (" + tItem.Ch3Time?.ToString("HH:mm:ss") + ")" : tItem.Ch3Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
 
@@ -96,6 +117,13 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch4Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch4Data"))" Title="CH4" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH4</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch4Data + " (" + tItem.Ch4Time?.ToString("HH:mm:ss") + ")" : tItem.Ch4Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
                     </GridColumns>

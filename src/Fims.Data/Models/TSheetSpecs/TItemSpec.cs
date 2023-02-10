@@ -37,10 +37,11 @@ namespace Fims.Data.Models.TSheetSpecs
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-        public string Ch1Data { get; set; }
-        public string Ch2Data { get; set; }
-        public string Ch3Data { get; set; }
-        public string Ch4Data { get; set; }
+#nullable enable  //suppress the Warning CS8632
+        public string? Ch1Data { get; set; }
+        public string? Ch2Data { get; set; }
+        public string? Ch3Data { get; set; }
+        public string? Ch4Data { get; set; }
 
         public DateTime? Ch1Time { get; set; }
         public DateTime? Ch2Time { get; set; }
@@ -48,6 +49,7 @@ namespace Fims.Data.Models.TSheetSpecs
         public DateTime? Ch4Time { get; set; }
 
         public DateTime? InspectDateTime { get; set; }
+#nullable disable  //suppress the Warning CS8632
 
 
         #region Part Needed for the View Model only
