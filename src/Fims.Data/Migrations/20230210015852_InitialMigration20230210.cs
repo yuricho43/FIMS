@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Fims.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration20230210 : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,8 +34,8 @@ namespace Fims.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    HangulName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: false),
-                    EnglishName = table.Column<string>(type: "nvarchar(50)", maxLength: 50, nullable: true),
+                    HangulName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
+                    EnglishName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsDeleted = table.Column<bool>(type: "bit", nullable: false),
@@ -216,7 +216,11 @@ namespace Fims.Data.Migrations
                     Ch2Data = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Ch3Data = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Ch4Data = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InspectDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    Ch1Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Ch2Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Ch3Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    Ch4Time = table.Column<DateTime>(type: "datetime2", nullable: true),
+                    InspectDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TSheetId = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),

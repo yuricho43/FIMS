@@ -42,12 +42,12 @@ namespace Fims.Data.Models.TSheetSpecs
         public string Ch3Data { get; set; }
         public string Ch4Data { get; set; }
 
-        public DateTime Ch1Time { get; set; }
-        public DateTime Ch2Time { get; set; }
-        public DateTime Ch3Time { get; set; }
-        public DateTime Ch4Time { get; set; }
+        public DateTime? Ch1Time { get; set; }
+        public DateTime? Ch2Time { get; set; }
+        public DateTime? Ch3Time { get; set; }
+        public DateTime? Ch4Time { get; set; }
 
-        public DateTime InspectDateTime { get; set; }
+        public DateTime? InspectDateTime { get; set; }
 
 
         #region Part Needed for the View Model only
