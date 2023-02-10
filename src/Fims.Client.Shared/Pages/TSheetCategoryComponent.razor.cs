@@ -75,150 +75,150 @@ namespace Fims.Client.Shared.Pages
             await Dialogs.AlertAsync(message, title);
         }
 
-        #region TextBoxOnChangeHandlers
-        private void TextBoxOnChangeHandler1(object theUserInput, TItemSpec itemspec)
-        {
-            if (itemspec.ExpressionMode == "Number")
-            {
-                bool needToCheckLcl = true;
-                bool needToCheckUcl = true;
+        //#region TextBoxOnChangeHandlers
+        //private void TextBoxOnChangeHandler1(object theUserInput, TItemSpec itemspec)
+        //{
+        //    if (itemspec.ExpressionMode == "Number")
+        //    {
+        //        bool needToCheckLcl = true;
+        //        bool needToCheckUcl = true;
 
-                if (Decimal.TryParse(theUserInput as string, out decimal inputval))
-                {
-                    if (!Decimal.TryParse(itemspec.Ch1LCL, out decimal lcl))
-                        needToCheckLcl = false; //LCL is not defined properly, so skip the check.
+        //        if (Decimal.TryParse(theUserInput as string, out decimal inputval))
+        //        {
+        //            if (!Decimal.TryParse(itemspec.Ch1LCL, out decimal lcl))
+        //                needToCheckLcl = false; //LCL is not defined properly, so skip the check.
 
-                    if (!Decimal.TryParse(itemspec.Ch1UCL, out decimal ucl))
-                        needToCheckUcl = false; //UCL is not defined properly, so skip the check.
+        //            if (!Decimal.TryParse(itemspec.Ch1UCL, out decimal ucl))
+        //                needToCheckUcl = false; //UCL is not defined properly, so skip the check.
 
-                    if ((needToCheckLcl) && (inputval < lcl))
-                    {
-                        MarkCh1DataInvalid(itemspec);
-                    }
-                    else
-                    {
-                        MarkCh1DataValid(itemspec);
-                    }
+        //            if ((needToCheckLcl) && (inputval < lcl))
+        //            {
+        //                MarkCh1DataInvalid(itemspec);
+        //            }
+        //            else
+        //            {
+        //                MarkCh1DataValid(itemspec);
+        //            }
 
-                    if ((needToCheckUcl) && (inputval > ucl))
-                    {
-                        MarkCh1DataInvalid(itemspec);
-                    }
-                    else
-                    {
-                        MarkCh1DataValid(itemspec);
-                    }
-                }
-                else
-                {
-                    //UserInput is not a number string
-                    MarkCh1DataInvalid(itemspec);
-                }
-            }
-            else
-            {
-                //String, String/Combo
-                if (string.IsNullOrEmpty(theUserInput as string))
-                {
-                    MarkCh1DataInvalid(itemspec);
-                }
-                else
-                {
-                    MarkCh1DataValid(itemspec);
-                }
-            }
-        }
+        //            if ((needToCheckUcl) && (inputval > ucl))
+        //            {
+        //                MarkCh1DataInvalid(itemspec);
+        //            }
+        //            else
+        //            {
+        //                MarkCh1DataValid(itemspec);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //UserInput is not a number string
+        //            MarkCh1DataInvalid(itemspec);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //String, String/Combo
+        //        if (string.IsNullOrEmpty(theUserInput as string))
+        //        {
+        //            MarkCh1DataInvalid(itemspec);
+        //        }
+        //        else
+        //        {
+        //            MarkCh1DataValid(itemspec);
+        //        }
+        //    }
+        //}
 
-        private void MarkCh1DataValid(TItemSpec itemspec)
-        {
-            itemspec.IsCh1DataValid = true;
-            //itemspec.IsCh1DataEntered = true;
-        }
+        //private void MarkCh1DataValid(TItemSpec itemspec)
+        //{
+        //    itemspec.IsCh1DataValid = true;
+        //    //itemspec.IsCh1DataEntered = true;
+        //}
 
-        private void MarkCh1DataInvalid(TItemSpec itemspec)
-        {
-            //itemspec.Ch1Data = "대한민국";
-            itemspec.IsCh1DataValid = false;
-            //itemspec.IsCh1DataEntered = true;
+        //private void MarkCh1DataInvalid(TItemSpec itemspec)
+        //{
+        //    //itemspec.Ch1Data = "대한민국";
+        //    itemspec.IsCh1DataValid = false;
+        //    //itemspec.IsCh1DataEntered = true;
 
-            //TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            //TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    //TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnChangeHandler2(object theUserInput, TItemSpec itemspec)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
+        //private void TextBoxOnChangeHandler2(object theUserInput, TItemSpec itemspec)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
 
-            //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
-            var cool = itemspec.Ch2LCL;
-            itemspec.Ch2LCL = "위대한";
-            //var one = itemspec.Ch2LCL;
-            //var two = myTItemSpec.Ch2LCL;
+        //    //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
+        //    var cool = itemspec.Ch2LCL;
+        //    itemspec.Ch2LCL = "위대한";
+        //    //var one = itemspec.Ch2LCL;
+        //    //var two = myTItemSpec.Ch2LCL;
 
-            TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
 
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnChangeHandler3(object theUserInput, TItemSpec itemspec)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
+        //private void TextBoxOnChangeHandler3(object theUserInput, TItemSpec itemspec)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
 
-            //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
-            var cool = itemspec.Ch3LCL;
-            itemspec.Ch3LCL = "자유우선";
-            //var one = itemspec.Ch3LCL;
-            //var two = myTItemSpec.Ch3LCL;
+        //    //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
+        //    var cool = itemspec.Ch3LCL;
+        //    itemspec.Ch3LCL = "자유우선";
+        //    //var one = itemspec.Ch3LCL;
+        //    //var two = myTItemSpec.Ch3LCL;
 
-            TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
 
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnChangeHandler4(object theUserInput, TItemSpec itemspec)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
+        //private void TextBoxOnChangeHandler4(object theUserInput, TItemSpec itemspec)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
 
-            //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
-            var cool = itemspec.Ch4LCL;
-            itemspec.Ch4LCL = "민주국가";
-            //var one = itemspec.Ch4LCL;
-            //var two = myTItemSpec.Ch4LCL;
+        //    //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
+        //    var cool = itemspec.Ch4LCL;
+        //    itemspec.Ch4LCL = "민주국가";
+        //    //var one = itemspec.Ch4LCL;
+        //    //var two = myTItemSpec.Ch4LCL;
 
-            TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
 
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnBlurHandler(object theUserInput)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
-        }
-        private void TextBoxValueChangedHandler(object theUserInput)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
-        }
-        #endregion
+        //private void TextBoxOnBlurHandler(object theUserInput)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
+        //}
+        //private void TextBoxValueChangedHandler(object theUserInput)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
+        //}
+        //#endregion
 
 
         #region Validations
         private bool ValidateUserInputCh1(string theUserInput, TItemSpec itemspec)
         {
             bool valid = false;
- 
+
             if (itemspec.ExpressionMode == "Number")
             {
                 bool needToCheckLcl = true;
@@ -256,7 +256,7 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
@@ -264,6 +264,10 @@ namespace Fims.Client.Shared.Pages
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch1Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -311,7 +315,7 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
@@ -319,6 +323,10 @@ namespace Fims.Client.Shared.Pages
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch1Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -366,7 +374,7 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
@@ -374,6 +382,10 @@ namespace Fims.Client.Shared.Pages
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch1Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -421,7 +433,7 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
@@ -429,6 +441,10 @@ namespace Fims.Client.Shared.Pages
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch1Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -457,33 +473,57 @@ namespace Fims.Client.Shared.Pages
             string field = args.Field as string;
             string userinput = args.Value as string;
 
-            if (userinput.IsNullOrEmpty())
-            {
-                //itemspec.IsCh1DataEntered = false;
-                return;
-            }
+            //if (userinput.IsNullOrEmpty())
+            //{
+            //    switch (field)
+            //    {
+            //        case "Ch1Data":
+            //            itemspec.IsCh1DataEntered = false;
+            //            itemspec.IsCh1DataValid = false;
+            //            itemspec.Ch1Data = null;
+            //            break;
+            //        case "Ch2Data":
+            //            itemspec.IsCh2DataEntered = false;
+            //            itemspec.IsCh2DataValid = false;
+            //            itemspec.Ch2Data = null;
+            //            break;
+            //        case "Ch3Data":
+            //            itemspec.IsCh3DataEntered = false;
+            //            itemspec.IsCh3DataValid = false;
+            //            itemspec.Ch3Data = null;
+            //            break;
+            //        case "Ch4Data":
+            //            itemspec.IsCh4DataEntered = false;
+            //            itemspec.IsCh4DataValid = false;
+            //            itemspec.Ch4Data = null;
+            //            break;
+            //    }
+            //
+            //    return;
+            //}
+
 
             if (field == "Ch1Data")
             {
-                itemspec.IsCh1DataEntered = true;
+                itemspec.IsCh1DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh1DataValid = ValidateUserInputCh1(userinput, itemspec);
             }
 
             if (field == "Ch2Data")
             {
-                itemspec.IsCh2DataEntered = true;
+                itemspec.IsCh2DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh2DataValid = ValidateUserInputCh2(userinput, itemspec);
             }
 
             if (field == "Ch3Data")
             {
-                itemspec.IsCh3DataEntered = true;
+                itemspec.IsCh3DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh3DataValid = ValidateUserInputCh3(userinput, itemspec);
             }
 
             if (field == "Ch4Data")
             {
-                itemspec.IsCh4DataEntered = true;
+                itemspec.IsCh4DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh4DataValid = ValidateUserInputCh4(userinput, itemspec);
             }
 
@@ -816,6 +856,7 @@ namespace Fims.Client.Shared.Pages
         #region Helpers
         private bool CheckAllChannelDataEntered(TItemSpec itemspec)
         {
+            //JBH FIXME: check IsChXDataValid ?
             var ch1 = itemspec.IsCh1DataEnabled ? (itemspec.IsCh1DataEntered ? true : false) : true;
             var ch2 = itemspec.IsCh2DataEnabled ? (itemspec.IsCh2DataEntered ? true : false) : true;
             var ch3 = itemspec.IsCh3DataEnabled ? (itemspec.IsCh3DataEntered ? true : false) : true;

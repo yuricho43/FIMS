@@ -37,14 +37,20 @@ namespace Fims.Data.Models.TSheetSpecs
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-        #region Part Needed for the View Model only
         public string Ch1Data { get; set; }
         public string Ch2Data { get; set; }
         public string Ch3Data { get; set; }
         public string Ch4Data { get; set; }
 
+        public DateTime Ch1Time { get; set; }
+        public DateTime Ch2Time { get; set; }
+        public DateTime Ch3Time { get; set; }
+        public DateTime Ch4Time { get; set; }
+
         public DateTime InspectDateTime { get; set; }
 
+
+        #region Part Needed for the View Model only
         public List<string> UnitList { get; set; } //Combo Dropdown list
 
         // used for batch editing logic only, so they need to be part of the view model only

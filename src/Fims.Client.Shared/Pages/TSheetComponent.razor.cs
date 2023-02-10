@@ -254,7 +254,7 @@ namespace Fims.Client.Shared.Pages
 
             TSheetComponentNotificationComponent.Show(new NotificationModel()
             {
-                Text = "완료된 성적서가 성공적으로 저장되었습니다.",
+                Text = "검사서가 성공적으로 DB에 저장되었습니다.",
                 ThemeColor = "success",
                 ShowIcon = true,
                 Icon = "caret-double-alt-up"
