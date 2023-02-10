@@ -57,12 +57,12 @@ namespace Fims.Web.Server.Controllers
         //     [FromQuery] TSheetsComplexSearchRequestModel searchRequest)
         //     => await this.tSheetsService.ComplexSearchAsync(searchRequest);
 
-        [HttpPost(nameof(AddTSheet))]
+        [HttpPost(nameof(CreateTSheet))]
         //[HttpPost]
-        public async Task<ActionResult> AddTSheet(TSheet tSheet)
+        public async Task<ActionResult> CreateTSheet(TSheet tSheet)
         {
             var id = await this.tSheetsService.CreateAsync(tSheet, this.currentUserService.UserId);
-            return Created(nameof(this.AddTSheet), id);
+            return Created(nameof(this.CreateTSheet), id);
         }
 
         [HttpPut(nameof(UpdateTSheet))]

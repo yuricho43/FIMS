@@ -218,7 +218,7 @@ namespace Fims.Client.Shared.Pages
             await Dialogs.AlertAsync(message, title);
         }
 
-        public async Task SaveAllChanges()
+        public async Task SaveTSheetToDb()
         {
             //  List<TItemSpec> deletedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsDeleted == true).ToList();
             //  List<TItemSpec> newItems     = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsNew == true).ToList();
@@ -248,7 +248,7 @@ namespace Fims.Client.Shared.Pages
             tSheet.IsInspectionCompleted = true;
             tSheet.InspectionEndDateTime = DateTime.Now;
 
-            var idTSheet = await TSheetsClientService.AddTSheet(tSheet);
+            var idTSheet = await TSheetsClientService.CreateTSheet(tSheet);
 
             await TSheetInspectionCompleted.InvokeAsync(tSheet.ProductSerial);
 

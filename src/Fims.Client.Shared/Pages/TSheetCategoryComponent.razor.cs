@@ -250,7 +250,7 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }
@@ -309,7 +309,7 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }
@@ -368,7 +368,7 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }
@@ -427,7 +427,7 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }

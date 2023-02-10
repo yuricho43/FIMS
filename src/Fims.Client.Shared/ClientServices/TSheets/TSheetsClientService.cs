@@ -23,10 +23,10 @@ namespace Fims.Client.Shared.ClientServices.TSheets
             this.http = http;
         }
 
-        public async Task<int> AddTSheet(TSheet tSheet)
+        public async Task<int> CreateTSheet(TSheet tSheet)
         {
-            var path = $"{TSheetsPath}/{nameof(this.AddTSheet)}"; // "api/tsheets/AddTSheet"
-            var tSheetResponse = await this.http.PostAsJsonAsync($"{TSheetsPath}/{nameof(this.AddTSheet)}", tSheet);
+            var path = $"{TSheetsPath}/{nameof(this.CreateTSheet)}"; // "api/tsheets/CreateTSheet"
+            var tSheetResponse = await this.http.PostAsJsonAsync($"{TSheetsPath}/{nameof(this.CreateTSheet)}", tSheet);
             var tSheetId = await tSheetResponse.Content.ReadFromJsonAsync<int>();
             //var tSheetId = 7;
             return tSheetId;
