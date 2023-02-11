@@ -1,4 +1,20 @@
-﻿using AutoMapper;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Linq;
+using static System.Net.Mime.MediaTypeNames;
+
+using Microsoft.AspNetCore.Components;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+
+using AutoMapper;
+
+using Telerik.Blazor;
+using Telerik.Blazor.Components;
+using Telerik.DataSource;
+using static Telerik.Blazor.ThemeConstants;
+
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
 using Fims.Common;
 using Fims.Common.Mapping;
@@ -6,18 +22,6 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
-using Microsoft.AspNetCore.Components;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using System.Collections;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using Telerik.Blazor;
-using Telerik.Blazor.Components;
-using Telerik.DataSource;
-using static System.Net.Mime.MediaTypeNames;
-using static Telerik.Blazor.ThemeConstants;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -53,6 +57,9 @@ namespace Fims.Client.Shared.Pages
         [Parameter]
         public EventCallback<string> TSheetInspectionCompleted { get; set; }
 
+        [Parameter]
+        public EventCallback<string> TSheetInspectionInvalid { get; set; }
+
         private IMapper Mapper { get; set; }
 
 
@@ -62,6 +69,7 @@ namespace Fims.Client.Shared.Pages
         TelerikNotification TSheetComponentNotificationComponent { get; set; }
 
         public Dictionary<string,int> TItemSpecsInCategoryCompletedCountDict { get; set; } = new Dictionary<string,int>();
+        public Dictionary<string, int> TItemSpecsInCategoryInvalidCountDict { get; set; } = new Dictionary<string, int>();
 
 
         protected override void OnInitialized()
@@ -77,8 +85,15 @@ namespace Fims.Client.Shared.Pages
 
             foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
             {
-                int completed = catItems.Value.Where(a => a.Completed==true).Count();
-                TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completed);
+                int completedCount = catItems.Value.Where(t => t.Completed==true).Count();
+                TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
+
+                var ch1InvalidCount = catItems.Value.Where(t => t.IsCh1DataValid == false && t.IsCh1DataEnabled == true).Count();
+                var ch2InvalidCount = catItems.Value.Where(t => t.IsCh2DataValid == false && t.IsCh2DataEnabled == true).Count();
+                var ch3InvalidCount = catItems.Value.Where(t => t.IsCh3DataValid == false && t.IsCh3DataEnabled == true).Count();
+                var ch4InvalidCount = catItems.Value.Where(t => t.IsCh4DataValid == false && t.IsCh4DataEnabled == true).Count();
+                int totalInvalidCount = ch1InvalidCount + ch2InvalidCount + ch3InvalidCount + ch4InvalidCount;
+                TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, totalInvalidCount);
             }
 
             await base.OnInitializedAsync();
@@ -166,6 +181,19 @@ namespace Fims.Client.Shared.Pages
             //StateHasChanged();
         }
 
+        private void OnTItemSpecsInCategoryInvalidCountChanged(string categoryInvalidCount)
+        {
+            var pair = categoryInvalidCount.Split(':');
+            var category = pair[0];
+
+            int invalidCount = 0;
+            try { invalidCount = Int32.Parse(pair[1]); } catch { }
+
+            TItemSpecsInCategoryInvalidCountDict[category] = invalidCount;
+
+            //StateHasChanged();
+        }
+
         private int GetTItemSpecsNotCompletedCount()
         {
             int notCompletedCount = 0;
@@ -176,6 +204,18 @@ namespace Fims.Client.Shared.Pages
             }
 
             return notCompletedCount;
+        }
+
+        private int GetTItemSpecsInvalidCount()
+        {
+            int invalidCount = 0;
+
+            foreach (var cat in TItemSpecsInCategoryInvalidCountDict)
+            {
+                invalidCount += TItemSpecsInCategoryInvalidCountDict[cat.Key];
+            }
+
+            return invalidCount;
         }
 
         private IMapper CreateAutoMapperFromTItemSpecToTItem()
@@ -233,13 +273,20 @@ namespace Fims.Client.Shared.Pages
             //  MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
 
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
-            if (notCompletedCount > 0)
+            int invalidCount      = GetTItemSpecsInvalidCount();
+            if (notCompletedCount > 0 || invalidCount > 0)
             {
-                bool confirmed = await Dialogs.ConfirmAsync("아직 입력되지 않은 항목들이 있습니다. 그래도 DB에 저장할까요?", "Database 저장");
-                if (!confirmed)
+                bool notConfirmed = await Dialogs.ConfirmAsync($"아직 제대로 입력되지 않은 항목들이 있습니다.\n- 미입력항목:{notCompletedCount}\n- 데이터오류항목:{invalidCount}\n\n그래도 DB에 저장할까요?", "Database 저장");
+                if (!notConfirmed)
                 {
                     return;
                 }
+            }
+
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 저장된 검사서는 더 이상 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
+            if (!saveConfirmed)
+            {
+                return;
             }
 
             CollectTItemSpecsFinal();

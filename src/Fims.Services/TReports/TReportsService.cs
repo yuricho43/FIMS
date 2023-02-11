@@ -7,10 +7,13 @@ using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
+using System.ComponentModel;
+using System.Net.Http.Headers;
+
+using Microsoft.AspNetCore.Http;
 
 using ExcelMapper;
 using OfficeOpenXml;
-
 
 using Fims.Common;
 using Fims.Data.Utils;
@@ -18,10 +21,8 @@ using Fims.Data.Models.TReports;
 using Fims.Data.Models;
 using Fims.Services.TSheets;
 using Fims.Data.Entities;
-using System.ComponentModel;
 using Fims.Data.Models.TSheetSpecsInProgress;
-using Microsoft.AspNetCore.Http;
-using System.Net.Http.Headers;
+
 
 namespace Fims.Services.TReports
 {
@@ -152,7 +153,7 @@ namespace Fims.Services.TReports
             return memoryStream;
         }
 
-        public async Task<string> ReplaceAsync(IFormFile specFormFile)
+        public async Task<string> UploadSpecFileAsync(IFormFile specFormFile)
         {
             var newSpecFileContent = ContentDispositionHeaderValue.Parse(specFormFile.ContentDisposition);
 
@@ -164,6 +165,10 @@ namespace Fims.Services.TReports
             {
                 //File.Delete(newSpecFilePath);
                 //backup the prev
+                if (File.Exists(newSpecFilePath + ".BACKUP"))
+                {
+                    File.Delete(newSpecFilePath + ".BACKUP");
+                }
                 File.Move(newSpecFilePath, newSpecFilePath + ".BACKUP");
             }
 
@@ -177,14 +182,26 @@ namespace Fims.Services.TReports
             //string buildresult = BuildTReportSpecsFromExcelSpecFile(newSpecFilePath) ?? string.Empty;
             string buildresult = "SUCCESS";
 
-            if (buildresult != "SUCCESS")
+            if (buildresult == "SUCCESS")
             {
-                //delete the new
-                File.Delete(newSpecFilePath);
+                if (File.Exists(newSpecFilePath + ".BACKUP"))
+                {
+                    File.Delete(newSpecFilePath + ".BACKUP");
+                }
+            }
+            else
+            {
+                if (File.Exists(newSpecFilePath))
+                {
+                    //delete the new
+                    File.Delete(newSpecFilePath);
+                }
 
-                //restore the prev
-                File.Move(newSpecFilePath + ".BACKUP", newSpecFilePath);
-
+                if (File.Exists(newSpecFilePath + ".BACKUP"))
+                {
+                    //restore the prev
+                    File.Move(newSpecFilePath + ".BACKUP", newSpecFilePath);
+                }
             }
 
             // instead mock async operation

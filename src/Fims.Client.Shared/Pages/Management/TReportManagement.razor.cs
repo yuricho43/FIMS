@@ -29,8 +29,8 @@ namespace Fims.Client.Shared.Pages.Management
     {
         public List<string> AllowedExtensions { get; set; } = new List<string>() { ".xlsx" };
         public List<FileSelectFileInfo> FileSelectFileInfos { get; set; } = new List<FileSelectFileInfo>();
-
         public TelerikFileSelect TReportFileSelector { get; set; }
+
         TelerikNotification UploadTReportNotificationComponent { get; set; }
 
 
@@ -40,62 +40,66 @@ namespace Fims.Client.Shared.Pages.Management
 
         private void OnFileSelected(FileSelectEventArgs args)
         {
-            foreach (var file in args.Files)
+            var file = args.Files[0];
+            if (!file.InvalidExtension && file.Name.StartsWith("FimsTReportSpecs_"))
             {
-                if (!file.InvalidExtension && file.Name.StartsWith("FimsTReportSpecs_"))
-                {
-                    FileSelectFileInfos.Add(file);
-                }
+                FileSelectFileInfos.Clear(); //allow only one file selected.
+                FileSelectFileInfos.Add(file);
+            }
+            else
+            {
+                _ = ActivateAlert("성적서스펙 파일이름 오류", "유효한 성적서스펙 파일이름이 아닙니다.\n\n유효형식: FimsTReportSpecs_성적서스펙 이름_YYYYMMDD.xlsx");
             }
         }
 
         public async Task OnUploadSpec()
         {
-            await UploadSpecFiles();
+            if (FileSelectFileInfos.Count < 1)
+            {
+                _ = ActivateAlert("업로드 실패", "업로드할 성적서스펙파일을 선택하세요.");
+                return;
+            }
+
+            await UploadSpecFile();
         }
 
         private List<string> FileNamesToUpload = new();
 
-        private async Task UploadSpecFiles()
+        private async Task UploadSpecFile()
         {
             if (FileSelectFileInfos.Count < 1) return;
+            var file = FileSelectFileInfos[0];
 
-            foreach (var file in FileSelectFileInfos)
+            if (!file.InvalidExtension)
             {
-                if (!file.InvalidExtension)
+                using var content = new MultipartFormDataContent();
+                var fileContent = new StreamContent(file.Stream);
+                //fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                FileNamesToUpload.Clear(); //allow only one file to upload at a time.
+                FileNamesToUpload.Add(file.Name);
+                content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
+                var response = await Http.PostAsync("api/TReports/UploadSpecFile", content);
+                var uploadResult = await response.Content.ReadAsStringAsync();
+
+                if (uploadResult.StartsWith("SUCCESS"))
                 {
-                    using var content = new MultipartFormDataContent();
-                    var fileContent = new StreamContent(file.Stream);
-                    //fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                    FileNamesToUpload.Add(file.Name);
-                    content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
-                    var response = await Http.PostAsync("api/TReports/save", content);
-                    var uploadResult = await response.Content.ReadAsStringAsync();
-
-                    if (uploadResult.StartsWith("SUCCESS"))
+                    UploadTReportNotificationComponent.Show(new NotificationModel()
                     {
-                        UploadTReportNotificationComponent.Show(new NotificationModel()
-                        {
-                            Text = "성적서스펙 파일이 성공적으로 교체되었습니다.",
-                            ThemeColor = "primary",
-                            ShowIcon = true,
-                            Icon = "caret-double-alt-up"
-                        });
-
-                        StateHasChanged();
-                    }
-                    else
-                    {
-                        _ = ActivateAlert("교체 실패", uploadResult);
-                    }
-
+                        Text = "성적서스펙 파일이 성공적으로 교체되었습니다.",
+                        ThemeColor = "primary",
+                        ShowIcon = true,
+                        Icon = "caret-double-alt-up"
+                    });
+                    StateHasChanged();
+                }
+                else
+                {
+                    _ = ActivateAlert("교체 실패", uploadResult);
                 }
             }
 
-            //await RemoveSecondFile();
-
+            hideFileSelectedList();
             FileSelectFileInfos.Clear(); //remove from the selected files list
-            int cool = 7;
         }
 
         public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();

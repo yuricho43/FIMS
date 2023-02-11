@@ -21,6 +21,7 @@
                 <div class="k-form-field-wrap">
                     <TelerikFileSelect @ref=@TReportFileSelector
                             AllowedExtensions="@AllowedExtensions"
+                            Multiple="false"
                             OnSelect="@OnFileSelected">
                     </TelerikFileSelect>
                     <br/>
@@ -85,6 +86,12 @@
     }
 </style>
 
+@* for newline by '\n' in the Dialog message *@
+<style>
+    .k-dialog-content {
+        white-space: pre-line;
+    }
+</style>
 
 <style>
     .k-grid td, .k-grid tr {
@@ -203,7 +210,7 @@
         }
 </style>
 
-@inject IJSRuntime _js
+@inject IJSRuntime JS
 
 @* move this script to a correct location it's here as ahack to make the snippet shorter and easy to copy  *@
 <script suppress-error="BL9992">
@@ -218,6 +225,20 @@
 @code {
     async Task RemoveSecondFile()
     {
-        await _js.InvokeVoidAsync("removeSecondFile");
+        await JS.InvokeVoidAsync("removeSecondFile");
+    }
+}
+
+@*https://feedback.telerik.com/blazor/1555132-add-a-clearfile-option-similar-to-the-upload-control*@
+<script suppress-error="BL9992">
+    function clearFileSelect() {
+        document.querySelector(".custom-class .k-upload-files").innerHTML = "";
+    }
+</script>
+
+@code {
+    void hideFileSelectedList()
+    {
+        JS.InvokeVoidAsync("clearFileSelect");
     }
 }

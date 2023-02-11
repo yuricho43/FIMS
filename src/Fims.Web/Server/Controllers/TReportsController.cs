@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.IO;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,8 +15,6 @@ using Fims.Data.Entities;
 using Fims.Web.Server.Infrastructure.Services;
 using Fims.Web.Server.Infrastructure.Extensions;
 using static Fims.Common.Constants;
-using System.IO;
-using Microsoft.AspNetCore.Http;
 
 namespace Fims.Web.Server.Controllers
 {
@@ -69,12 +69,12 @@ namespace Fims.Web.Server.Controllers
         }
 
 
-        [HttpPost(nameof(Save))]
+        [HttpPost(nameof(UploadSpecFile))]
         [AllowAnonymous]
-        public async Task<string> Save(IEnumerable<IFormFile> files)
+        public async Task<string> UploadSpecFile(IEnumerable<IFormFile> files)
         {
             var specFormFile = files.First();
-            var result = await this.tReportsService.ReplaceAsync(specFormFile);
+            var result = await this.tReportsService.UploadSpecFileAsync(specFormFile);
             return result;
         }
 

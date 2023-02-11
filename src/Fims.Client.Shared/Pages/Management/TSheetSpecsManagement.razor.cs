@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using static System.Net.Mime.MediaTypeNames;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http.Json;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -14,6 +15,7 @@ using Telerik.Blazor;
 using Telerik.Blazor.Components;
 using Telerik.Blazor.Components.Upload;
 using Telerik.DataSource;
+using Telerik.Blazor.Components.FileSelect;
 
 using AutoMapper;
 
@@ -22,8 +24,6 @@ using Fims.Common;
 using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.TSheetSpecs;
-using System.Net.Http.Json;
-using Telerik.Blazor.Components.FileSelect;
 
 namespace Fims.Client.Shared.Pages.Management
 {
@@ -31,6 +31,8 @@ namespace Fims.Client.Shared.Pages.Management
     {
         public List<string> AllowedExtensions { get; set; } = new List<string>() { ".xlsx" };
         public List<FileSelectFileInfo> FileSelectFileInfos { get; set; } = new List<FileSelectFileInfo>();
+        public TelerikFileSelect TSheetSpecsFileSelector { get; set; }
+
         TelerikNotification UploadTSheetSpecsNotificationComponent { get; set; }
 
 
@@ -40,58 +42,66 @@ namespace Fims.Client.Shared.Pages.Management
 
         private void OnFileSelected(FileSelectEventArgs args)
         {
-            foreach (var file in args.Files)
+            var file = args.Files[0];
+            if (!file.InvalidExtension && file.Name.StartsWith("FimsTSheetSpecs_"))
             {
-                if (!file.InvalidExtension && file.Name.StartsWith("FimsTSheetSpecs_"))
-                {
-                    FileSelectFileInfos.Add(file);
-                }
+                FileSelectFileInfos.Clear(); //allow only one file selected.
+                FileSelectFileInfos.Add(file);
+            }
+            else
+            {
+                _ = ActivateAlert("검사스펙 파일이름 오류", "유효한 검사스펙 파일이름이 아닙니다.\n\n유효형식: FimsTSheetSpecs_YYYYMMDD.xlsx");
             }
         }
 
         public async Task OnUploadSpec()
         {
-            await UploadSpecFiles();
+            if (FileSelectFileInfos.Count < 1)
+            {
+                _ = ActivateAlert("업로드 실패", "업로드할 검사스펙파일을 선택하세요.");
+                return;
+            }
+
+            await UploadSpecFile();
         }
 
         private List<string> FileNamesToUpload = new();
 
-        private async Task UploadSpecFiles()
+        private async Task UploadSpecFile()
         {
             if (FileSelectFileInfos.Count < 1) return;
+            var file = FileSelectFileInfos[0];
 
-            foreach (var file in FileSelectFileInfos)
+            if (!file.InvalidExtension)
             {
-                if (!file.InvalidExtension)
+                using var content = new MultipartFormDataContent();
+                var fileContent = new StreamContent(file.Stream);
+                //fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                FileNamesToUpload.Clear(); //allow only one file to upload at a time.
+                FileNamesToUpload.Add(file.Name);
+                content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
+                var response = await Http.PostAsync("api/TSheetSpecs/UploadSpecFile", content);
+                var uploadResult = await response.Content.ReadAsStringAsync();
+
+                if (uploadResult.StartsWith("SUCCESS"))
                 {
-                    using var content = new MultipartFormDataContent();
-                    var fileContent = new StreamContent(file.Stream);
-                    //fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
-                    FileNamesToUpload.Add(file.Name);
-                    content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
-                    var response = await Http.PostAsync("api/TSheetSpecs/save", content);
-                    var uploadResult = await response.Content.ReadAsStringAsync();
-
-                    if (uploadResult.StartsWith("SUCCESS"))
+                    UploadTSheetSpecsNotificationComponent.Show(new NotificationModel()
                     {
-                        UploadTSheetSpecsNotificationComponent.Show(new NotificationModel()
-                        {
-                            Text = "검사서스펙 파일이 성공적으로 교체되었습니다.",
-                            ThemeColor = "primary",
-                            ShowIcon = true,
-                            Icon = "caret-double-alt-up"
-                        });
-                    }
-                    else
-                    {
-                        _ = ActivateAlert("교체 실패", uploadResult);
-                    }
-
+                        Text = "검사서스펙 파일이 성공적으로 교체되었습니다.",
+                        ThemeColor = "primary",
+                        ShowIcon = true,
+                        Icon = "caret-double-alt-up"
+                    });
+                StateHasChanged();
+                }
+                else
+                {
+                    _ = ActivateAlert("교체 실패", "검사스펙에 오류가 있습니다.\n스펙파일 내용을 점검하세요.\n\n" + uploadResult);
                 }
             }
 
+            hideFileSelectedList();
             FileSelectFileInfos.Clear(); //remove from the selected files list
-
         }
 
         public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();
