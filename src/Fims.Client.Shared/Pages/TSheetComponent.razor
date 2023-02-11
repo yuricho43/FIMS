@@ -38,12 +38,6 @@
                     }
                     else
                     {
-                        var ch1InvalidCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(t => t.IsCh1DataValid == false && t.IsCh1DataEnabled == true).Count();
-                        var ch2InvalidCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(t => t.IsCh2DataValid == false && t.IsCh2DataEnabled == true).Count();
-                        var ch3InvalidCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(t => t.IsCh3DataValid == false && t.IsCh3DataEnabled == true).Count();
-                        var ch4InvalidCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(t => t.IsCh4DataValid == false && t.IsCh4DataEnabled == true).Count();
-                        var totalInvalidCount = ch1InvalidCount + ch2InvalidCount + ch3InvalidCount + ch4InvalidCount;
-
                         if (TItemSpecsInCategoryInvalidCountDict[TCategory] > 0)
                         {
                             <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>

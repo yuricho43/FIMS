@@ -52,12 +52,7 @@ namespace Fims.Client.Shared.Pages.Management
         protected override async Task OnInitializedAsync()
         {
             TSheets = await TSheetsClientService.AllTSheetsAsync();
-        }
-
-        public void ShowDetailsHandler(GridCommandEventArgs args)
-        {
-            var tSheet = (TSheet)args.Item;
-            this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
+            TReportSpecs = await TReportsClientService.AllTReportSpecs();
         }
 
         private void OnGenerateTReportFinished(string fileGenerated)
@@ -67,9 +62,14 @@ namespace Fims.Client.Shared.Pages.Management
             //StateHasChanged();
         }
 
-        public async void GenerateReportHandler(GridCommandEventArgs args)
+        public void ShowDetailsHandler(GridCommandEventArgs args)
         {
-            TReportSpecs = await TReportsClientService.AllTReportSpecs();
+            var tSheet = (TSheet)args.Item;
+            this.NavigationManager.NavigateTo($"/Management/TSheetDetails/{tSheet.Id}", forceLoad: true);
+        }
+
+        public void GenerateReportHandler(GridCommandEventArgs args)
+        {
             CurrentTSheet = (TSheet)args.Item;
             GenerateTReportDialogVisible = true;
             //StateHasChanged();
