@@ -38,6 +38,28 @@
 
         <GridColumn Field="@nameof(TItemSpec.Ch1Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch1Data"))" Title="CH1" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH1</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh1DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch1Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch1Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch1Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
@@ -67,6 +89,28 @@
 
         <GridColumn Field="@nameof(TItemSpec.Ch2Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch2Data"))" Title="CH2" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH2</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh2DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch2Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch2Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch2Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
@@ -96,6 +140,28 @@
  
         <GridColumn Field="@nameof(TItemSpec.Ch3Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch3Data"))" Title="CH3" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH3</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh3DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch3Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch3Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch3Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
@@ -125,6 +191,28 @@
 
         <GridColumn Field="@nameof(TItemSpec.Ch4Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch4Data"))" Title="CH4" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH4</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh4DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch4Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch4Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch4Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
