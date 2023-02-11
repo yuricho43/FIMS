@@ -57,9 +57,6 @@ namespace Fims.Client.Shared.Pages
         [Parameter]
         public EventCallback<string> TSheetInspectionCompleted { get; set; }
 
-        [Parameter]
-        public EventCallback<string> TSheetInspectionInvalid { get; set; }
-
         private IMapper Mapper { get; set; }
 
 
@@ -88,12 +85,13 @@ namespace Fims.Client.Shared.Pages
                 int completedCount = catItems.Value.Where(t => t.Completed==true).Count();
                 TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
 
-                var ch1InvalidCount = catItems.Value.Where(t => t.IsCh1DataValid == false && t.IsCh1DataEnabled == true).Count();
-                var ch2InvalidCount = catItems.Value.Where(t => t.IsCh2DataValid == false && t.IsCh2DataEnabled == true).Count();
-                var ch3InvalidCount = catItems.Value.Where(t => t.IsCh3DataValid == false && t.IsCh3DataEnabled == true).Count();
-                var ch4InvalidCount = catItems.Value.Where(t => t.IsCh4DataValid == false && t.IsCh4DataEnabled == true).Count();
-                int totalInvalidCount = ch1InvalidCount + ch2InvalidCount + ch3InvalidCount + ch4InvalidCount;
-                TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, totalInvalidCount);
+                int invalidCount = catItems.Value.Where(t =>
+                                    (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
+                                    (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
+                                    (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
+                                    (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
+                ).Count();
+                TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
             }
 
             await base.OnInitializedAsync();
@@ -276,7 +274,7 @@ namespace Fims.Client.Shared.Pages
             int invalidCount      = GetTItemSpecsInvalidCount();
             if (notCompletedCount > 0 || invalidCount > 0)
             {
-                bool notConfirmed = await Dialogs.ConfirmAsync($"아직 제대로 입력되지 않은 항목들이 있습니다.\n- 미입력항목:{notCompletedCount}\n- 데이터오류항목:{invalidCount}\n\n그래도 DB에 저장할까요?", "Database 저장");
+                bool notConfirmed = await Dialogs.ConfirmAsync($"아직 제대로 입력되지 않은 항목들이 있습니다.\n\n- 미입력 항목: {notCompletedCount} 개\n- 데이터오류 항목: {invalidCount} 개\n\n그래도 DB에 저장할까요?", "Database 저장");
                 if (!notConfirmed)
                 {
                     return;

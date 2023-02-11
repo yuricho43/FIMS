@@ -24,6 +24,9 @@ namespace Fims.Client.Shared.Pages
         [Parameter]
         public EventCallback<string> TItemSpecsInCategoryCompletedCountChanged { get; set; }
 
+        [Parameter]
+        public EventCallback<string> TItemSpecsInCategoryInvalidCountChanged { get; set; }
+
         public int MaxChannels { get; set; }
 
         private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
@@ -33,6 +36,7 @@ namespace Fims.Client.Shared.Pages
         public bool SelectionIsDirty => TItemSpecsSelected.ToList().Exists(item => item.IsDirty);
 
         public int TItemSpecsInCategoryCompletedCount { get; set; } = 0;
+        public int TItemSpecsInCategoryInvalidCount { get; set; } = 0;
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
@@ -49,8 +53,9 @@ namespace Fims.Client.Shared.Pages
         {
             MaxChannels = TItemSpecsInCategory.Select(x => x.Channels).Max();
 
-            TItemSpecsInCategoryCompletedCount = TItemSpecsInCategory.Where(x => x.Completed==true).Count();
+            //TItemSpecsInCategoryCompletedCount = TItemSpecsInCategory.Where(x => x.Completed==true).Count();
             CalculateTItemSpecsInputCompletedCount();
+            CalculateTItemSpecsInputInvalidCount();
 
             Layout.DocsTitle = Localizer["HumanCapital"];
             base.OnInitialized();
@@ -562,6 +567,7 @@ namespace Fims.Client.Shared.Pages
             ChangeLocalItem(itemspec);
 
             CalculateTItemSpecsInputCompletedCount();
+            CalculateTItemSpecsInputInvalidCount();
         }
 
         public void CreateHandler(GridCommandEventArgs args)
@@ -888,6 +894,24 @@ namespace Fims.Client.Shared.Pages
             {
                 TItemSpecsInCategoryCompletedCount = compeletedCount;
                 TItemSpecsInCategoryCompletedCountChanged.InvokeAsync($"{TItemSpecsInCategory[0].Category}:{compeletedCount}"); // notify pass Param to parent, by calling EventCallback
+            }
+        }
+
+        private void CalculateTItemSpecsInputInvalidCount()
+        {
+            int invalidCount = TItemSpecsInCategory.Where(t =>
+                                (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
+                                (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
+                                (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
+                                (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
+            ).Count();
+
+            //var ch2InvalidCount = TItemSpecsInCategory.Where(t => t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh1DataEntered == true).Count();
+
+            if (invalidCount != TItemSpecsInCategoryInvalidCount)
+            {
+                TItemSpecsInCategoryInvalidCount = invalidCount;
+                TItemSpecsInCategoryInvalidCountChanged.InvokeAsync($"{TItemSpecsInCategory[0].Category}:{invalidCount}"); // notify pass Param to parent, by calling EventCallback
             }
         }
 
