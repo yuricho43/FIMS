@@ -92,7 +92,7 @@ namespace Fims.Client.Shared.Pages.Management
                         ShowIcon = true,
                         Icon = "caret-double-alt-up"
                     });
-                StateHasChanged();
+                    StateHasChanged();
                 }
                 else
                 {

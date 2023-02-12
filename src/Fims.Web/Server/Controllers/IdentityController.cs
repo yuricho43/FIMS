@@ -45,7 +45,7 @@ namespace Fims.Web.Server.Controllers
         [Authorize]
         [HttpPut(nameof(ChangeUserProfile))]
         public async Task<ActionResult> ChangeUserProfile(
-            ChangeUserProfileRequestModel model)
+            UserProfileModel model)
             => await this.identityService
                 .ChangeUserProfileAsync(model, this.currentUserService.UserId)
                 .ToActionResult();
@@ -53,7 +53,7 @@ namespace Fims.Web.Server.Controllers
         [Authorize]
         [HttpPut(nameof(ChangePassword))]
         public async Task<ActionResult> ChangePassword(
-            ChangePasswordRequestModel model)
+            PasswordModel model)
             => await this.identityService
                 .ChangePasswordAsync(model, this.currentUserService.UserId)
                 .ToActionResult();

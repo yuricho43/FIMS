@@ -14,9 +14,9 @@ namespace Fims.Client.Shared.Pages.Account
         [CascadingParameter]
         public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
-        private readonly ChangeUserProfileRequestModel model = new ChangeUserProfileRequestModel();
+        private readonly UserProfileModel UserProfileModel = new UserProfileModel();
 
-        private string email;
+        private string Email;
 
         public bool ShowErrors { get; set; }
 
@@ -26,7 +26,7 @@ namespace Fims.Client.Shared.Pages.Account
 
         private async Task SubmitAsync()
         {
-            var response = await this.Http.PutAsJsonAsync("api/identity/changeuserprofile", this.model);
+            var response = await this.Http.PutAsJsonAsync("api/identity/changeuserprofile", this.UserProfileModel);
 
             if (response.IsSuccessStatusCode)
             {
@@ -51,9 +51,9 @@ namespace Fims.Client.Shared.Pages.Account
             //var authState = await AuthenticationStateTask;
             //var user = authState.User;
 
-            this.email = user.GetEmail();
-            this.model.HangulName  = user.GetHangulName();
-            this.model.EnglishName = user.GetEnglishName();
+            this.Email = user.GetEmail();
+            this.UserProfileModel.HangulName  = user.GetHangulName();
+            this.UserProfileModel.EnglishName = user.GetEnglishName();
         }
     }
 }

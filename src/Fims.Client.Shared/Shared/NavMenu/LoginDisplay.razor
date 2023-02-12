@@ -13,29 +13,52 @@
             <text>...</text>
         </Authorizing>
         <Authorized>
-            <img src="_content/Fims.Client.Shared/images/user.svg" />
             <div>
                 @if (context.User.Identity.Name != null)
                 {
-                    <a href="/Account/UserProfile" class="username">@context.User.Identity.Name</a>
+@*                    <a href="/Account/UserProfile" class="username">@context.User.Identity.Name</a>
+*@
+                    <TelerikButton OnClick="@(() => ShowUserProfileDialogVisible())">
+                        <img src="_content/Fims.Client.Shared/images/user.svg" style="width: 30px;" />@context.User.Identity.Name
+                    </TelerikButton>
                 }
                 else
                 {
-                    <a href="/Account/UserProfile" class="username">@UserName</a>
+@*                    <a href="/Account/UserProfile" class="username">@UserName</a>
+*@
+                    <TelerikButton OnClick="@(() => ShowUserProfileDialogVisible())">
+                        <img src="_content/Fims.Client.Shared/images/user.svg" style="width: 30px;" />@UserName
+                    </TelerikButton>
+
                 }
             </div>
             &nbsp;
             <div>
-                <button class="btn btn-link username" @onclick="BeginSignOut">로그아웃</button>
-
+@*                <button class="btn btn-link username" @onclick="BeginSignOut">로그아웃</button>
+*@
+                <TelerikButton Icon="FontIcon.Logout" OnClick="BeginLogOut">로그아웃</TelerikButton>
             </div>
         </Authorized>
         <NotAuthorized>
-            <a class="sign-in username" href="/Account/Login">로그인</a>
+@*            <a class="sign-in username" href="/Account/Login">로그인</a>
+*@
+            <TelerikButton Icon="FontIcon.Login" OnClick="BeginLogIn">로그인</TelerikButton>
+
         </NotAuthorized>
     </AuthorizeView>
 </div>
 
+
+@if (UserProfileDialogVisible)
+{
+    <UserProfileDialog DialogVisible="@UserProfileDialogVisible" UserProfileDialogFinished="OnUserProfileDialogFinished"></UserProfileDialog>
+}
+
+
+@*<div id="component-container">
+    @DynamicRender
+</div>
+*@
 
 @*<AuthorizeView>
     <Authorized>

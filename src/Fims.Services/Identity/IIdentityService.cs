@@ -17,9 +17,9 @@ namespace Fims.Services.Identity
 
         Task<Result<LoginResponseModel>> LoginAsync(LoginRequestModel model);
 
-        Task<Result> ChangeUserProfileAsync(ChangeUserProfileRequestModel model, string userId);
+        Task<Result> ChangeUserProfileAsync(UserProfileModel model, string userId);
 
-        Task<Result> ChangePasswordAsync(ChangePasswordRequestModel model, string userId);
+        Task<Result> ChangePasswordAsync(PasswordModel model, string userId);
 
         Task<List<UserAuthInfoModel>> AllUsers();
         Task<List<FimsRole>> Roles();

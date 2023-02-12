@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using Fims.Client.Shared.Infrastructure.Extensions;
+using Fims.Client.Shared.Pages.Account;
+using Fims.Data.Models.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -12,6 +14,7 @@ namespace Fims.Client.Shared.Shared.NavMenu
     {
         [CascadingParameter]
         public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        public bool UserProfileDialogVisible { get; set; } = false;
 
         public string UserName { get; set; }
 
@@ -53,7 +56,40 @@ namespace Fims.Client.Shared.Shared.NavMenu
             }
         }
 
-        private void BeginSignOut(MouseEventArgs args)
+        private RenderFragment DynamicRender { get; set; }
+
+        private RenderFragment CreateComponent() => builder =>
+        {
+            builder.OpenComponent(0, typeof(UserProfileDialog));
+            builder.AddAttribute(1, "UserProfileDialogFinished", "OnUserProfileDialogFinished");
+            builder.CloseComponent();
+        };
+
+
+        private void ShowUserProfileDialogVisible()
+        {
+            CreateComponent();
+
+            //ProductService.UpdateProduct((ProductDto)args.Item);
+            //await LoadData();
+            UserProfileDialogVisible = true;
+            //StateHasChanged();
+        }
+
+        private void OnUserProfileDialogFinished()
+        {
+            //builder.CloseComponent();
+            UserProfileDialogVisible = false;
+            //StateHasChanged();
+        }
+
+        private void BeginLogIn(MouseEventArgs args)
+        {
+            //JBH await SignOutManager.SetSignOutState();
+            Navigation.NavigateTo("Account/login");
+        }
+
+        private void BeginLogOut(MouseEventArgs args)
         {
             //JBH await SignOutManager.SetSignOutState();
             Navigation.NavigateTo("Account/logout");
