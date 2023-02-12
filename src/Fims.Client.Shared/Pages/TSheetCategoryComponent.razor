@@ -69,11 +69,6 @@
                         {
                             <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch1Data" Class="k-focused-cell" />
                         }
-                        else if (tItemSpec.ExpressionMode == "String/Input(Time)")
-                        {
-                            <TelerikTextBox @bind-Value=tItemSpec.Ch1Data Class="k-grid k-focused-cell"></TelerikTextBox>
-                            <span class="auto-fill">@tItemSpec.Ch1Time?.ToString("HH:mm:ss")</span>
-                        }
                         else
                         {
                             <TelerikTextBox @bind-Value=tItemSpec.Ch1Data Class="k-grid k-focused-cell"></TelerikTextBox>
@@ -119,11 +114,6 @@
                         if (tItemSpec.ExpressionMode == "String/Combo")
                         {
                             <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch2Data" Class="k-focused-cell" />
-                        }
-                        else if (tItemSpec.ExpressionMode == "String/Input(Time)")
-                        {
-                            <TelerikTextBox @bind-Value=tItemSpec.Ch2Data Class="k-grid k-focused-cell"></TelerikTextBox>
-                            <span class="auto-fill">@tItemSpec.Ch2Time?.ToString("HH:mm:ss")</span>
                         }
                         else
                         {
@@ -171,11 +161,6 @@
                         {
                             <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch3Data" Class="k-focused-cell" />
                         }
-                        else if (tItemSpec.ExpressionMode == "String/Input(Time)")
-                        {
-                            <TelerikTextBox @bind-Value=tItemSpec.Ch3Data Class="k-grid k-focused-cell"></TelerikTextBox>
-                            <span class="auto-fill">@tItemSpec.Ch3Time?.ToString("HH:mm:ss")</span>
-                        }
                         else
                         {
                             <TelerikTextBox @bind-Value=tItemSpec.Ch3Data Class="k-grid k-focused-cell"></TelerikTextBox>
@@ -221,11 +206,6 @@
                         if (tItemSpec.ExpressionMode == "String/Combo")
                         {
                             <TelerikDropDownList Data="@tItemSpec.UnitList" @bind-Value="@tItemSpec.Ch4Data" Class="k-focused-cell" />
-                        }
-                        else if (tItemSpec.ExpressionMode == "String/Input(Time)")
-                        {
-                            <TelerikTextBox @bind-Value=tItemSpec.Ch4Data Class="k-grid k-focused-cell"></TelerikTextBox>
-                            <span class="auto-fill">@tItemSpec.Ch4Time?.ToString("HH:mm:ss")</span>
                         }
                         else
                         {
