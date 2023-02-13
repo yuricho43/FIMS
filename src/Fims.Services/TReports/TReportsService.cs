@@ -95,47 +95,91 @@ namespace Fims.Services.TReports
 
                     if ((cvalstr.Length > 0) && (cvalstr.StartsWith("$!$-")))
                     {
-                        int tItemNo = 0;
-                        string ch = "Ch1";
-                        bool isTime = false;
+                        // cvalstr: SINGLE: "$!$-1002", "$!$-1007-Ch3", "$!$-5003-Ch1-T"
+                        //          MULTI:  "$!$-1002,$!$1007, ...", "$!$-1007-Ch3,$!$1009-Ch3, ...", "$!$-5003-Ch1-T,$!$1007-Ch3-T, ..."
+                        var cellspecs = cvalstr.Split(',').ToList();
+                        List<string> cellvalues = new List<string>();
 
-                        // cvalstr: "$!$-1002", "$!$-1007-Ch3", "$!$-5003-Ch1-T", ...
-                        var markers = cvalstr.Split('-').ToList();
-
-                        try
+                        foreach (var cellspec in cellspecs)
                         {
-                            tItemNo = Int32.Parse(markers[1]);
-                        }
-                        catch
-                        {
-                            tItemNo = 0;
-                        }
+                            int tItemNo = 0;
+                            string ch = "Ch1";
+                            bool isTime = false;
+                            string cellvalue;
 
-                        ch = (markers.Count > 2) ? markers[2].ToString() : "Ch1";
+                            // cellspec: "$!$-1002", "$!$-1007-Ch3", "$!$-5003-Ch1-T", ...
+                            var markers = cellspec.Split('-').ToList();
 
-                        isTime = (markers.Count > 3) ? (markers[3].ToString()=="T" ? true : false) : false;     // "$!$-5003-Ch1-T"
-
-                        var tItem = tsheet.TItems.FirstOrDefault(t => t.TestNo == tItemNo); //make sure using FirstOrDefault(), instead of First() which seems to cause an Exception!
-                        if (tItem != null)
-                        {
-                            switch (ch)
+                            try
                             {
-                                case "Ch1": cell.Value = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
-                                case "Ch2": cell.Value = (isTime) ? tItem.Ch2Time?.ToString("HH:mm:ss") : tItem.Ch2Data; break;
-                                case "Ch3": cell.Value = (isTime) ? tItem.Ch3Time?.ToString("HH:mm:ss") : tItem.Ch3Data; break;
-                                case "Ch4": cell.Value = (isTime) ? tItem.Ch4Time?.ToString("HH:mm:ss") : tItem.Ch4Data; break;
-                                default:    cell.Value = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
+                                tItemNo = Int32.Parse(markers[1]);
+                            }
+                            catch
+                            {
+                                tItemNo = 0;
+                            }
+
+                            ch = (markers.Count > 2) ? markers[2].ToString() : "Ch1";
+
+                            if (markers.Count == 3)
+                            {
+                                // "$!$-5003-T"
+                                isTime = markers[2].ToString() == "T" ? true : false;
+                            }
+                            else if (markers.Count == 4)
+                            {
+                                // "$!$-5003-Ch1-T"
+                                isTime = markers[3].ToString() == "T" ? true : false;
+                            }
+                            else
+                            {
+                                // "$!$-5003"
+                                isTime = false;
+                            }
+
+                            var tItem = tsheet.TItems.FirstOrDefault(t => t.TestNo == tItemNo); //make sure using FirstOrDefault(), instead of First() which seems to cause an Exception!
+                            if (tItem != null)
+                            {
+                                switch (ch)
+                                {
+                                    case "Ch1": cellvalue = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
+                                    case "Ch2": cellvalue = (isTime) ? tItem.Ch2Time?.ToString("HH:mm:ss") : tItem.Ch2Data; break;
+                                    case "Ch3": cellvalue = (isTime) ? tItem.Ch3Time?.ToString("HH:mm:ss") : tItem.Ch3Data; break;
+                                    case "Ch4": cellvalue = (isTime) ? tItem.Ch4Time?.ToString("HH:mm:ss") : tItem.Ch4Data; break;
+                                    default:    cellvalue = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
+                                }
+                            }
+                            else
+                            {
+                                cellvalue = "NOTEXIST";
+                            }
+
+                            cellvalues.Add(cellvalue);
+                        }
+
+                        string cellValueString = string.Empty;
+                        foreach (var item in cellvalues.Select((value, i) => (value, i)))
+                        {
+                            var cellvalue = item.value;
+                            var cellindex = item.i;
+                            if (cellindex == 0)
+                            {
+                                cellValueString = cellvalue;
+                            }
+                            else
+                            {
+                                cellValueString += ", " + cellvalue;
                             }
                         }
-                        else
-                        {
-                            cell.Value = "NODATA";
-                        }
+
+                        cell.Value = cellValueString;
                     }
                 }
             }
 
-            await package.SaveAsAsync(new FileInfo(reportFilePath));
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            // DO NOT SAVE IN SERVER!!      await package.SaveAsAsync(new FileInfo(reportFilePath));
+            ///////////////////////////////////////////////////////////////////////////////////////////
 
             Stream memoryStream = new MemoryStream();
 
