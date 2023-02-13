@@ -2,6 +2,7 @@
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
 using Fims.Common;
 using Fims.Data.Models;
+using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.IdentityModel.Tokens;
@@ -18,15 +19,24 @@ namespace Fims.Client.Shared.Pages
     public partial class TSheetCategoryComponent
     {
         [Parameter]
-        public ObservableCollection<TItemSpec> MyCategoryTItemSpecs { get; set; }
+        public ObservableCollection<TItemSpec> TItemSpecsInCategory { get; set; }
+
+        [Parameter]
+        public EventCallback<string> TItemSpecsInCategoryCompletedCountChanged { get; set; }
+
+        [Parameter]
+        public EventCallback<string> TItemSpecsInCategoryInvalidCountChanged { get; set; }
 
         public int MaxChannels { get; set; }
 
-        private List<TItemSpec> PristineItems { get; set; } = new List<TItemSpec>();
-        public IEnumerable<TItemSpec> SelectedItems { get; set; } = Enumerable.Empty<TItemSpec>();
+        private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
+        public IEnumerable<TItemSpec> TItemSpecsSelected { get; set; } = Enumerable.Empty<TItemSpec>();
 
-        public bool GridIsDirty => MyCategoryTItemSpecs.ToList().Exists(itm => itm.IsDirty);
-        public bool SelectionIsDirty => SelectedItems.ToList().Exists(itm => itm.IsDirty);
+        public bool GridIsDirty => TItemSpecsInCategory.ToList().Exists(item => item.IsDirty);
+        public bool SelectionIsDirty => TItemSpecsSelected.ToList().Exists(item => item.IsDirty);
+
+        public int TItemSpecsInCategoryCompletedCount { get; set; } = 0;
+        public int TItemSpecsInCategoryInvalidCount { get; set; } = 0;
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
@@ -41,7 +51,12 @@ namespace Fims.Client.Shared.Pages
 
         protected override void OnInitialized()
         {
-            MaxChannels = MyCategoryTItemSpecs.Select(x => x.Channels).Max();
+            MaxChannels = TItemSpecsInCategory.Select(x => x.Channels).Max();
+
+            //TItemSpecsInCategoryCompletedCount = TItemSpecsInCategory.Where(x => x.Completed==true).Count();
+            CalculateTItemSpecsInputCompletedCount();
+            CalculateTItemSpecsInputInvalidCount();
+
             Layout.DocsTitle = Localizer["HumanCapital"];
             base.OnInitialized();
         }
@@ -51,8 +66,6 @@ namespace Fims.Client.Shared.Pages
         //    int cool = 7;
         //    MyTItemSpecs = new ObservableCollection<TItemSpec>(MyTSheetSpec.TItemSpecs);
         //}
-
-
 
         FilterDescriptor SingleTeamDescriptor() => new FilterDescriptor("TeamId", FilterOperator.IsEqualTo, 3);
 
@@ -67,150 +80,150 @@ namespace Fims.Client.Shared.Pages
             await Dialogs.AlertAsync(message, title);
         }
 
-        #region TextBoxOnChangeHandlers
-        private void TextBoxOnChangeHandler1(object theUserInput, TItemSpec itemspec)
-        {
-            if (itemspec.ExpressionMode == "Number")
-            {
-                bool needToCheckLcl = true;
-                bool needToCheckUcl = true;
+        //#region TextBoxOnChangeHandlers
+        //private void TextBoxOnChangeHandler1(object theUserInput, TItemSpec itemspec)
+        //{
+        //    if (itemspec.ExpressionMode == "Number")
+        //    {
+        //        bool needToCheckLcl = true;
+        //        bool needToCheckUcl = true;
 
-                if (Decimal.TryParse(theUserInput as string, out decimal inputval))
-                {
-                    if (!Decimal.TryParse(itemspec.Ch1LCL, out decimal lcl))
-                        needToCheckLcl = false; //LCL is not defined properly, so skip the check.
+        //        if (Decimal.TryParse(theUserInput as string, out decimal inputval))
+        //        {
+        //            if (!Decimal.TryParse(itemspec.Ch1LCL, out decimal lcl))
+        //                needToCheckLcl = false; //LCL is not defined properly, so skip the check.
 
-                    if (!Decimal.TryParse(itemspec.Ch1UCL, out decimal ucl))
-                        needToCheckUcl = false; //UCL is not defined properly, so skip the check.
+        //            if (!Decimal.TryParse(itemspec.Ch1UCL, out decimal ucl))
+        //                needToCheckUcl = false; //UCL is not defined properly, so skip the check.
 
-                    if ((needToCheckLcl) && (inputval < lcl))
-                    {
-                        MarkCh1DataInvalid(itemspec);
-                    }
-                    else
-                    {
-                        MarkCh1DataValid(itemspec);
-                    }
+        //            if ((needToCheckLcl) && (inputval < lcl))
+        //            {
+        //                MarkCh1DataInvalid(itemspec);
+        //            }
+        //            else
+        //            {
+        //                MarkCh1DataValid(itemspec);
+        //            }
 
-                    if ((needToCheckUcl) && (inputval > ucl))
-                    {
-                        MarkCh1DataInvalid(itemspec);
-                    }
-                    else
-                    {
-                        MarkCh1DataValid(itemspec);
-                    }
-                }
-                else
-                {
-                    //UserInput is not a number string
-                    MarkCh1DataInvalid(itemspec);
-                }
-            }
-            else
-            {
-                //String, String/Combo
-                if (string.IsNullOrEmpty(theUserInput as string))
-                {
-                    MarkCh1DataInvalid(itemspec);
-                }
-                else
-                {
-                    MarkCh1DataValid(itemspec);
-                }
-            }
-        }
+        //            if ((needToCheckUcl) && (inputval > ucl))
+        //            {
+        //                MarkCh1DataInvalid(itemspec);
+        //            }
+        //            else
+        //            {
+        //                MarkCh1DataValid(itemspec);
+        //            }
+        //        }
+        //        else
+        //        {
+        //            //UserInput is not a number string
+        //            MarkCh1DataInvalid(itemspec);
+        //        }
+        //    }
+        //    else
+        //    {
+        //        //String, String/Combo
+        //        if (string.IsNullOrEmpty(theUserInput as string))
+        //        {
+        //            MarkCh1DataInvalid(itemspec);
+        //        }
+        //        else
+        //        {
+        //            MarkCh1DataValid(itemspec);
+        //        }
+        //    }
+        //}
 
-        private void MarkCh1DataValid(TItemSpec itemspec)
-        {
-            itemspec.IsCh1DataValid = true;
-            //itemspec.IsCh1DataEntered = true;
-        }
+        //private void MarkCh1DataValid(TItemSpec itemspec)
+        //{
+        //    itemspec.IsCh1DataValid = true;
+        //    //itemspec.IsCh1DataEntered = true;
+        //}
 
-        private void MarkCh1DataInvalid(TItemSpec itemspec)
-        {
-            //itemspec.Ch1Data = "대한민국";
-            itemspec.IsCh1DataValid = false;
-            //itemspec.IsCh1DataEntered = true;
+        //private void MarkCh1DataInvalid(TItemSpec itemspec)
+        //{
+        //    //itemspec.Ch1Data = "대한민국";
+        //    itemspec.IsCh1DataValid = false;
+        //    //itemspec.IsCh1DataEntered = true;
 
-            //TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            //TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    //TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnChangeHandler2(object theUserInput, TItemSpec itemspec)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
+        //private void TextBoxOnChangeHandler2(object theUserInput, TItemSpec itemspec)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
 
-            //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
-            var cool = itemspec.Ch2LCL;
-            itemspec.Ch2LCL = "위대한";
-            //var one = itemspec.Ch2LCL;
-            //var two = myTItemSpec.Ch2LCL;
+        //    //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
+        //    var cool = itemspec.Ch2LCL;
+        //    itemspec.Ch2LCL = "위대한";
+        //    //var one = itemspec.Ch2LCL;
+        //    //var two = myTItemSpec.Ch2LCL;
 
-            TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
 
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnChangeHandler3(object theUserInput, TItemSpec itemspec)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
+        //private void TextBoxOnChangeHandler3(object theUserInput, TItemSpec itemspec)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
 
-            //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
-            var cool = itemspec.Ch3LCL;
-            itemspec.Ch3LCL = "자유우선";
-            //var one = itemspec.Ch3LCL;
-            //var two = myTItemSpec.Ch3LCL;
+        //    //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
+        //    var cool = itemspec.Ch3LCL;
+        //    itemspec.Ch3LCL = "자유우선";
+        //    //var one = itemspec.Ch3LCL;
+        //    //var two = myTItemSpec.Ch3LCL;
 
-            TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
 
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnChangeHandler4(object theUserInput, TItemSpec itemspec)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
+        //private void TextBoxOnChangeHandler4(object theUserInput, TItemSpec itemspec)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
 
-            //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
-            var cool = itemspec.Ch4LCL;
-            itemspec.Ch4LCL = "민주국가";
-            //var one = itemspec.Ch4LCL;
-            //var two = myTItemSpec.Ch4LCL;
+        //    //var myTItemSpec = MyTSheetSpec.TItemSpecs.Single<TItemSpec>(x => x.TestNo == itemspec.TestNo);
+        //    var cool = itemspec.Ch4LCL;
+        //    itemspec.Ch4LCL = "민주국가";
+        //    //var one = itemspec.Ch4LCL;
+        //    //var two = myTItemSpec.Ch4LCL;
 
-            TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
-            TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
+        //    TextBoxFillMode = ThemeConstants.TextBox.FillMode.Outline;
+        //    TextBoxRounded = ThemeConstants.TextBox.Rounded.Full;
 
-            //update the UI
-            //JBH FIXME: Really Needed?    StateHasChanged();
-        }
+        //    //update the UI
+        //    //JBH FIXME: Really Needed?    StateHasChanged();
+        //}
 
-        private void TextBoxOnBlurHandler(object theUserInput)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
-        }
-        private void TextBoxValueChangedHandler(object theUserInput)
-        {
-            // the handler receives an object that you may need to cast
-            string result = string.Format("The user entered: {0}", theUserInput);
-        }
-        #endregion
+        //private void TextBoxOnBlurHandler(object theUserInput)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
+        //}
+        //private void TextBoxValueChangedHandler(object theUserInput)
+        //{
+        //    // the handler receives an object that you may need to cast
+        //    string result = string.Format("The user entered: {0}", theUserInput);
+        //}
+        //#endregion
 
 
         #region Validations
         private bool ValidateUserInputCh1(string theUserInput, TItemSpec itemspec)
         {
             bool valid = false;
- 
+
             if (itemspec.ExpressionMode == "Number")
             {
                 bool needToCheckLcl = true;
@@ -242,20 +255,28 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch1Time = null;
+                    }
                 }
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch1Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -297,20 +318,28 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch2Time = null;
+                    }
                 }
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch2Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -352,20 +381,28 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch3Time = null;
+                    }
                 }
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch3Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -407,20 +444,28 @@ namespace Fims.Client.Shared.Pages
                 }
                 else
                 {
-                    //UserInput is not a number string
+                    //UserInput is not a number string, or empty
                     valid = false;
                 }
             }
             else
             {
-                //String, String/Combo
+                //String/Input, String/Input(Time), String/Combo
                 if (string.IsNullOrEmpty(theUserInput as string))
                 {
                     valid = false;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch4Time = null;
+                    }
                 }
                 else
                 {
                     valid = true;
+                    if (itemspec.ExpressionMode == "String/Input(Time)")
+                    {
+                        itemspec.Ch4Time = DateTime.Now;
+                    }
                 }
             }
 
@@ -449,59 +494,88 @@ namespace Fims.Client.Shared.Pages
             string field = args.Field as string;
             string userinput = args.Value as string;
 
-            if (userinput.IsNullOrEmpty())
-            {
-                //itemspec.IsCh1DataEntered = false;
-                return;
-            }
+            //if (userinput.IsNullOrEmpty())
+            //{
+            //    switch (field)
+            //    {
+            //        case "Ch1Data":
+            //            itemspec.IsCh1DataEntered = false;
+            //            itemspec.IsCh1DataValid = false;
+            //            itemspec.Ch1Data = null;
+            //            break;
+            //        case "Ch2Data":
+            //            itemspec.IsCh2DataEntered = false;
+            //            itemspec.IsCh2DataValid = false;
+            //            itemspec.Ch2Data = null;
+            //            break;
+            //        case "Ch3Data":
+            //            itemspec.IsCh3DataEntered = false;
+            //            itemspec.IsCh3DataValid = false;
+            //            itemspec.Ch3Data = null;
+            //            break;
+            //        case "Ch4Data":
+            //            itemspec.IsCh4DataEntered = false;
+            //            itemspec.IsCh4DataValid = false;
+            //            itemspec.Ch4Data = null;
+            //            break;
+            //    }
+            //
+            //    return;
+            //}
+
 
             if (field == "Ch1Data")
             {
-                itemspec.IsCh1DataEntered = true;
+                itemspec.IsCh1DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh1DataValid = ValidateUserInputCh1(userinput, itemspec);
             }
 
             if (field == "Ch2Data")
             {
-                itemspec.IsCh2DataEntered = true;
+                itemspec.IsCh2DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh2DataValid = ValidateUserInputCh2(userinput, itemspec);
             }
 
             if (field == "Ch3Data")
             {
-                itemspec.IsCh3DataEntered = true;
+                itemspec.IsCh3DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh3DataValid = ValidateUserInputCh3(userinput, itemspec);
             }
 
             if (field == "Ch4Data")
             {
-                itemspec.IsCh4DataEntered = true;
+                itemspec.IsCh4DataEntered = userinput.IsNullOrEmpty() ? false : true;
                 itemspec.IsCh4DataValid = ValidateUserInputCh4(userinput, itemspec);
             }
 
 
             if (!itemspec.IsDirty)
             {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, itemspec);
+                TItemSpec pristineItem = GetItemFromCollection(TItemSpecsPristine, itemspec);
                 if (pristineItem == null)
                 {
                     //add only the first time a field is edited, later it is no longer pristine
-                    PristineItems.Add(GetItemFromCollection(MyCategoryTItemSpecs, itemspec));
+                    TItemSpecsPristine.Add(GetItemFromCollection(TItemSpecsInCategory, itemspec));
                 }
             }
 
             itemspec.IsChanged = true;
             itemspec.DirtyFields.Add(args.Field);
 
+            itemspec.Completed = CheckAllChannelDataEntered(itemspec);
+
             ChangeLocalItem(itemspec);
+
+            CalculateTItemSpecsInputCompletedCount();
+            CalculateTItemSpecsInputInvalidCount();
         }
 
         public void CreateHandler(GridCommandEventArgs args)
         {
             TItemSpec item = (TItemSpec)args.Item;
-            item.TestNo = MyCategoryTItemSpecs.Max(model => model.TestNo) + 1;
+            item.TestNo = TItemSpecsInCategory.Max(model => model.TestNo) + 1;
             item.IsNew = true;
-            MyCategoryTItemSpecs.Insert(0, item);
+            TItemSpecsInCategory.Insert(0, item);
         }
 
         public void DeleteHandler(GridCommandEventArgs args)
@@ -715,31 +789,31 @@ namespace Fims.Client.Shared.Pages
         #region Grid Toolbar commands
         public void DeleteSelected()
         {
-            foreach (TItemSpec item in SelectedItems)
+            foreach (TItemSpec item in TItemSpecsSelected)
             {
                 DeleteItem(item);
             }
 
-            SelectedItems = new List<TItemSpec>();
+            TItemSpecsSelected = new List<TItemSpec>();
         }
 
         public void RevertSelected()
         {
-            foreach (TItemSpec item in SelectedItems)
+            foreach (TItemSpec item in TItemSpecsSelected)
             {
                 RevertItem(item);
             }
 
-            SelectedItems = new List<TItemSpec>();
+            TItemSpecsSelected = new List<TItemSpec>();
         }
 
         public void RevertAllChanges()
         {
-            for (int i = MyCategoryTItemSpecs.Count - 1; i >= 0; i--)
+            for (int i = TItemSpecsInCategory.Count - 1; i >= 0; i--)
             {
-                if (MyCategoryTItemSpecs[i].IsDirty)
+                if (TItemSpecsInCategory[i].IsDirty)
                 {
-                    RevertItem(MyCategoryTItemSpecs[i]);
+                    RevertItem(TItemSpecsInCategory[i]);
                 }
             }
             StateHasChanged();
@@ -750,7 +824,7 @@ namespace Fims.Client.Shared.Pages
         #region Button events in the Changes colum   
         public void RestoreItem(TItemSpec item)
         {
-            TItemSpec localItem = GetItemFromCollection(MyCategoryTItemSpecs, item);
+            TItemSpec localItem = GetItemFromCollection(TItemSpecsInCategory, item);
             if (localItem != null)
             {
                 localItem.IsDeleted = false;
@@ -761,7 +835,7 @@ namespace Fims.Client.Shared.Pages
         {
             if (item.IsNew)
             {
-                MyCategoryTItemSpecs.Remove(item);
+                TItemSpecsInCategory.Remove(item);
             }
             if (item.IsDeleted)
             {
@@ -770,11 +844,11 @@ namespace Fims.Client.Shared.Pages
             }
             if (item.IsChanged)
             {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, item);
+                TItemSpec pristineItem = GetItemFromCollection(TItemSpecsPristine, item);
                 if (pristineItem != null)
                 {
                     ChangeLocalItem(pristineItem);
-                    PristineItems.Remove(pristineItem);
+                    TItemSpecsPristine.Remove(pristineItem);
                     pristineItem.DirtyFields = new List<string>();
                 }
             }
@@ -782,7 +856,7 @@ namespace Fims.Client.Shared.Pages
 
         public void DeleteItem(TItemSpec itmToDelete)
         {
-            TItemSpec localItem = GetItemFromCollection(MyCategoryTItemSpecs, itmToDelete);
+            TItemSpec localItem = GetItemFromCollection(TItemSpecsInCategory, itmToDelete);
             if (localItem != null)
             {
                 if (localItem.IsDeleted)
@@ -791,7 +865,7 @@ namespace Fims.Client.Shared.Pages
                 }
                 else if (localItem.IsNew)
                 {
-                    MyCategoryTItemSpecs.Remove(localItem);
+                    TItemSpecsInCategory.Remove(localItem);
                 }
                 else
                 {
@@ -802,28 +876,67 @@ namespace Fims.Client.Shared.Pages
         #endregion
 
         #region Helpers
-        private void ChangeLocalItem(TItemSpec item)
+        private bool CheckAllChannelDataEntered(TItemSpec itemspec)
         {
-            var index = MyCategoryTItemSpecs.ToList().FindIndex(i => i.TestNo == item.TestNo);
+            //JBH FIXME: check IsChXDataValid ?
+            var ch1 = itemspec.IsCh1DataEnabled ? (itemspec.IsCh1DataEntered ? true : false) : true;
+            var ch2 = itemspec.IsCh2DataEnabled ? (itemspec.IsCh2DataEntered ? true : false) : true;
+            var ch3 = itemspec.IsCh3DataEnabled ? (itemspec.IsCh3DataEntered ? true : false) : true;
+            var ch4 = itemspec.IsCh4DataEnabled ? (itemspec.IsCh4DataEntered ? true : false) : true;
+
+            return ch1 && ch2 && ch3 && ch4;
+        }
+
+        private void CalculateTItemSpecsInputCompletedCount()
+        {
+            var compeletedCount = TItemSpecsInCategory.Where(x => x.Completed == true).Count();
+            if (compeletedCount != TItemSpecsInCategoryCompletedCount)
+            {
+                TItemSpecsInCategoryCompletedCount = compeletedCount;
+                TItemSpecsInCategoryCompletedCountChanged.InvokeAsync($"{TItemSpecsInCategory[0].Category}:{compeletedCount}"); // notify pass Param to parent, by calling EventCallback
+            }
+        }
+
+        private void CalculateTItemSpecsInputInvalidCount()
+        {
+            int invalidCount = TItemSpecsInCategory.Where(t =>
+                                (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
+                                (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
+                                (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
+                                (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
+            ).Count();
+
+            //var ch2InvalidCount = TItemSpecsInCategory.Where(t => t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh1DataEntered == true).Count();
+
+            if (invalidCount != TItemSpecsInCategoryInvalidCount)
+            {
+                TItemSpecsInCategoryInvalidCount = invalidCount;
+                TItemSpecsInCategoryInvalidCountChanged.InvokeAsync($"{TItemSpecsInCategory[0].Category}:{invalidCount}"); // notify pass Param to parent, by calling EventCallback
+            }
+        }
+
+        private void ChangeLocalItem(TItemSpec itemspec)
+        {
+            var index = TItemSpecsInCategory.ToList().FindIndex(i => i.TestNo == itemspec.TestNo);
 
             if (index != -1)
             {
-                var existingItem = MyCategoryTItemSpecs[index];
+                var existingItem = TItemSpecsInCategory[index];
 
-                if (SelectedItems.Contains(existingItem))
+                if (TItemSpecsSelected.Contains(existingItem))
                 {
-                    var tempSelectedItems = SelectedItems.ToList();
+                    var tempSelectedItems = TItemSpecsSelected.ToList();
 
                     tempSelectedItems.Remove(existingItem);
-                    tempSelectedItems.Add(item);
+                    tempSelectedItems.Add(itemspec);
 
-                    MyCategoryTItemSpecs[index] = item;
+                    TItemSpecsInCategory[index] = itemspec;
 
-                    SelectedItems = new List<TItemSpec>(tempSelectedItems);
+                    TItemSpecsSelected = new List<TItemSpec>(tempSelectedItems);
                 }
                 else
                 {
-                    MyCategoryTItemSpecs[index] = item;
+                    TItemSpecsInCategory[index] = itemspec;
                 }
             }
         }
@@ -843,17 +956,17 @@ namespace Fims.Client.Shared.Pages
         #region Batch Saving
         public async Task SaveAllChanges()
         {
-            List<TItemSpec> deletedItems = MyCategoryTItemSpecs.Where(itm => itm.IsDeleted == true).ToList();
-            List<TItemSpec> newItems = MyCategoryTItemSpecs.Where(itm => itm.IsNew == true).ToList();
-            List<TItemSpec> updatedItems = MyCategoryTItemSpecs.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
+            List<TItemSpec> deletedItems = TItemSpecsInCategory.Where(item => item.IsDeleted == true).ToList();
+            List<TItemSpec> newItems = TItemSpecsInCategory.Where(item => item.IsNew == true).ToList();
+            List<TItemSpec> updatedItems = TItemSpecsInCategory.Where(item => item.IsChanged == true && item.IsDeleted == false).ToList();
 
             // clean up current data and selection
-            MyCategoryTItemSpecs.Clear();
-            SelectedItems = Enumerable.Empty<TItemSpec>();
+            TItemSpecsInCategory.Clear();
+            TItemSpecsSelected = Enumerable.Empty<TItemSpec>();
 
             // update the grid with the data from the service
             List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            MyCategoryTItemSpecs = new ObservableCollection<TItemSpec>(newData);
+            TItemSpecsInCategory = new ObservableCollection<TItemSpec>(newData);
         }
 
         private List<TItemSpec> Data { get; set; }

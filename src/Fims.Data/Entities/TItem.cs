@@ -47,9 +47,14 @@ namespace Fims.Data.Entities
         public string? Ch2Data { get; set; }
         public string? Ch3Data { get; set; }
         public string? Ch4Data { get; set; }
-#nullable disable
 
-        public DateTime InspectDateTime { get; set; }
+        public DateTime? Ch1Time { get; set; }
+        public DateTime? Ch2Time { get; set; }
+        public DateTime? Ch3Time { get; set; }
+        public DateTime? Ch4Time { get; set; }
+
+        public DateTime? InspectDateTime { get; set; }
+#nullable disable
 
 
 

@@ -1,7 +1,7 @@
 ﻿@using Telerik.Blazor.Components.Common.Icon
 
 
-<TelerikGrid Data=@MyCategoryTItemSpecs
+<TelerikGrid Data=@TItemSpecsInCategory
              EditMode="@GridEditMode.Incell"
              SelectionMode="GridSelectionMode.Multiple"
              @ref="@TItemSpecGrid"
@@ -27,8 +27,7 @@
             </Template>
         </GridColumn>
 
-        @*<GridColumn Field="@nameof(TItemSpec.Title)" Width="200px" Title="항목" OnCellRender="@OnCellRenderHandler" HeaderClass="align-right right-padding" TextAlign="@ColumnTextAlign.Right">*@                            
-        <GridColumn Field="@nameof(TItemSpec.Title)" Width="150px" Title="항목" Editable="false" HeaderClass="align-right right-padding">
+        <GridColumn Field="@nameof(TItemSpec.Title)" Width="150px" Title="항목" Editable="false" HeaderClass="center-me">
             <HeaderTemplate><strong>시험항목</strong></HeaderTemplate>
             <Template>
                 <span>@((context as TItemSpec).Title)</span>
@@ -39,10 +38,31 @@
 
         <GridColumn Field="@nameof(TItemSpec.Ch1Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch1Data"))" Title="CH1" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH1</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh1DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch1Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch1Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch1Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
-                    //<TelerikTextBox @bind-Value=tItemSpec.Ch1Data Enabled=tItemSpec.IsCh1DataEnabled></TelerikTextBox>
                     if (tItemSpec.IsCh1DataEnabled)
                     {
                         if (tItemSpec.ExpressionMode == "String/Combo")
@@ -64,10 +84,31 @@
 
         <GridColumn Field="@nameof(TItemSpec.Ch2Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch2Data"))" Title="CH2" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH2</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh2DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch2Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch2Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch2Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
-                    //<TelerikTextBox @bind-Value=tItemSpec.Ch2Data Enabled=tItemSpec.IsCh2DataEnabled></TelerikTextBox>
                     if (tItemSpec.IsCh2DataEnabled)
                     {
                         if (tItemSpec.ExpressionMode == "String/Combo")
@@ -89,10 +130,31 @@
  
         <GridColumn Field="@nameof(TItemSpec.Ch3Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch3Data"))" Title="CH3" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH3</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh3DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch3Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch3Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch3Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
-                    //<TelerikTextBox @bind-Value=tItemSpec.Ch3Data Enabled=tItemSpec.IsCh3DataEnabled></TelerikTextBox>
                     if (tItemSpec.IsCh3DataEnabled)
                     {
                         if (tItemSpec.ExpressionMode == "String/Combo")
@@ -114,10 +176,31 @@
 
         <GridColumn Field="@nameof(TItemSpec.Ch4Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch4Data"))" Title="CH4" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>CH4</strong></HeaderTemplate>
+            <Template>
+                @{
+                    var tItemSpec = context as TItemSpec;
+                    if (tItemSpec.IsCh4DataEnabled)
+                    {
+                        if (tItemSpec.ExpressionMode == "String/Input(Time)")
+                        {
+                            <span>@tItemSpec.Ch4Data</span>
+                            <span>&nbsp;</span>
+                            <span class="auto-fill">@tItemSpec.Ch4Time?.ToString("HH:mm:ss")</span>
+                        }
+                        else
+                        {
+                            <span>@tItemSpec.Ch4Data</span>
+                        }
+                    }
+                    else
+                    {
+                        <div tabindex="0" style="display:none"></div>
+                    }
+                }
+            </Template>
             <EditorTemplate>
                 @{
                     var tItemSpec = context as TItemSpec;
-                    //<TelerikTextBox @bind-Value=tItemSpec.Ch4Data Enabled=tItemSpec.IsCh4DataEnabled></TelerikTextBox>
                     if (tItemSpec.IsCh4DataEnabled)
                     {
                         if (tItemSpec.ExpressionMode == "String/Combo")
@@ -141,56 +224,27 @@
 
 
 <style>
-    .italy-flag {
-        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/italy-flag.png');
-    }
-
-    .germany-flag {
-        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/germany-flag.png');
-    }
-
-    .france-flag {
-        background-image: url('https://demos.telerik.com/kendo-ui/content/web/drawer/france-flag.png');
-    }
-
-    .flag {
-        background-size: cover;
-        margin-right: 8px;
-    }
-</style>
-
-@*<style>
-    .tab-parent .k-tabstrip-items li {
-        color: yellow;
-    }
-
-    .tab-parent .k-tabstrip-items li.k-state-active,
-    .tab-parent .k-tabstrip-items li.k-state-active ~ li {
-        color: red;
-    }
-</style>
-*@
-
-<style>
-    .k-grid td {
+    .k-grid td, .k-grid tr {
         background-color: #E0E0E0;
         color: black;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
     .k-grid-header-wrap th {
         background-color: teal;
         color: white;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
-/*    .k-grid-header {
+    /*   
+    .k-grid-header {
         color: whitesmoke;
         background-color: teal;
     }
-*/
+    */
+ 
     .k-grid .k-focused-cell {
         background-color: cornflowerblue;
     }
@@ -250,6 +304,17 @@
         margin-right: 0;
     }
 </style>
+
+
+<style>
+    .auto-fill {
+        font-size: 0.8em;
+        font-weight: normal;
+        color: black;
+    }
+</style>
+
+
 
 @*<style>
     .batch-grid td:first-child,

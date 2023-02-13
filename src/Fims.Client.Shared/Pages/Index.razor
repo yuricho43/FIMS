@@ -5,7 +5,8 @@
 
 <div class="fims-page">
     <TelerikStackLayout Class="bars-section" Orientation="StackLayoutOrientation.Vertical" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Width="100%">
-        <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="50px">
+
+        <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
             <TelerikButton OnClick="OnAddNewProductClicked" Icon="@FontIcon.PlusCircle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="prod-register-button"><strong>검사설비추가</strong></TelerikButton>
             <TelerikButton OnClick="OnLoadSessionData" Icon="@FontIcon.CaretDoubleAltDown" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
                 @*@if (IsLoadingSession) {<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>}*@
@@ -16,13 +17,12 @@
                 <strong>진행목록 저장</strong></TelerikButton>
         </TelerikStackLayout>
     
-        <TelerikStackLayout Class="serials-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="50px">
+        <TelerikStackLayout Class="serials-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
             @if (ProductSerials != null)
             {
                 <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
                     @foreach (string productSerial in ProductSerials)
                     {
-                        var cool = ProductSerialsSelected[productSerial];
                         <ButtonGroupToggleButton @bind-Selected="@ProductSerialsSelected[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))" Enabled="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? false: true)" ThemeColor="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? ThemeConstants.Button.ThemeColor.Error: ThemeConstants.Button.ThemeColor.Base)" Class="serial-button">
                             <strong>@productSerial</strong>
                             &nbsp;
@@ -32,6 +32,7 @@
                 </TelerikButtonGroup>
             }
         </TelerikStackLayout>
+
     </TelerikStackLayout>
 </div>
 
@@ -50,23 +51,11 @@
 }
 
 
-<TelerikNotification @ref="@IndexNotificationComponent"
+<TelerikNotification @ref="@LoadSessionNotificationComponent"
                      Class="IndexNotification"
                      VerticalPosition="NotificationVerticalPosition.Top"
-                     HorizontalPosition="NotificationHorizontalPosition.Right">
+                     HorizontalPosition="NotificationHorizontalPosition.Center">
 </TelerikNotification>
-
-
-<style>
-    .tab-parent .k-tabstrip-items li {
-        color: yellow;
-    }
-
-    .tab-parent .k-tabstrip-items li.k-state-active,
-    .tab-parent .k-tabstrip-items li.k-state-active ~ li {
-        color: red;
-    }
-</style>
 
 
 <style>
@@ -100,16 +89,12 @@
 </style>
 
 <style>
-    .serial-button-enabled {
-
-    }
-
     .serial-button {
-        height: 40px;
+        height: 30px;
     }
 
     .prod-register-button {
         width: 200px;
-        height: 40px;
+        height: 30px;
     }
 </style>

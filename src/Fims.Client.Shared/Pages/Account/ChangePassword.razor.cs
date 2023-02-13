@@ -9,7 +9,7 @@ namespace Fims.Client.Shared.Pages.Account
 {
     public partial class ChangePassword
     {
-        private readonly ChangePasswordRequestModel model = new ChangePasswordRequestModel();
+        private readonly PasswordModel ChangePasswordModel = new PasswordModel();
 
         public bool ShowErrors { get; set; }
 
@@ -17,15 +17,15 @@ namespace Fims.Client.Shared.Pages.Account
 
         private async Task SubmitAsync()
         {
-            var response = await this.Http.PutAsJsonAsync("api/identity/changepassword", this.model);
+            var response = await this.Http.PutAsJsonAsync("api/identity/changepassword", this.ChangePasswordModel);
 
             if (response.IsSuccessStatusCode)
             {
                 this.ShowErrors = false;
 
-                this.model.Password = null;
-                this.model.NewPassword = null;
-                this.model.ConfirmNewPassword = null;
+                this.ChangePasswordModel.Password = null;
+                this.ChangePasswordModel.NewPassword = null;
+                this.ChangePasswordModel.ConfirmNewPassword = null;
 
                 await this.AuthClientService.Logout();
 

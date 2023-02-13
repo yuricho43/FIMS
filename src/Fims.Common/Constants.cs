@@ -19,6 +19,6 @@
         public const string FimsTReportSpecsFileNameBase = "FimsTReportSpecs";
 
         public const string FimsTReportOutputRepoPath = "./FimsTReportOutputRepository";
-        public const string FimsTReportOutputFileNameBase = "FimsTReportOutput";
+        public const string FimsTReportOutputFileNameBase = "FimsReport";
     }
 }

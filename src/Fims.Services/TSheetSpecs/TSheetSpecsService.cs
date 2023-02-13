@@ -90,6 +90,58 @@ namespace Fims.Services.TSheetSpecs
             return "SUCCESS";
         }
 
+
+        private string VerifyExcelSpecFile(string tSheetSpecsFilePath)
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); //prevent NotSupportedException: "No data is available for encoding 1252" from the old Excel format.
+                                                                                                   //Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB"); //dd/MM/yyyy
+
+            using var excelStream = File.OpenRead(tSheetSpecsFilePath); //make sure "using" so that, after the end of this method, the excel file handle should be released/disposed right away for others.
+            var importer = new ExcelImporter(excelStream);
+            importer.Configuration.SkipBlankLines = true;
+            importer.Configuration.RegisterClassMap<TItemSpecClassMap>();
+
+            List<string> tmpEquipmentModels = new List<string>();
+            Dictionary<string, TSheetSpec>  tmpEquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
+
+            foreach (ExcelSheet sheet in importer.ReadSheets())
+            {
+                var equipmentModel = sheet.Name;
+                tmpEquipmentModels.Add(equipmentModel);
+
+                //TItemSpec[] tItemSpecs = sheet.ReadRows<TItemSpec>().ToArray();
+                //IEnumerable<TItemSpec> tItemSpecs = sheet.ReadRows<TItemSpec>().ToArray();
+                //IEnumerable<TItemSpec> tItemSpecs = sheet.ReadRows<TItemSpec>().ToList();
+
+                List<TItemSpec> tItemSpecs;
+                try
+                {
+                    tItemSpecs = sheet.ReadRows<TItemSpec>().ToList();
+                    tItemSpecs.RemoveAll(x => x.Applicable == null);
+
+                    var tSheetSpec = new TSheetSpec
+                    {
+                        ProductModel = equipmentModel,
+                        TItemSpecs = tItemSpecs,
+                        SpecFile = FimsTSheetSpecsFileName
+                    };
+
+                    tmpEquipmentModelTSheetSpecDict.Add(equipmentModel, tSheetSpec);
+                }
+                catch (Exception ex)
+                {
+                    tmpEquipmentModels.Clear();
+                    tmpEquipmentModelTSheetSpecDict.Clear();
+                    //FimsTSheetSpecsFileValidationMessage = $"FAIL: {ex.Message}";
+                    return $"FAIL: {ex.Message}";
+                }
+            }
+
+            //FimsTSheetSpecsFileValidationMessage = "SUCCESS";
+            return "SUCCESS";
+        }
+
+
         public Task<List<string>> GetEquipmentModelsAsync()
         {
             return Task.FromResult(EquipmentModels);
@@ -127,15 +179,19 @@ namespace Fims.Services.TSheetSpecs
             return await Task.Run(() => { return 1; });
         }
 
-        public async Task<string> ReplaceAsync(IFormFile specFormFile)
+        public async Task<string> UploadSpecFileAsync(IFormFile specFormFile)
         {
             // backup the current SpecSheet file.
             string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
             string[] specFiles = Directory.GetFiles(Constants.FimsTSheetSpecsRepoPath, specsFilePattern);
-            string currentSpecFilePath = (specFiles.Length > 0) ? specFiles[0] : null;
-            if (currentSpecFilePath != null)
+            string prevSpecFilePath = (specFiles.Length > 0) ? specFiles[0] : null;
+            if (prevSpecFilePath != null)
             {
-                File.Move(currentSpecFilePath, currentSpecFilePath + ".BACKUP");
+                if (File.Exists(prevSpecFilePath + ".BACKUP"))
+                {
+                    File.Delete(prevSpecFilePath + ".BACKUP");
+                }
+                File.Move(prevSpecFilePath, prevSpecFilePath + ".BACKUP");
             }
 
 
@@ -157,18 +213,28 @@ namespace Fims.Services.TSheetSpecs
             }
 
             // verify the new spec file is valid
-            string buildresult = BuildTSheetSpecsFromExcelSpecFile(newSpecFilePath) ?? string.Empty;
+            string buildresult = VerifyExcelSpecFile(newSpecFilePath) ?? string.Empty;
 
-            if (buildresult != "SUCCESS")
+            if (buildresult == "SUCCESS")
             {
-                //restore the current
-                if (currentSpecFilePath != null)
+                if (File.Exists(prevSpecFilePath + ".BACKUP"))
                 {
-                    File.Move(currentSpecFilePath + ".BACKUP", currentSpecFilePath);
+                    File.Delete(prevSpecFilePath + ".BACKUP");
+                }
+            }
+            else
+            {
+                if (File.Exists(newSpecFilePath))
+                {
+                    //delete the new
+                    File.Delete(newSpecFilePath);
                 }
 
-                //delete the new
-                File.Delete(newSpecFilePath);
+                if (File.Exists(prevSpecFilePath))
+                {
+                    //restore the prev
+                    File.Move(prevSpecFilePath + ".BACKUP", newSpecFilePath);
+                }
             }
 
             // instead mock async operation

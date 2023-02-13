@@ -17,7 +17,7 @@ namespace Fims.Data.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.1")
+                .HasAnnotation("ProductVersion", "7.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
@@ -87,13 +87,13 @@ namespace Fims.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("EnglishName")
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<string>("HangulName")
                         .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("nvarchar(50)");
+                        .HasMaxLength(20)
+                        .HasColumnType("nvarchar(20)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("bit");
@@ -163,14 +163,26 @@ namespace Fims.Data.Migrations
                     b.Property<string>("Ch1Data")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("Ch1Time")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Ch2Data")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Ch2Time")
+                        .HasColumnType("datetime2");
 
                     b.Property<string>("Ch3Data")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime?>("Ch3Time")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("Ch4Data")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("Ch4Time")
+                        .HasColumnType("datetime2");
 
                     b.Property<int>("Channels")
                         .HasColumnType("int");
@@ -184,7 +196,7 @@ namespace Fims.Data.Migrations
                     b.Property<string>("ExpressionMode")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("InspectDateTime")
+                    b.Property<DateTime?>("InspectDateTime")
                         .HasColumnType("datetime2");
 
                     b.Property<bool>("IsDeleted")

@@ -25,6 +25,17 @@ namespace Fims.Client.Shared.Infrastructure
         {
             this.httpClient = httpClient;
             this.localStorage = localStorage;
+            AuthenticationStateChanged += OnAuthenticationStateChangedAsync;
+        }
+
+        private async void OnAuthenticationStateChangedAsync(Task<AuthenticationState> task)
+        {
+            var authenticationState = await task;
+
+            if (authenticationState is not null)
+            {
+                //CurrentUser = User.FromClaimsPrincipal(authenticationState.User);
+            }
         }
 
         public void MarkUserAsAuthenticated(string userName)

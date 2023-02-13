@@ -10,7 +10,7 @@ namespace Fims.Web.Server.Infrastructure.Services
     {
         public CurrentUserService(IHttpContextAccessor httpContextAccessor)
         {
-            //JBH: For example, ShoppingCartsController needs to know who is the current user.
+            //JBH: For example, TSheetsController needs to know who is the current user.
 
             var user = httpContextAccessor.HttpContext?.User;
             //JBH: "ClaimsPrincipal" of System.Security.Claims.ClaimsPrincipal is the "User" in plain english.

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Net.NetworkInformation;
 using static System.Net.Mime.MediaTypeNames;
 using System.ComponentModel.DataAnnotations;
+using System.Net.Http.Json;
 
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
@@ -14,6 +15,7 @@ using Telerik.Blazor;
 using Telerik.Blazor.Components;
 using Telerik.Blazor.Components.Upload;
 using Telerik.DataSource;
+using Telerik.Blazor.Components.FileSelect;
 
 using AutoMapper;
 
@@ -27,144 +29,100 @@ namespace Fims.Client.Shared.Pages.Management
 {
     public partial class TSheetSpecsManagement
     {
-        // setup upload endpoints
-        public string SaveUrl => ToAbsoluteUrl("api/TSheetSpecs/save");
-        public string RemoveUrl => ToAbsoluteUrl("api/TSheetSpecs/remove");
+        public List<string> AllowedExtensions { get; set; } = new List<string>() { ".xlsx" };
+        public List<FileSelectFileInfo> FileSelectFileInfos { get; set; } = new List<FileSelectFileInfo>();
+        public TelerikFileSelect TSheetSpecsFileSelector { get; set; }
 
-        public string ToAbsoluteUrl(string url)
-        {
-            return $"{NavigationManager.BaseUri}{url}";
-        }
+        TelerikNotification UploadTSheetSpecsNotificationComponent { get; set; }
 
-        // setup validation, this is a workaround because file validation does not exist in the framework
-        // see more here https://github.com/dotnet/aspnetcore/issues/18821
-        JobApplicationForm currentForm { get; set; }
-        protected EditContext MyEditContext { get; set; }
-
-        private bool NotValid => MyEditContext.GetValidationMessages().Any();
-        Dictionary<string, bool> FilesValidationInfo { get; set; } = new Dictionary<string, bool>();
 
         protected override void OnInitialized()
         {
-            currentForm = new JobApplicationForm();
-            MyEditContext = new EditContext(currentForm);
         }
 
-        void OnSelectHandler(UploadSelectEventArgs e)
+        private void OnFileSelected(FileSelectEventArgs args)
         {
-            foreach (var item in e.Files)
+            var file = args.Files[0];
+            if (!file.InvalidExtension && file.Name.StartsWith("FimsTSheetSpecs_"))
             {
-                if (!FilesValidationInfo.Keys.Contains(item.Id))
-                {
-                    // nothing is assumed to be valid until the server returns an OK
-                    FilesValidationInfo.Add(item.Id, IsSelectedFileValid(item));
-                }
-            }
-
-            UpdateValidationModel();
-        }
-
-        void OnSuccessHandler(UploadSuccessEventArgs e)
-        {
-            if (e.Operation == UploadOperationType.Upload)
-            {
-                if (FilesValidationInfo.Keys.Contains(e.Files[0].Id))
-                {
-                    // only when the server got the file, saved it and confirmed it is OK do we update client validation
-                    FilesValidationInfo[e.Files[0].Id] = true;
-                }
+                FileSelectFileInfos.Clear(); //allow only one file selected.
+                FileSelectFileInfos.Add(file);
             }
             else
             {
-                RemoveFailedFilesFromList(e.Files);
+                _ = ActivateAlert("검사스펙 파일이름 오류", "유효한 검사스펙 파일이름이 아닙니다.\n\n유효형식: FimsTSheetSpecs_YYYYMMDD.xlsx");
+            }
+        }
+
+        public async Task OnUploadSpec()
+        {
+            if (FileSelectFileInfos.Count < 1)
+            {
+                _ = ActivateAlert("업로드 실패", "업로드할 검사스펙파일을 선택하세요.");
+                return;
             }
 
-            UpdateValidationModel();
+            await UploadSpecFile();
         }
 
-        void OnRemoveHandler(UploadEventArgs e)
-        {
-            RemoveFailedFilesFromList(e.Files);
-            UpdateValidationModel();
-        }
+        private List<string> FileNamesToUpload = new();
 
-        void OnErrorHandler(UploadErrorEventArgs e)
+        private async Task UploadSpecFile()
         {
-            RemoveFailedFilesFromList(e.Files);
-            UpdateValidationModel();
-        }
+            if (FileSelectFileInfos.Count < 1) return;
+            var file = FileSelectFileInfos[0];
 
-        void OnCancelHandler(UploadCancelEventArgs e)
-        {
-            RemoveFailedFilesFromList(e.Files);
-            UpdateValidationModel();
-        }
-
-        void RemoveFailedFilesFromList(List<UploadFileInfo> files)
-        {
-            foreach (var file in files)
+            if (!file.InvalidExtension)
             {
-                if (FilesValidationInfo.Keys.Contains(file.Id))
+                using var content = new MultipartFormDataContent();
+                var fileContent = new StreamContent(file.Stream);
+                //fileContent.Headers.ContentType = new MediaTypeHeaderValue(file.ContentType);
+                FileNamesToUpload.Clear(); //allow only one file to upload at a time.
+                FileNamesToUpload.Add(file.Name);
+                content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
+                var response = await Http.PostAsync("api/TSheetSpecs/UploadSpecFile", content);
+                var uploadResult = await response.Content.ReadAsStringAsync();
+
+                if (uploadResult.StartsWith("SUCCESS"))
                 {
-                    FilesValidationInfo.Remove(file.Id);
+                    UploadTSheetSpecsNotificationComponent.Show(new NotificationModel()
+                    {
+                        Text = "검사서스펙 파일이 성공적으로 교체되었습니다.",
+                        ThemeColor = "primary",
+                        ShowIcon = true,
+                        Icon = "caret-double-alt-up"
+                    });
+                    StateHasChanged();
+                }
+                else
+                {
+                    _ = ActivateAlert("교체 실패", "검사스펙에 오류가 있습니다.\n스펙파일 내용을 점검하세요.\n\n" + uploadResult);
                 }
             }
+
+            hideFileSelectedList();
+            FileSelectFileInfos.Clear(); //remove from the selected files list
         }
 
-        bool IsSelectedFileValid(UploadFileInfo file)
+        public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();
+        private async Task ReadFile(FileSelectFileInfo file)
         {
-            return !(file.InvalidExtension || file.InvalidMaxFileSize || file.InvalidMinFileSize);
+            Tokens.Add(file.Id, new CancellationTokenSource());
+            var byteArray = new byte[file.Size];
+            await using MemoryStream ms = new MemoryStream(byteArray);
+            await file.Stream.CopyToAsync(ms, Tokens[file.Id].Token);
         }
 
-        void UpdateValidationModel()
+
+        [CascadingParameter]
+        public DialogFactory Dialogs { get; set; }
+        public async Task ActivateAlert(string title, string message)
         {
-            bool areAllUploadedFilesValid = false;
+            if (string.IsNullOrWhiteSpace(title)) title = "Warning!";
+            if (string.IsNullOrWhiteSpace(message)) message = "Something went wrong!";
 
-            if (FilesValidationInfo.Keys.Count > 0 &&
-                !FilesValidationInfo.Values.Contains(false))
-            {
-                areAllUploadedFilesValid = true;
-            }
-
-            currentForm.IsSpecFileValid = areAllUploadedFilesValid;
-
-            // we update the validation state out of the standard form cycle and events
-            // so we need an EditContext that we can call upon to re-evaluate the validation
-            MyEditContext.Validate();
+            await Dialogs.AlertAsync(message, title);
         }
 
-
-        // sample model
-        public class JobApplicationForm
-        {
-            //[Required(ErrorMessage = "Enter your name")]
-            //public string Name { get; set; }
-
-            //[Required(ErrorMessage = "Enter your email")]
-            //[EmailAddress(ErrorMessage = "Please provide a valid email address.")]
-            //public string Email { get; set; }
-
-            [Required(ErrorMessage = "FimsTSheetSpecs_YYYYMMDD.xlsx 형식의 파일을 선택하세요")]
-            [Range(typeof(bool), "true", "true", ErrorMessage = "FimsTSheetSpecs_YYYYMMDD.xlsx 형식의 파일을 선택하세요")]
-            public bool IsSpecFileValid { get; set; }
-        }
-
-        // UI for the demo to showcase changes to the form validation and success
-        string SuccessMessage = string.Empty;
-
-        void HandleValidSubmit()
-        {
-            SuccessMessage = "Spec Sheets 파일을 성공적으로 교체하였습니다.";
-        }
-
-        void HandleInvalidSubmit()
-        {
-            SuccessMessage = string.Empty;
-        }
-
-        async Task BackToForm()
-        {
-            await JsInterop.InvokeVoidAsync("window.location.reload");
-        }
     }
 }

@@ -1,6 +1,8 @@
 using System.Security.Cryptography;
 using System.Text;
 using Fims.Client.Shared.Infrastructure.Extensions;
+using Fims.Client.Shared.Pages.Account;
+using Fims.Data.Models.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Components.Web;
@@ -12,6 +14,7 @@ namespace Fims.Client.Shared.Shared.NavMenu
     {
         [CascadingParameter]
         public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        public bool UserProfileDialogVisible { get; set; } = false;
 
         public string UserName { get; set; }
 
@@ -19,12 +22,13 @@ namespace Fims.Client.Shared.Shared.NavMenu
         {
             //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
             //FIXME    // So do it after rendering finished.
-            //FIXME    // var state = await this.AuthState.GetAuthenticationStateAsync();
-            //FIXME    // var user = state.User;
-            //FIXME    var authState = await AuthenticationStateTask;
-            //FIXME    if (authState.User.Identity.IsAuthenticated)
+            //FIXME    var state = await this.AuthState.GetAuthenticationStateAsync();
+            //FIXME    var user = state.User;
+            //FIXME    //var authState = await AuthenticationStateTask;
+            //FIXME    //var user = authState.User;
+            //FIXME    if (user.Identity.IsAuthenticated)
             //FIXME    {
-            //FIXME        UserName = authState.User.GetUserName();
+            //FIXME        UserName = user.GetUserName();
             //FIXME    }
         }
 
@@ -39,42 +43,56 @@ namespace Fims.Client.Shared.Shared.NavMenu
             // So do it here after rendering finished.
             if (firstRender)
             {
-                // var state = await this.AuthState.GetAuthenticationStateAsync();
-                // var user = state.User;
-                var authState = await AuthenticationStateTask;
-                if (authState.User.Identity.IsAuthenticated)
+                var state = await this.AuthState.GetAuthenticationStateAsync();
+                var user = state.User;
+                //var authState = await AuthenticationStateTask;
+                //var user = authState.User;
+
+                if (user.Identity.IsAuthenticated)
                 {
-                    UserName = authState.User.GetUserName();
+                    UserName = user.GetUserName();
                 }
                 StateHasChanged();
             }
         }
 
-        private void BeginSignOut(MouseEventArgs args)
+        private RenderFragment DynamicRender { get; set; }
+
+        private RenderFragment CreateComponent() => builder =>
         {
-            //JBH await SignOutManager.SetSignOutState();
-            Navigation.NavigateTo("authentication/logout");
+            builder.OpenComponent(0, typeof(UserProfileDialog));
+            builder.AddAttribute(1, "UserProfileDialogFinished", "OnUserProfileDialogFinished");
+            builder.CloseComponent();
+        };
+
+
+        private void ShowUserProfileDialogVisible()
+        {
+            CreateComponent();
+
+            //ProductService.UpdateProduct((ProductDto)args.Item);
+            //await LoadData();
+            UserProfileDialogVisible = true;
+            //StateHasChanged();
         }
 
-        /// Hashes an email with MD5.  Suitable for use with Gravatar profile
-        /// image urls
-        string HashEmailForGravatar(string email)
+        private void OnUserProfileDialogFinished()
         {
-            // Create a new instance of the MD5CryptoServiceProvider object.
-            MD5 md5Hasher = MD5.Create();
-            // Convert the input string to a byte array and compute the hash.
-            byte[] data = md5Hasher.ComputeHash(Encoding.Default.GetBytes(email));
-            // Create a new Stringbuilder to collect the bytes
-            // and create a string.
-            StringBuilder sBuilder = new StringBuilder("https://www.gravatar.com/avatar/");
-            // Loop through each byte of the hashed data
-            // and format each one as a hexadecimal string.
-            for (int i = 0; i < data.Length; i++)
-            {
-                sBuilder.Append(data[i].ToString("x2"));
-            }
+            //builder.CloseComponent();
+            UserProfileDialogVisible = false;
+            //StateHasChanged();
+        }
 
-            return sBuilder.ToString(); // Return the hexadecimal string.
+        private void BeginLogIn(MouseEventArgs args)
+        {
+            //JBH await SignOutManager.SetSignOutState();
+            Navigation.NavigateTo("Account/login");
+        }
+
+        private void BeginLogOut(MouseEventArgs args)
+        {
+            //JBH await SignOutManager.SetSignOutState();
+            Navigation.NavigateTo("Account/logout");
         }
     }
 }

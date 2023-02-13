@@ -7,16 +7,22 @@ using System.Reflection.Metadata;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
+using System.ComponentModel;
+using System.Net.Http.Headers;
+
+using Microsoft.AspNetCore.Http;
 
 using ExcelMapper;
+using OfficeOpenXml;
 
 using Fims.Common;
 using Fims.Data.Utils;
-using Fims.Data.Models.TSheetSpecsInProgress;
+using Fims.Data.Models.TReports;
 using Fims.Data.Models;
 using Fims.Services.TSheets;
 using Fims.Data.Entities;
-using FastExcel;
+using Fims.Data.Models.TSheetSpecsInProgress;
+
 
 namespace Fims.Services.TReports
 {
@@ -28,71 +34,184 @@ namespace Fims.Services.TReports
         public string FimsTSheetSpecsInProgressFileName { get; set; }
         public string FimsTSheetSpecsInProgressFileFullPath { get; set; }
 
+
         public ITSheetsService TSheetsService { get; set; }
 
         public TReportsService(ITSheetsService tSheetsService)
         {
             TSheetsService = tSheetsService;
+            ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
 
-        public async Task<bool> GenerateTReportAsync(int tSheetId, string tReportSpecsFilePath, string outTReportFilePath)
+
+        public async Task<List<string>> AllTReportSpecsAsync()
+        {
+            string searchPattern = Constants.FimsTReportSpecsFileNameBase + "_" + "*" + ".xlsx";
+            string[] filePaths = Directory.GetFiles(Constants.FimsTReportSpecsRepoPath, searchPattern);
+
+            List<string> tReportSpecsList = new List<string>();
+
+            foreach (var filePath in filePaths)
+            {
+                //filePath: ".\\FimsTReportSpecs_CHILLER 검사 성적서_20221226.xlsx"
+                var fileName = Path.GetFileNameWithoutExtension(filePath);
+                fileName = fileName["FimsTReportSpecs_".Length..];
+                tReportSpecsList.Add(fileName);
+            }
+
+            return tReportSpecsList;
+        }
+
+
+        public async Task<Stream> GenerateTReportAsync(TReportDto tReportRequest)
         {
             if (!Directory.Exists(Constants.FimsTReportOutputRepoPath))
             {
                 Directory.CreateDirectory(Constants.FimsTReportOutputRepoPath);
             }
 
-            TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tSheetId);
-
-
-            if (File.Exists(outTReportFilePath))
+            string reportFilePath = Path.Combine(Constants.FimsTReportOutputRepoPath, tReportRequest.TReportOutputFile);
+            if (File.Exists(reportFilePath))
             {
-                File.Delete(outTReportFilePath);
+                File.Delete(reportFilePath);
             }
 
+            TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tReportRequest.TSheetId);
 
-            var tReportSpecsFileInfo = new FileInfo(tReportSpecsFilePath);
+            string specFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, tReportRequest.TReportSpec);
+            using ExcelPackage package = new ExcelPackage(new FileInfo(specFilePath));
 
-            // Create an instance of Fast Excel
-            using (FastExcel.FastExcel fastExcel = new FastExcel.FastExcel(new FileInfo(tReportSpecsFilePath), true))
-            using (FastExcel.FastExcel newFastExcel = new FastExcel.FastExcel(new FileInfo(tReportSpecsFilePath), new FileInfo(outTReportFilePath)))
+            foreach (var ws in package.Workbook.Worksheets)
             {
-                foreach (var worksheet in fastExcel.Worksheets)
-                {
-                    // Console.WriteLine(string.Format("Worksheet Name:{0}, Index:{1}", worksheet.Name, worksheet.Index));
-                    // 
-                    // //To read the rows call read
-                    // worksheet.Read();
-                    // var rows = worksheet.Rows.ToArray();
-                    // //Do something with rows
-                    // Console.WriteLine(string.Format("Worksheet Rows:{0}", rows.Count()));
+                var ws2 = ws as ExcelWorksheet;
+                var wsname = ws.Name;
+                var ws2name = ws2.Name;
 
-                    worksheet.Read(); //to read the rows
-                    foreach (var row in worksheet.Rows)
+
+                foreach (var cell in ws.Cells)
+                {
+                    var cval = cell.Value;
+                    string cvalstr = cval?.ToString() ?? "";
+
+                    if ((cvalstr.Length > 0) && (cvalstr.StartsWith("$!$-")))
                     {
-                        foreach (var cell in row.Cells)
+                        int tItemNo = 0;
+                        string ch = "Ch1";
+                        bool isTime = false;
+
+                        // cvalstr: "$!$-1002", "$!$-1007-Ch3", "$!$-5003-Ch1-T", ...
+                        var markers = cvalstr.Split('-').ToList();
+
+                        try
                         {
-                            var cellValue = cell.Value;
-                            var cellName = cell.CellName;
-                            var cellNames = cell.CellNames;
-                            var cellColumnName = cell.ColumnName;
-                            var cellColumnNumber = cell.ColumnNumber;
-                            var cellRowNumber = cell.RowNumber;
-                            var cellType = cell.GetType();
+                            tItemNo = Int32.Parse(markers[1]);
+                        }
+                        catch
+                        {
+                            tItemNo = 0;
+                        }
+
+                        ch = (markers.Count > 2) ? markers[2].ToString() : "Ch1";
+
+                        isTime = (markers.Count > 3) ? (markers[3].ToString()=="T" ? true : false) : false;     // "$!$-5003-Ch1-T"
+
+                        var tItem = tsheet.TItems.FirstOrDefault(t => t.TestNo == tItemNo); //make sure using FirstOrDefault(), instead of First() which seems to cause an Exception!
+                        if (tItem != null)
+                        {
+                            switch (ch)
+                            {
+                                case "Ch1": cell.Value = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
+                                case "Ch2": cell.Value = (isTime) ? tItem.Ch2Time?.ToString("HH:mm:ss") : tItem.Ch2Data; break;
+                                case "Ch3": cell.Value = (isTime) ? tItem.Ch3Time?.ToString("HH:mm:ss") : tItem.Ch3Data; break;
+                                case "Ch4": cell.Value = (isTime) ? tItem.Ch4Time?.ToString("HH:mm:ss") : tItem.Ch4Data; break;
+                                default:    cell.Value = (isTime) ? tItem.Ch1Time?.ToString("HH:mm:ss") : tItem.Ch1Data; break;
+                            }
+                        }
+                        else
+                        {
+                            cell.Value = "NODATA";
                         }
                     }
-
-                    newFastExcel.Write(worksheet, worksheet.Name);
                 }
             }
 
-            bool result = true;
+            await package.SaveAsAsync(new FileInfo(reportFilePath));
 
-            // this controller always returns a success, unless an exception is thrown
-            return result;
+            Stream memoryStream = new MemoryStream();
+
+            try
+            {
+                await package.SaveAsAsync(memoryStream);
+                memoryStream.Position = 0;
+            }
+            catch (Exception ex)
+            {
+                var msg = ex.Message;
+            }
+
+            // tReportRequest.IsSuccess = true;
+            return memoryStream;
+        }
+
+        public async Task<string> UploadSpecFileAsync(IFormFile specFormFile)
+        {
+            var newSpecFileContent = ContentDispositionHeaderValue.Parse(specFormFile.ContentDisposition);
+
+            // Some browsers send file names with full path.
+            // We are only interested in the file name.
+            var newSpecFileName = Path.GetFileName(newSpecFileContent.FileName.ToString().Trim('"'));
+            var newSpecFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, newSpecFileName);
+            if (File.Exists(newSpecFilePath))
+            {
+                //File.Delete(newSpecFilePath);
+                //backup the prev
+                if (File.Exists(newSpecFilePath + ".BACKUP"))
+                {
+                    File.Delete(newSpecFilePath + ".BACKUP");
+                }
+                File.Move(newSpecFilePath, newSpecFilePath + ".BACKUP");
+            }
+
+            // await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+            using (var newSpecFileStream = new FileStream(newSpecFilePath, FileMode.Create))
+            {
+                await specFormFile.CopyToAsync(newSpecFileStream);
+            }
+
+            // verify the new spec file is valid
+            //string buildresult = BuildTReportSpecsFromExcelSpecFile(newSpecFilePath) ?? string.Empty;
+            string buildresult = "SUCCESS";
+
+            if (buildresult == "SUCCESS")
+            {
+                if (File.Exists(newSpecFilePath + ".BACKUP"))
+                {
+                    File.Delete(newSpecFilePath + ".BACKUP");
+                }
+            }
+            else
+            {
+                if (File.Exists(newSpecFilePath))
+                {
+                    //delete the new
+                    File.Delete(newSpecFilePath);
+                }
+
+                if (File.Exists(newSpecFilePath + ".BACKUP"))
+                {
+                    //restore the prev
+                    File.Move(newSpecFilePath + ".BACKUP", newSpecFilePath);
+                }
+            }
+
+            // instead mock async operation
+            await Task.Yield();
+
+            return buildresult;
         }
 
 
+        /*
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
@@ -145,5 +264,6 @@ namespace Fims.Services.TReports
             filePaths.ToList().ForEach(filePath => File.Delete(filePath));
             return (filePaths.Length > 0) ? productSerial : null;
         }
+        */
     }
 }

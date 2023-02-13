@@ -42,7 +42,6 @@ namespace Fims.Client.Shared.Pages
 
         private List<string> ProductModels { get; set; } = new List<string>();
 
-        private string     CurrentProductSerial { get; set; }
         private TSheetSpec CurrentTSheetSpec { get; set; }
         private string     CurrentInspectorName { get; set; }
         private string     CurrentInspectorUserId { get; set; }
@@ -51,7 +50,7 @@ namespace Fims.Client.Shared.Pages
 
         public int Page { get; set; } = 1;
 
-        TelerikNotification IndexNotificationComponent { get; set; }
+        TelerikNotification LoadSessionNotificationComponent { get; set; }
         public List<string> ToggleButtonsThemeColor { get; set; }
 
         private System.Timers.Timer TSheetSpecsSavingTimer;
@@ -83,11 +82,11 @@ namespace Fims.Client.Shared.Pages
         {
             //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
             //FIXME    // So do it after rendering finished.
-            // var state = await this.AuthState.GetAuthenticationStateAsync();
-            // var user = state.User;
-            // var authState = await AuthenticationStateTask;
-            // var user = authState.User;
-            // CurrentInspectorName = user.GetHangulName();
+            //FIXME    var state = await this.AuthState.GetAuthenticationStateAsync();
+            //FIXME    var user = state.User;
+            //FIXME    //var authState = await AuthenticationStateTask;
+            //FIXME    //var user = authState.User;
+            //FIXME    CurrentInspectorName = user.GetHangulName();
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
@@ -117,10 +116,10 @@ namespace Fims.Client.Shared.Pages
             // So do it here after rendering finished.
             if (firstRender)
             {
-                // var state = await this.AuthState.GetAuthenticationStateAsync();
-                // var user = state.User;
-                var authState = await AuthenticationStateTask;
-                var user = authState.User;
+                var state = await this.AuthState.GetAuthenticationStateAsync();
+                var user = state.User;
+                //var authState = await AuthenticationStateTask;
+                //var user = authState.User;
 
                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 //JBH FIXME: null upon right after logged in. why?
@@ -148,9 +147,24 @@ namespace Fims.Client.Shared.Pages
             var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
             ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
 
-            TSheetSpecsInProgressClientService.DeleteTSheetSpecsInProgressByUserIdProductSerial(productSerial); 
+            TSheetSpecsInProgressClientService.DeleteTSheetSpecsInProgressByUserIdProductSerial(productSerial);
 
-            //StateHasChanged();
+            ProductSerials.Remove(productSerial);
+            ProductSerialsSelected.Remove(productSerial);
+            ProductSerialToTSheetSpecDict.Remove(productSerial);
+
+            var firstEntry = ProductSerialToTSheetSpecDict.FirstOrDefault();
+            if (firstEntry.Key != null)
+            {
+                SetProductSerialAsCurrent(firstEntry.Key);
+            }
+            else
+            {
+                // Products empty, so no display of TSheetComponent
+                CurrentTSheetSpec = null;
+            }
+
+            StateHasChanged();
         }
 
         private async Task<bool> AddTProduct(TProductSpec tProductSpec)
@@ -196,7 +210,6 @@ namespace Fims.Client.Shared.Pages
         private void SetProductSerialAsCurrent(string productSerial)
         {
             CurrentTSheetSpec = ProductSerialToTSheetSpecDict[productSerial] as TSheetSpec;
-            CurrentProductSerial = productSerial;
 
             ProductSerialsSelected.Keys.ToList().ForEach(serial =>{ProductSerialsSelected[serial] = false;});
             ProductSerialsSelected[productSerial] = true;
@@ -379,8 +392,10 @@ namespace Fims.Client.Shared.Pages
         {
             IsLoadingSession = true;
 
-            var authState = await AuthenticationStateTask;
-            var user = authState.User;
+            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var user = state.User;
+            //var authState = await AuthenticationStateTask;
+            //var user = authState.User;
             CurrentInspectorName = user.GetHangulName();
             CurrentInspectorUserId = user.GetUserId();
 
@@ -392,7 +407,7 @@ namespace Fims.Client.Shared.Pages
             if (serialToTSheetSpecPairs.Count == 0)
             {
                 IsLoadingSession = false;
-                IndexNotificationComponent.Show(new NotificationModel()
+                LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "저장된 진행목록이 없습니다.",
                     ThemeColor = "warning",
@@ -423,7 +438,7 @@ namespace Fims.Client.Shared.Pages
 
             StateHasChanged();
 
-            IndexNotificationComponent.Show(new NotificationModel()
+            LoadSessionNotificationComponent.Show(new NotificationModel()
             {
                 Text = "진행목록이 성공적으로 로딩되었습니다.",
                 ThemeColor = "primary",
@@ -439,7 +454,7 @@ namespace Fims.Client.Shared.Pages
             if (ProductSerialToTSheetSpecDict.Count == 0)
             {
                 IsSavingSession = false;
-                IndexNotificationComponent.Show(new NotificationModel()
+                LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "진행목록이 비어 있습니다.",
                     ThemeColor = "warning",
@@ -452,7 +467,7 @@ namespace Fims.Client.Shared.Pages
             bool result = await SaveSessionData();
             IsSavingSession = false;
 
-            IndexNotificationComponent.Show(new NotificationModel()
+            LoadSessionNotificationComponent.Show(new NotificationModel()
             {
                 Text = "진행목록이 성공적으로 저장되었습니다.",
                 ThemeColor = "success",
@@ -486,8 +501,11 @@ namespace Fims.Client.Shared.Pages
                 return false;
             }
 
-            var authState = await AuthenticationStateTask;
-            var user = authState.User;
+            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var user = state.User;
+            //var authState = await AuthenticationStateTask;
+            //var user = authState.User;
+
             CurrentInspectorName = user.GetHangulName();
             CurrentInspectorUserId = user.GetUserId();
 

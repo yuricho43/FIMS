@@ -167,10 +167,10 @@
 
     protected override async Task OnInitializedAsync()
     {
-        // var state = await this.AuthState.GetAuthenticationStateAsync();
-        // var user = state.User;
-        var authState = await AuthenticationStateTask;
-        var user = authState.User;
+        var state = await this.AuthState.GetAuthenticationStateAsync();
+        var user = state.User;
+        //var authState = await AuthenticationStateTask;
+        //var user = authState.User;
         UserName = user.GetUserName();
 
         MenuItems = new List<MenuItem>()

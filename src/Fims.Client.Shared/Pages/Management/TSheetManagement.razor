@@ -5,7 +5,7 @@
 <div class="flex-center">
     <TelerikCard>
         <CardHeader>
-            <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>성적서 관리</strong></h2></CardTitle>
+            <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>검사서 관리</strong></h2></CardTitle>
             <CardSubTitle>조회/삭제/출력</CardSubTitle>
         </CardHeader>
 
@@ -20,7 +20,7 @@
                          Pageable=true PageSize=@PageSize>
 
                 <GridToolBarTemplate>
-                    <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">보고서 출력</GridCommandButton>
+                    <GridCommandButton Command="ExcelExport" Icon="@FontIcon.FileExcel">검사서목록 출력</GridCommandButton>
                 </GridToolBarTemplate>
                 <GridExport>
                     <GridExcelExport FileName="FIMS-Report" AllPages="true" />
@@ -33,63 +33,97 @@
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.Contains" />
+ 
                     <GridColumn Field=@nameof(TSheet.ProductSerial)
                                 Title="S/N"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.Contains" />
+
                     <GridColumn Field=@nameof(TSheet.Customer)
                                 Title="Customer"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.Contains" />
+
                     <GridColumn Field=@nameof(TSheet.EndUser)
                                 Title="End User"
-                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                Width="40px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.Contains" />
+
                     <GridColumn Field=@nameof(TSheet.InspectorName)
                                 Title="검사자"
-                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
+                                Width="40px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.Contains" />
-                    <GridColumn Field=@nameof(TSheet.InspectionStartDateTime)
+
+@*                    <GridColumn Field=@nameof(TSheet.InspectionStartDateTime)
                                 Title="시작시간"
+                                DisplayFormat="{0:yyyy-MM-dd-HH:mm}"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
+*@
                     <GridColumn Field=@nameof(TSheet.InspectionEndDateTime)
                                 Title="완료시간"
+                                DisplayFormat="{0:yyyy-MM-dd-HH:mm}"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
+
                     <GridColumn Field=@nameof(TSheet.Id)
                                 Title="검사번호"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
                                 DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
+
                     <GridCommandColumn Width="100px">
-                        <GridCommandButton OnClick="@ShowDetailsHandler" Icon="@FontIcon.ZoomIn">상세보기</GridCommandButton>
-                        <GridCommandButton Command="Delete" Icon="@FontIcon.Trash">Delete</GridCommandButton>
+                        <GridCommandButton OnClick="@ShowDetailsHandler" Icon="@FontIcon.ZoomIn" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">상세보기</GridCommandButton>
+                        <GridCommandButton OnClick="@GenerateReportHandler" Icon="@FontIcon.FileReport" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">성적서출력</GridCommandButton>
+                        <GridCommandButton Command="Delete" ThemeColor="@ThemeConstants.Button.ThemeColor.Warning">삭제</GridCommandButton>
                     </GridCommandColumn>
                 </GridColumns>
             </TelerikGrid>
         </CardBody>
 
-        <CardFooter Class="k-hbox justify-space-between">
+@*        <CardFooter Class="k-hbox justify-space-between">
             <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
         </CardFooter>
+*@
     </TelerikCard>
 </div>
 
 
+@if (GenerateTReportDialogVisible)
+{
+    <GenerateTReportDialog TSheetId="CurrentTSheet.Id" TReportSpecs="TReportSpecs" GenerateTReportFinished="OnGenerateTReportFinished"></GenerateTReportDialog>
+}
+
+
+
 <style>
-    .k-grid td {
+    .k-grid td, .k-grid tr {
         background-color: #E0E0E0;
         color: black;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
+
+    .k-grid-header-wrap th {
+        background-color: teal;
+        color: white;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
+    }
+
+    /*
+        .k-grid-header {
+            color: whitesmoke;
+            background-color: teal;
+        }
+    */
+
 
     /*
      * JBH NOTE:

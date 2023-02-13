@@ -13,7 +13,7 @@
         <CardBody>
             <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />
 
-            <TelerikGrid Data=@GridData
+            <TelerikGrid Data=@UserAuthInfoModels
                          EditMode="@GridEditMode.Inline"
                          Height="500px"
                          Resizable="true"
@@ -55,9 +55,10 @@
 
         </CardBody>
 
-        <CardFooter Class="k-hbox justify-space-between">
+@*        <CardFooter Class="k-hbox justify-space-between">
             <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
         </CardFooter>
+*@
     </TelerikCard>
 </div>
 
@@ -65,8 +66,9 @@
 <div class="notification-parent">
     <TelerikNotification @ref="UserManagementNotificationComponent"
                          Class="MyTelerikNotification"
-                         HorizontalPosition="@NotificationHorizontalPosition.Center"
-                         VerticalPosition="@NotificationVerticalPosition.Top"></TelerikNotification>
+                         VerticalPosition="@NotificationVerticalPosition.Top"
+                         HorizontalPosition="@NotificationHorizontalPosition.Center">
+    </TelerikNotification>
 </div>
 
 
@@ -86,25 +88,27 @@
 </style>
 
 <style>
-    .k-grid td {
+    .k-grid td, .k-grid tr {
         background-color: #E0E0E0;
         color: black;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
     .k-grid-header-wrap th {
         background-color: teal;
         color: white;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
-    /*    .k-grid-header {
-                color: whitesmoke;
-                background-color: teal;
-            }
-        */
+    /*
+        .k-grid-header {
+            color: whitesmoke;
+            background-color: teal;
+        }
+    */
+
     .k-grid .k-focused-cell {
         background-color: cornflowerblue;
     }

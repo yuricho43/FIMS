@@ -13,6 +13,7 @@ using Fims.Client.Shared.Infrastructure; //for ApiAuthenticationStateProvider
 using Fims.Client.Shared.ClientServices.Authentication;
 using Fims.Client.Shared.ClientServices.TSheets;
 using Fims.Client.Shared.ClientServices.TSheetSpecs;
+using Fims.Client.Shared.ClientServices.TReports;
 
 using Fims.Client.Shared.Localization;
 using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
@@ -48,6 +49,7 @@ namespace Fims.Web.Client
             builder.Services.AddTransient<ITSheetsClientService, TSheetsClientService>();
             builder.Services.AddTransient<ITSheetSpecsClientService, TSheetSpecsClientService>();
             builder.Services.AddTransient<ITSheetSpecsInProgressClientService, TSheetSpecsInProgressClientService>();
+            builder.Services.AddTransient<ITReportsClientService, TReportsClientService>();
 
             builder.Services.AddTransient<AuthenticationHeaderHandler>();
 

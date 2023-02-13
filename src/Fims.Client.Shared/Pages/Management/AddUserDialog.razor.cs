@@ -56,56 +56,56 @@ namespace Fims.Client.Shared.Pages.Management
         //{
         //    var state = await this.AuthState.GetAuthenticationStateAsync();
         //    var user = state.User;
-        //    var authState = await AuthenticationStateTask;
-        //    var user = authState.User;
+        //    //var authState = await AuthenticationStateTask;
+        //    //var user = authState.User;
         //
         //    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
         //}
 
         public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
-    public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
-    {
-        FormValidationMessageType.None,
-        FormValidationMessageType.Inline,
-        FormValidationMessageType.Tooltip
-    };
-    public bool ValidSubmit { get; set; } = false;
-
-    async void HandleValidSubmit()
-    {
-        ValidSubmit = true;
-
-        var result = await this.AuthClientService.Register(this.NewUserRegisterRequestModel);
-
-        if (result.Succeeded)
+        public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
         {
-            this.ShowErrors = false;
+            FormValidationMessageType.None,
+            FormValidationMessageType.Inline,
+            FormValidationMessageType.Tooltip
+        };
+        public bool ValidSubmit { get; set; } = false;
 
-            AddUserNotificationComponent.Show(new NotificationModel
+        async void HandleValidSubmit()
+        {
+            ValidSubmit = true;
+
+            var result = await this.AuthClientService.Register(this.NewUserRegisterRequestModel);
+
+            if (result.Succeeded)
             {
-                Text = "사용자 등록 성공",
-                ThemeColor = "error",
-                CloseAfter = 3000
-            });
+                this.ShowErrors = false;
 
-            await AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
-            //this.NavigationManager.NavigateTo("/account/login");
+                AddUserNotificationComponent.Show(new NotificationModel
+                {
+                    Text = "사용자 등록 성공",
+                    ThemeColor = "error",
+                    CloseAfter = 3000
+                });
+
+                await AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
+                //this.NavigationManager.NavigateTo("/account/login");
+            }
+            else
+            {
+                this.Errors = result.Errors;
+                this.ShowErrors = true;
+            }
+
+            ValidSubmit = false;
+
+            StateHasChanged();
         }
-        else
+
+        void HandleInvalidSubmit()
         {
-            this.Errors = result.Errors;
-            this.ShowErrors = true;
+            ValidSubmit = false;
         }
-
-        ValidSubmit = false;
-
-        StateHasChanged();
-    }
-
-    void HandleInvalidSubmit()
-    {
-        ValidSubmit = false;
-    }
 
         void OnAddUserDialogOK()
         {

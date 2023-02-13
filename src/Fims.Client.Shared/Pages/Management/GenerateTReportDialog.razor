@@ -1,0 +1,211 @@
+﻿@page "/Management/GenerateTReportDialog"
+
+@using TReportDto = Fims.Data.Models.TReports.TReportDto
+@inject IJSRuntime JS
+
+
+<TelerikDialog Visible="true" Title="성적서 출력" Width="700px" Class="dialog-background">
+    <DialogContent>
+
+        <TelerikForm Model="@NewTReportRequestDto"
+                     @ref="@GenerateTReportFormRef"
+                     OnValidSubmit="@HandleValidSubmit"
+                     OnInvalidSubmit="@HandleInvalidSubmit"
+                     Orientation="FormOrientation.Horizontal">
+            <FormValidation>
+                <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+            </FormValidation>
+
+            <FormItems>
+                <FormItem Field="@nameof(TReportDto.TSheetId)">
+                    <Template>
+                        <label for="fname" class="k-label k-form-label">검사번호*:</label>
+                        <TelerikNumericTextBox Id="fname" @bind-Value="NewTReportRequestDto.TSheetId" Enabled="false"></TelerikNumericTextBox>
+                    </Template>
+                </FormItem>
+
+                <FormItem Field="@nameof(TReportDto.TReportSpec)">
+                    <Template>
+                        <label for="role" class="k-label k-form-label">성적서 양식*:</label>
+                        <TelerikDropDownList Id="role" Data="@TReportSpecs" @bind-Value="NewTReportRequestDto.TReportSpec"></TelerikDropDownList>
+                    </Template>
+                </FormItem>
+
+@*                <FormItem Field="@nameof(TReportDto.TReportOutputFile)">
+                    <Template>
+                        <label for="fname" class="k-label k-form-label">파일 이름*:</label>
+                        <TelerikTextBox Id="fname" @bind-Value="NewTReportRequestDto.TReportSpec"></TelerikTextBox>
+                    </Template>
+                </FormItem>
+*@
+            </FormItems>
+
+            <FormButtons>
+                <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">생성</TelerikButton>
+                <TelerikButton ButtonType="ButtonType.Button" OnClick="@OnGenerateTReportDialogCancel">취소</TelerikButton>
+           </FormButtons>
+
+        </TelerikForm>
+
+    </DialogContent>
+
+@*    <DialogButtons>
+        <TelerikButton OnClick="OnAddUserDialogCancel">취소</TelerikButton>
+        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" OnClick="OnAddUserDialogOK">OK</TelerikButton>
+    </DialogButtons>
+*@
+</TelerikDialog>
+
+
+<style>
+    .dialog-background {
+        background-color: silver;
+    }
+</style>
+
+
+<div class="notification-parent">
+    <TelerikNotification @ref="GenerateTReportNotificationComponent"
+                         Class="MyTelerikNotification"
+                         VerticalPosition="@NotificationVerticalPosition.Top"
+                         HorizontalPosition="@NotificationHorizontalPosition.Center">
+    </TelerikNotification>
+</div>
+
+
+<style>
+    .MyTelerikNotification .k-notification-container .k-notification-wrap {
+        width: 300px;
+        height:200px;
+        font-size: 1.5em;
+        text-align: center;
+        align-items: center;
+    }
+</style>
+
+
+<style>
+    .my-button {
+        align-content: center;
+        color: black;
+        margin: 0px;
+        border-color: cornflowerblue;
+    }
+
+    .ok-button {
+        width: 200px;
+        align-content: center;
+        color: black;
+        margin: 0px;
+        border-color: cornflowerblue;
+    }
+
+    .grid-layout-container {
+        overflow-x: auto;
+    }
+
+    .grid-layout {
+/*        width: 800px;
+        margin: auto;
+        color: #424242;
+*/    }
+
+    .grid-layout-heading {
+/*        font-size: 14px;
+        color: #42B242;
+        line-height: 20px;
+*/    }
+
+    .article, .card-article {
+        gap: 10px;
+        color: #656565;
+    }
+
+    .card-article {
+        padding: 8px;
+        margin-bottom: 8px;
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        border-radius: 3px;
+    }
+
+    .article-description,
+    .card-article-description {
+        gap: 6px;
+    }
+
+    .article-position {
+        margin-right: 10px;
+        font-size: 32px;
+        font-weight: bold;
+        color: #ff6358;
+    }
+
+    .article-description .title {
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: bold;
+    }
+
+    .card-article-description .title {
+        font-size: 18px;
+        line-height: 24px;
+        font-weight: bold;
+    }
+
+    .card-article-description .sub-title {
+        font-size: 14px;
+        line-height: 24px;
+    }
+
+    .article-description .author {
+        font-size: 12px;
+        line-height: 20px;
+    }
+
+    .card-article-description .author {
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 20px;
+        padding-bottom: 4px;
+    }
+
+    .article-description .date,
+    .card-article-description .date {
+        font-size: 10px;
+        line-height: 20px;
+    }
+
+    .article-description .separator,
+    .card-article-description .separator {
+        padding: 0 5px;
+    }
+
+    .card-article-image {
+        width: 225px;
+    }
+
+    .card-article .photo-text {
+        text-align: right;
+        font-style: italic;
+        font-size: 10px;
+        opacity: 0.7;
+    }
+
+    .k-chip-list {
+        padding: 5px 0px;
+        grid-gap: 6px;
+        margin-top: 8px;
+    }
+
+    .k-chip {
+        color: #656565;
+        margin: 0px;
+        border-color: rgba(0, 0, 0, 0.08);
+    }
+
+    .event-calendar {
+        width: 100%;
+    }
+</style>
+

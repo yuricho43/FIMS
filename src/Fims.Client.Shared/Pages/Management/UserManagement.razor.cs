@@ -15,8 +15,7 @@ namespace Fims.Client.Shared.Pages.Management
     public partial class UserManagement
     {
         int PageSize = 15;
-        public List<UserAuthInfoModel> GridData { get; set; }
-        public UserAuthInfoModel CurrentUserAuthInfoModel { get; set; }
+        public List<UserAuthInfoModel> UserAuthInfoModels { get; set; }
         public List<FimsRole> UserRoles { get; set; }
         public List<string> UserRoleNames { get; set; } = new List<string>();
         public string UserRoleName { get; set; }
@@ -33,7 +32,7 @@ namespace Fims.Client.Shared.Pages.Management
 
         private async Task LoadData()
         {
-            GridData = await this.AuthClientService.AllUsers();
+            UserAuthInfoModels = await this.AuthClientService.AllUsers();
 
             UserRoles = await this.AuthClientService.AllRoles();
             foreach (var userRole in UserRoles) {

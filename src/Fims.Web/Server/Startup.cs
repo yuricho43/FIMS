@@ -13,6 +13,7 @@ using Fims.Data.Models.TSheets;
 using Fims.Services.TSheets;
 using Fims.Services.TSheetSpecs;
 using Fims.Services.TSheetSpecsInProgress;
+using Fims.Services.TReports;
 
 namespace Fims.Web.Server
 {
@@ -32,6 +33,9 @@ namespace Fims.Web.Server
 
             ITSheetSpecsInProgressService tSheetSpecsInProgressService = new TSheetSpecsInProgressService();
             services.AddSingleton(tSheetSpecsInProgressService);
+
+            // NOTE: ITSheetsService and ITReportsService inherits "IService",
+            //       So those will be registered in AddApplicationServices().
 
             services
                 .AddDatabase(this.Configuration) //add/register a DbContext (FimsDbContext) and initial db datas (CategoriesData, ProductsData) and db initializer (FimsDbInitializer) to the DI container (IServiceCollection)

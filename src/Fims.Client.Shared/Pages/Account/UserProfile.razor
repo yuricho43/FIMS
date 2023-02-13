@@ -1,7 +1,7 @@
 ﻿@page "/account/userprofile"
 @attribute [Authorize]
 
-@if (model == null)
+@if (UserProfileModel == null)
 {
     <LoadingScreen />
 }
@@ -12,38 +12,50 @@ else
 
             <div class="row">
 
-                <AccountSidebar />
-
                 <main class="col-md-9">
 
                     <article class="card mb-3">
                         <div class="card-body">
 
                             <h4 class="card-title mb-4">Account UserProfile</h4>
-                            <EditForm Model="model" OnValidSubmit="SubmitAsync">
+                            <EditForm Model="UserProfileModel" OnValidSubmit="SubmitAsync">
 
                                 <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />
                                 <DataAnnotationsValidator />
                                 <ValidationSummary />
 
                                 <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">이름</label>
+                                    <label class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-6">
-                                        <InputText @bind-Value="model.HangulName" type="text" class="form-control" />
+                                        <InputText @bind-Value="Email" type="text" class="form-control-plaintext"/>
                                     </div>
                                 </div>
 
-@*                                <div class="form-group row">
-                                    <label class="col-sm-2 col-form-label">영문이름</label>
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">이름</label>
                                     <div class="col-sm-6">
-                                        <InputText @bind-Value="model.EnglishName" type="text" class="form-control" />
+                                        <InputText @bind-Value="UserProfileModel.HangulName" type="text" class="form-control" />
                                     </div>
                                 </div>
-*@
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">이름</label>
+                                    <div class="col-sm-6">
+                                        <InputText @bind-Value="UserProfileModel.HangulName" type="text" class="form-control" />
+                                    </div>
+                                </div>
+
                                 <div class="form-group row">
                                     <label class="col-sm-2 col-form-label">Email</label>
                                     <div class="col-sm-6">
-                                        <InputText @bind-Value="email" type="email" class="form-control-plaintext" readonly />
+                                        <InputText @bind-Value="Email" type="email" class="form-control-plaintext" readonly />
+                                    </div>
+                                </div>
+
+                                <div class="form-group row">
+                                    <label class="col-sm-2 col-form-label">이름</label>
+                                    <div class="col-sm-6">
+                                        <InputText @bind-Value="UserProfileModel.HangulName" type="text" class="form-control" />
                                     </div>
                                 </div>
 

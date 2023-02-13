@@ -2,7 +2,7 @@
 
 
 @*<TelerikDialog @bind-Visible="@ManualSelectionDialogVisible" Title="측정설비 선택">*@
-<TelerikDialog Visible="true" Title="검사설비 추가" Width="600px" Height="500px" Class="add-product">
+<TelerikDialog Visible="true" Title="검사설비 추가" Height="600px" Class="dialog-background">
     <DialogContent>
         <TelerikGridLayout RowSpacing="20px" ColumnSpacing="20px" Class="grid-layout" HorizontalAlign="GridLayoutHorizontalAlign.Center" VerticalAlign="GridLayoutVerticalAlign.Center">
             <GridLayoutRows>
@@ -15,8 +15,8 @@
                 <GridLayoutRow Height="40px"></GridLayoutRow>
             </GridLayoutRows>
             <GridLayoutColumns>
-                <GridLayoutColumn Width="200px"></GridLayoutColumn>
-                <GridLayoutColumn Width="200px"></GridLayoutColumn>
+                <GridLayoutColumn Width="100px"></GridLayoutColumn>
+                <GridLayoutColumn Width="500px"></GridLayoutColumn>
             </GridLayoutColumns>
  
             <GridLayoutItems>
@@ -70,14 +70,14 @@
 
     <DialogButtons>
         <TelerikButton OnClick="OnAddNewProductDialogCancel">취소</TelerikButton>
-        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" OnClick="OnAddNewProductDialogOK">OK</TelerikButton>
+        <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Success)" OnClick="OnAddNewProductDialogOK">완료</TelerikButton>
     </DialogButtons>
 </TelerikDialog>
 
 
 <style>
-    .add-product {
-        background-color:cornflowerblue;
+    .dialog-background {
+        background-color:silver;
     }
 
 </style>

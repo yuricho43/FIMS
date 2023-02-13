@@ -6,7 +6,7 @@
     <div class="flex-center">
         <TelerikCard>
             <CardHeader>
-                <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>성적서 상세보기</strong></h2></CardTitle>
+                <CardTitle><h2 class="card-title mb-4" style="align-self:center"><strong>검사서 상세보기</strong></h2></CardTitle>
                 <div class="toolbar-row">
                     <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%" Height="50px">
                         <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Stretch" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px" Width="100%">
@@ -19,7 +19,7 @@
                             <div class="toolbar-block">검사번호:&nbsp;<strong>@TSheetWithTItems.Id</strong></div>
                         </TelerikStackLayout>
                         <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px">
-                            <TelerikButton Icon="@FontIcon.ArrowUp" OnClick="@OnBackToTSheetManagement" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"><strong>성적서관리</strong></TelerikButton>
+                            <TelerikButton Icon="@FontIcon.ArrowUp" OnClick="@OnBackToTSheetManagement" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)"><strong>검사서관리</strong></TelerikButton>
                         </TelerikStackLayout>
                     </TelerikStackLayout>
                 </div>
@@ -43,7 +43,6 @@
 
                 <TelerikGrid Data=@TSheetWithTItems.TItems
                             @ref="@TItemGrid"
-                            Height="540px"
                             Pageable="true"
                             Resizable="true"
                             @bind-PageSize="@PageSize"
@@ -76,6 +75,13 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch1Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch1Data"))" Title="CH1" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH1</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch1Data + " (" + tItem.Ch1Time?.ToString("HH:mm:ss") + ")" : tItem.Ch1Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
 
@@ -83,6 +89,13 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch2Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch2Data"))" Title="CH2" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH2</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch2Data + " (" + tItem.Ch2Time?.ToString("HH:mm:ss") + ")" : tItem.Ch2Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
 
@@ -90,6 +103,13 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch3Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch3Data"))" Title="CH3" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH3</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch3Data + " (" + tItem.Ch3Time?.ToString("HH:mm:ss") + ")" : tItem.Ch3Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
 
@@ -97,39 +117,49 @@
                         {
                             <GridColumn Field="@nameof(TItem.Ch4Data)" Width="100px" OnCellRender="@((GridCellRenderEventArgs args) => OnCellRenderHandler(args, "Ch4Data"))" Title="CH4" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
                                 <HeaderTemplate><strong>CH4</strong></HeaderTemplate>
+                                <Template>
+                                    @{
+                                        var tItem = context as TItem;
+                                        string msg = (tItem.ExpressionMode == "String/Input(Time)") ? tItem.Ch4Data + " (" + tItem.Ch4Time?.ToString("HH:mm:ss") + ")" : tItem.Ch4Data;
+                                        <span>@msg</span>
+                                    }
+                                </Template>
                             </GridColumn>
                         }
                     </GridColumns>
                 </TelerikGrid>
             </CardBody>
 
-            <CardFooter Class="k-hbox justify-space-between">
+@*            <CardFooter Class="k-hbox justify-space-between">
                 <span>© 2023 FST (https://www.fstc.co.kr), All Rights Reserved.</span>
             </CardFooter>
+*@
         </TelerikCard>
     </div>
 }
 
 <style>
-    .k-grid td {
+    .k-grid td, .k-grid tr {
         background-color: #E0E0E0;
         color: black;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
     .k-grid-header-wrap th {
         background-color: teal;
         color: white;
-        border: 1px solid white;
-        //border-radius: 8px;
+        border-width: 0px 1px 1px 0px !important;
+        border-color: white !important;
     }
 
-    /*    .k-grid-header {
-                        color: whitesmoke;
-                        background-color: teal;
-                    }
-                */
+    /*
+        .k-grid-header {
+            color: whitesmoke;
+            background-color: teal;
+        }
+     */
+
     .k-grid .k-focused-cell {
         background-color: cornflowerblue;
     }
@@ -202,23 +232,4 @@
         color: white width: 200px;
         //background-color:cadetblue;
     }
-</style>
-
-<style>
-    .tab-parent {
-        color: green;
-        background: white;
-    }
-
-        .tab-parent .k-tabstrip-items li {
-            margin-left: 5px;
-            margin-right: 5px;
-            color: white;
-            background: cornflowerblue;
-        }
-
-            .tab-parent .k-tabstrip-items li.k-active {
-                color: black;
-                background: orange;
-            }
 </style>

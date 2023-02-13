@@ -80,7 +80,7 @@ namespace Fims.Services.Identity
             return new LoginResponseModel { Token = token };
         }
 
-        public async Task<Result> ChangeUserProfileAsync(ChangeUserProfileRequestModel model, string userId)
+        public async Task<Result> ChangeUserProfileAsync(UserProfileModel model, string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)
@@ -100,7 +100,7 @@ namespace Fims.Services.Identity
                 : Result.Failure(errors);
         }
 
-        public async Task<Result> ChangePasswordAsync(ChangePasswordRequestModel model, string userId)
+        public async Task<Result> ChangePasswordAsync(PasswordModel model, string userId)
         {
             var user = await this.userManager.FindByIdAsync(userId);
             if (user == null)

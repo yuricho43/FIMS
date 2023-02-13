@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http.Headers;
+using System.Linq;
 
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -10,9 +11,7 @@ using Microsoft.AspNetCore.Http;
 
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Services.TSheetSpecs;
-
 using Fims.Web.Server.Infrastructure.Services;
-using System.Linq;
 
 namespace Fims.Web.Server.Controllers
 {
@@ -63,12 +62,12 @@ namespace Fims.Web.Server.Controllers
         }
 
 
-        [HttpPost(nameof(Save))]
+        [HttpPost(nameof(UploadSpecFile))]
         [AllowAnonymous]
-        public async Task<string> Save(IEnumerable<IFormFile> files)
+        public async Task<string> UploadSpecFile(IEnumerable<IFormFile> files)
         {
             var specFormFile = files.First();
-            var result = await this.TSheetSpecsService.ReplaceAsync(specFormFile);
+            var result = await this.TSheetSpecsService.UploadSpecFileAsync(specFormFile);
             return result;
         }
 

@@ -1,50 +1,53 @@
 ﻿@page "/Management/AddUserDialog"
 
-<TelerikDialog Visible="true" Title="사용자 추가" Width="700px">
+@using RegisterRequestModel = Fims.Data.Models.Identity.RegisterRequestModel
+
+
+<TelerikDialog Visible="true" Title="사용자 추가" Width="700px" Class="dialog-background">
     <DialogContent>
 
         <TelerikForm Model="@NewUserRegisterRequestModel"
                      @ref="@AddUserFormRef"
                      OnValidSubmit="@HandleValidSubmit"
                      OnInvalidSubmit="@HandleInvalidSubmit"
-                     Orientation="FormOrientation.Horizontal">
+                     Orientation="FormOrientation.Vertical">
             <FormValidation>
                 <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
             <FormItems>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.UserName)">
+                <FormItem Field="@nameof(RegisterRequestModel.UserName)">
                     <Template>
                         <label for="fname" class="k-label k-form-label">ID*:</label>
                         <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.UserName"></TelerikTextBox>
                         <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.UserName)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.Password)">
+                <FormItem Field="@nameof(RegisterRequestModel.Password)">
                     <Template>
                         <label for="pass" class="k-label k-form-label">Password*:</label>
                         <TelerikTextBox Id="pass" @bind-Value="@NewUserRegisterRequestModel.Password" Password="true"></TelerikTextBox>
                         <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.Password)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.Role)">
+                <FormItem Field="@nameof(RegisterRequestModel.Role)">
                     <Template>
                         <label for="role" class="k-label k-form-label">권한*:</label>
                         <TelerikDropDownList Id="role" Data="@Roles" @bind-Value="NewUserRegisterRequestModel.Role"></TelerikDropDownList>
                     </Template>
                 </FormItem>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.HangulName)">
-                    <Template>
-                        <label for="fname" class="k-label k-form-label">이름*:</label>
-                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.HangulName"></TelerikTextBox>
-                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.HangulName)"></TelerikValidationMessage>
-                    </Template>
-                </FormItem>
-                <FormItem Field="@nameof(NewUserRegisterRequestModel.Email)">
+                <FormItem Field="@nameof(RegisterRequestModel.Email)">
                     <Template>
                         <label for="mail" class="k-label k-form-label">Email*:</label>
                         <TelerikTextBox Id="mail" @bind-Value="@NewUserRegisterRequestModel.Email" InputMode="email" PlaceHolder="example@domain.com"></TelerikTextBox>
                         <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.Email)"></TelerikValidationMessage>
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(RegisterRequestModel.HangulName)">
+                    <Template>
+                        <label for="fname" class="k-label k-form-label">이름*:</label>
+                        <TelerikTextBox Id="fname" @bind-Value="@NewUserRegisterRequestModel.HangulName"></TelerikTextBox>
+                        <TelerikValidationMessage For="@(() => NewUserRegisterRequestModel.HangulName)"></TelerikValidationMessage>
                     </Template>
                 </FormItem>
             </FormItems>
@@ -69,10 +72,17 @@
 <div class="notification-parent">
     <TelerikNotification @ref="AddUserNotificationComponent"
                          Class="MyTelerikNotification"
-                         HorizontalPosition="@NotificationHorizontalPosition.Center"
-                         VerticalPosition="@NotificationVerticalPosition.Top"></TelerikNotification>
+                         VerticalPosition="@NotificationVerticalPosition.Top"
+                         HorizontalPosition="@NotificationHorizontalPosition.Center">
+    </TelerikNotification>
 </div>
 
+
+<style>
+    .dialog-background {
+        background-color: silver;
+    }
+</style>
 
 <style>
     .MyTelerikNotification .k-notification-container .k-notification-wrap {

@@ -5,7 +5,7 @@ using static Fims.Data.ModelConstants.Identity;
 
 namespace Fims.Data.Models.Identity
 {
-    public class ChangePasswordRequestModel
+    public class PasswordModel
     {
         [Required]
         [MinLength(MinPasswordLength)]

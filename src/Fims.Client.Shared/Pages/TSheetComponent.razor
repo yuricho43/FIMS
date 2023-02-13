@@ -2,7 +2,7 @@
 
 
 <div class="toolbar-row">
-<TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%" Height="40px">
+<TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" Spacing="50px" Width="100%" Height="30px">
     <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Stretch" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px" Width="100%">
         <div class="toolbar-block">제품SN:&nbsp;<strong>@MyTSheetSpec.ProductSerial</strong></div>
         <div class="toolbar-block">모델:&nbsp;<strong>@MyTSheetSpec.ProductModel</strong></div>
@@ -11,12 +11,12 @@
         <div class="toolbar-block">검사자:&nbsp;<strong>@MyTSheetSpec.InspectorName</strong></div>
     </TelerikStackLayout>
     <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px">
-            <TelerikButton Enabled="@IsSaveEnabled" Icon="@FontIcon.Save" OnClick="@SaveAllChanges" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button"><strong>입력완료/저장</strong></TelerikButton>
+            <TelerikButton Enabled="@IsSaveEnabled" Icon="@FontIcon.Save" OnClick="@SaveTSheetToDb" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button"><strong>입력완료/저장</strong></TelerikButton>
     </TelerikStackLayout>
 </TelerikStackLayout>
 </div>
 
-<div style="background:white;height: 10px;"></div>
+<div style="background:Gainsboro;height: 10px;"></div>
 
 <TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
@@ -28,13 +28,29 @@
                 @*                  <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>*@
                 @*                    <div style="background-color:orange;color:@SelectedColor;padding:20px;"><span class="fa fa-temperature-high"></span><strong>@TCategory</strong></div>*@
                 <div>
-                    <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>
-                    @*&nbsp;*@
-                    <span class="badge badge-warning" style="width: 30px">@MyTSheetSpec.CategoryTItemsCountDict[TCategory]</span>
+                    @*<span class="fa fa-temperature-high"></span><strong>@TCategory</strong>*@
+                    <span style="color:white"><strong>@TCategory</strong></span>
+ 
+                    <span>&nbsp;</span>
+                    @if (MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory] > 0)
+                    {
+                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                    }
+                    else
+                    {
+                        if (TItemSpecsInCategoryInvalidCountDict[TCategory] > 0)
+                        {
+                            <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                        }
+                        else
+                        {
+                            <span class="badge badge-success" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                        }
+                    }
                 </div>
             </HeaderTemplate>
             <Content>
-                <TSheetCategoryComponent MyCategoryTItemSpecs="MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory]"></TSheetCategoryComponent>
+                <TSheetCategoryComponent TItemSpecsInCategory="MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory]" TItemSpecsInCategoryCompletedCountChanged="OnTItemSpecsInCategoryCompletedCountChanged" TItemSpecsInCategoryInvalidCountChanged="OnTItemSpecsInCategoryInvalidCountChanged"></TSheetCategoryComponent>
             </Content>
         </TabStripTab>
     }
@@ -42,8 +58,8 @@
 
 <TelerikNotification @ref="@TSheetComponentNotificationComponent"
                      Class="demo-notification"
-                     VerticalPosition="NotificationVerticalPosition.Bottom"
-                     HorizontalPosition="NotificationHorizontalPosition.Right">
+                     VerticalPosition="NotificationVerticalPosition.Top"
+                     HorizontalPosition="NotificationHorizontalPosition.Center">
 </TelerikNotification>
 
 
@@ -56,33 +72,44 @@
     }
 
     .toolbar-block {
-        color: white
+        color: white;
         width: 200px;
-        //background-color:cadetblue;
+       /*background-color:cadetblue;*/
     }
 </style>
 
 <style>
-    .tab-parent{
-        color: green;
-        background: white;
+    .tab-parent .k-tabstrip-items-wrapper .k-item:active, .k-tabstrip-items-wrapper .k-item.k-active, .k-tabstrip-items-wrapper .k-item.k-selected {
+        border-color: cornflowerblue;
+        border-width: 0;
+        color: orange;
+        background-color: cornflowerblue;
     }
 
-    .tab-parent .k-tabstrip-items li {
+    .tab-parent .k-tabstrip-items-wrapper li {
         margin-left: 5px;
         margin-right: 5px;
-        color: white;
-        background: cornflowerblue;
+        border-color: silver;
+        color: purple;
+        background: silver;
+        height: 30px;
     }
 
-    .tab-parent .k-tabstrip-items li.k-active {
-        color: black;
-        background: orange;
+    .tab-parent .k-tabstrip-items-wrapper li.k-active {
+        color: forestgreen;
+        background: cornflowerblue;
     }
 </style>
 
 <style>
     .save-button {
-        height: 30px;
+        height: 26px;
+    }
+</style>
+
+@* for newline by '\n' in the Dialog message *@
+<style>
+    .k-dialog-content {
+        white-space: pre-line;
     }
 </style>
