@@ -124,10 +124,14 @@ namespace Fims.Client.Shared.Pages.Account
             //StateHasChanged();
         }
 
+        private void OnChangePasswordClicked()
+        {
+            //ChangePasswordDialogVisible = true;
+        }
+
         private void OnChangePasswordDialogFinished(bool result)
         {
             ChangePasswordDialogVisible = false;
-            //StateHasChanged();
         }
 
         private async Task LoadDataAsync()

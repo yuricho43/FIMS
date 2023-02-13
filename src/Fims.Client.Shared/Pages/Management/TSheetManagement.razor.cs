@@ -75,10 +75,13 @@ namespace Fims.Client.Shared.Pages.Management
             //StateHasChanged();
         }
 
-        public void DeleteTSheetHandler(GridCommandEventArgs args)
+        public async void DeleteTSheetHandler(GridCommandEventArgs args)
         {
-            // ProductService.DeleteProduct((ProductDto)args.Item);
-            // LoadData();
+            // var tSheet = (TSheet)args.Item;
+            // var result = await this.TSheetsClientService.RemoveTSheet(tSheet.Id);
+            // 
+            // TSheets = await TSheetsClientService.AllTSheetsAsync();
+            // //StateHasChanged();
         }
 
 

@@ -38,7 +38,7 @@ namespace Fims.Client.Shared.ClientServices.TSheets
                 .ToResult();
 
         public async Task<Result> RemoveTSheet(int id)
-            => await this.http.DeleteAsync($"{TSheetsPath}/{nameof(this.RemoveTSheet)}/{id}").ToResult();
+            => await this.http.DeleteAsync($"{TSheetsPath}/DeleteTSheet/{id}").ToResult();
 
         public async Task<IEnumerable<TSheet>> AllTSheetsAsync()
         {

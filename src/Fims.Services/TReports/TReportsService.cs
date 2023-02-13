@@ -121,7 +121,21 @@ namespace Fims.Services.TReports
 
                             ch = (markers.Count > 2) ? markers[2].ToString() : "Ch1";
 
-                            isTime = (markers.Count > 3) ? (markers[3].ToString() == "T" ? true : false) : false;     // "$!$-5003-Ch1-T"
+                            if (markers.Count == 3)
+                            {
+                                // "$!$-5003-T"
+                                isTime = markers[2].ToString() == "T" ? true : false;
+                            }
+                            else if (markers.Count == 4)
+                            {
+                                // "$!$-5003-Ch1-T"
+                                isTime = markers[3].ToString() == "T" ? true : false;
+                            }
+                            else
+                            {
+                                // "$!$-5003"
+                                isTime = false;
+                            }
 
                             var tItem = tsheet.TItems.FirstOrDefault(t => t.TestNo == tItemNo); //make sure using FirstOrDefault(), instead of First() which seems to cause an Exception!
                             if (tItem != null)
@@ -137,7 +151,7 @@ namespace Fims.Services.TReports
                             }
                             else
                             {
-                                cellvalue = "NODATA";
+                                cellvalue = "NOTEXIST";
                             }
 
                             cellvalues.Add(cellvalue);
@@ -163,7 +177,9 @@ namespace Fims.Services.TReports
                 }
             }
 
-            await package.SaveAsAsync(new FileInfo(reportFilePath));
+            ///////////////////////////////////////////////////////////////////////////////////////////
+            // DO NOT SAVE IN SERVER!!      await package.SaveAsAsync(new FileInfo(reportFilePath));
+            ///////////////////////////////////////////////////////////////////////////////////////////
 
             Stream memoryStream = new MemoryStream();
 
