@@ -64,7 +64,7 @@ namespace Fims.Client.Shared.Pages.Account
 
         protected override async Task OnInitializedAsync()
         {
-            await this.LoadDataAsync();
+            //await this.LoadDataAsync();
             await base.OnInitializedAsync();
         }
 
@@ -80,7 +80,7 @@ namespace Fims.Client.Shared.Pages.Account
             if (firstRender)
             {
                 await this.LoadDataAsync();
-                StateHasChanged();
+                //StateHasChanged();
             }
         }
 
@@ -142,7 +142,8 @@ namespace Fims.Client.Shared.Pages.Account
             //this.UserProfileModel.EnglishName = user.GetEnglishName();
             this.CurrentUserProfileModel.Role = user.GetUserRole();
 
-            StateHasChanged();
+            //StateHasChanged();
+            this.NavigationManager.NavigateTo("/account/userprofiledialog", forceLoad: false);
         }
     }
 }
