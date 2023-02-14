@@ -79,7 +79,7 @@ namespace Fims.Client.Shared.Pages.Management
         {
             var tSheet = (TSheet)args.Item;
 
-            bool confirmed = await Dialogs.ConfirmAsync($"검사서({tSheet.Id})를 영구 삭제 합니다.", "검사서 삭제");
+            bool confirmed = await Dialogs.ConfirmAsync($"검사서({tSheet.Id})를 영구 삭제합니다.", "검사서 삭제");
 
             if (confirmed)
             {
