@@ -159,7 +159,6 @@ namespace Fims.Client.Shared.Pages
                 InspectionEndDateTime = tSheetSpec.InspectionEndDateTime,
                 IsInspectionCompleted = tSheetSpec.IsInspectionCompleted,
 
-                UserId = tSheetSpec.UserId,
                 TItems = tItemsFinal,
             };
 

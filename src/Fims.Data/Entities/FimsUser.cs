@@ -8,7 +8,8 @@ using Fims.Data.Contracts;
 
 namespace Fims.Data.Entities
 {
-    public class FimsUser : IdentityUser, IAuditInfo, IDeletableEntity
+    // public class FimsUser : IdentityUser, IAuditInfo, IDeletableEntity
+    public class FimsUser : IdentityUser, IAuditInfo
     {
         public FimsUser() => this.Id = Guid.NewGuid().ToString();
 
@@ -20,14 +21,8 @@ namespace Fims.Data.Entities
         public DateTime CreatedOn { get; set; }
         public DateTime? ModifiedOn { get; set; }
 
-        //For IDeletableEntity
-        public bool IsDeleted { get; set; }
-        public DateTime? DeletedOn { get; set; }
-
-
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // Navigation Properties
-        // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        public ICollection<TSheet> TSheets { get; } = new HashSet<TSheet>();
+        // //For IDeletableEntity
+        // public bool IsDeleted { get; set; }
+        // public DateTime? DeletedOn { get; set; }
     }
 }

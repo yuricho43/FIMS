@@ -13,22 +13,24 @@ namespace Fims.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<TItem> tItem)
         {
-            tItem
-                .Property(ti => ti.Title)
-                //FIXME  .HasMaxLength(MaxNameLength) // 50 causes a Truncated error
-                .IsRequired();
-
-            tItem
-                .HasOne(ti => ti.TSheet)
-                .WithMany(ts => ts.TItems)
-                .HasForeignKey(ti => ti.TSheetId)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            tItem
-                .HasIndex(ti => ti.IsDeleted);
-
-            tItem
-                .HasQueryFilter(ti => !ti.IsDeleted);
+            //JBH: no need, becasue we follow the EF Convention to declare the Entity?
+            //
+            // tItem
+            //     .Property(ti => ti.Title)
+            //     //FIXME  .HasMaxLength(MaxNameLength) // 50 causes a Truncated error
+            //     .IsRequired();
+            // 
+            // tItem
+            //     .HasOne(ti => ti.TSheet)
+            //     .WithMany(ts => ts.TItems)
+            //     .HasForeignKey(ti => ti.TSheetId)
+            //     .OnDelete(DeleteBehavior.Restrict);
+            // 
+            // //tItem
+            // //    .HasIndex(ti => ti.IsDeleted);
+            // //
+            // //tItem
+            // //    .HasQueryFilter(ti => !ti.IsDeleted);
         }
     }
 }

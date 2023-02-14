@@ -36,7 +36,6 @@ namespace Fims.Services.TSheets
             //    Date = tSheet.Date,
             //};
 
-            tSheet.UserId = userId;
             await this.TheDbContext.AddAsync(tSheet);
             await this.TheDbContext.SaveChangesAsync();
 
@@ -59,7 +58,6 @@ namespace Fims.Services.TSheets
             //tSheet.Date = newTSheet.Date;
 
             tSheet = newTSheet;
-            tSheet.UserId = userId;
 
             await this.TheDbContext.SaveChangesAsync();
 

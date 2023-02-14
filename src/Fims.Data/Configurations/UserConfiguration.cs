@@ -11,21 +11,23 @@ namespace Fims.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<FimsUser> user)
         {
-            user
-                .Property(u => u.HangulName)
-                .HasMaxLength(MaxNameLength)
-                .IsRequired();
-
-            user
-                .Property(u => u.EnglishName)
-                .HasMaxLength(MaxNameLength);
-                //optional  .IsRequired();
-
-            user
-                .HasIndex(u => u.IsDeleted);
-
-            user
-                .HasQueryFilter(u => !u.IsDeleted);
+            //JBH: no need, becasue we follow the EF Convention to declare the Entity?
+            //
+            // user
+            //     .Property(u => u.HangulName)
+            //     .HasMaxLength(MaxNameLength)
+            //     .IsRequired();
+            // 
+            // user
+            //     .Property(u => u.EnglishName)
+            //     .HasMaxLength(MaxNameLength);
+            //     //optional  .IsRequired();
+            // 
+            // //user
+            // //    .HasIndex(u => u.IsDeleted);
+            // //
+            // //user
+            // //    .HasQueryFilter(u => !u.IsDeleted);
         }
     }
 }
