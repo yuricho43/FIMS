@@ -77,11 +77,11 @@ namespace Fims.Client.Shared.Pages.Management
 
         public async void DeleteTSheetHandler(GridCommandEventArgs args)
         {
-            // var tSheet = (TSheet)args.Item;
-            // var result = await this.TSheetsClientService.RemoveTSheet(tSheet.Id);
-            // 
-            // TSheets = await TSheetsClientService.AllTSheetsAsync();
-            // //StateHasChanged();
+            var tSheet = (TSheet)args.Item;
+            var result = await this.TSheetsClientService.RemoveTSheet(tSheet.Id);
+            
+            TSheets = await TSheetsClientService.AllTSheetsAsync();
+            //StateHasChanged();
         }
 
 
