@@ -43,8 +43,8 @@ namespace Fims.Client.Shared.Pages.Account
 {
     public partial class ChangePasswordDialog
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         [Parameter]
         public EventCallback<bool> ChangePasswordDialogFinished { get; set; }

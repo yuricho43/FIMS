@@ -28,31 +28,32 @@ namespace Fims.Client.Shared.Pages
     public partial class TSheetComponent
     {
         [Parameter]
-        public TSheetSpec MyTSheetSpec
-        {
-            get { return _MyTSheetSpec; }
+        public TSheetSpec MyTSheetSpec { get; set; } 
+        //public TSheetSpec MyTSheetSpec
+        //{
+        //    get { return _MyTSheetSpec; }
  
-            set {
-                _MyTSheetSpec = value;
+        //    set {
+        //        _MyTSheetSpec = value;
 
-                //debug
-                var tmodel = _MyTSheetSpec.ProductModel;
-                var ccounts = _MyTSheetSpec.CategoryTItemsCountDict.Values.ToList();
-                var total = ccounts.Sum();
-                var xx = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
-                var yy = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values;
-                var xxl = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
-                var yyl = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values.ToList();
+        //        //debug
+        //        var tmodel = _MyTSheetSpec.ProductModel;
+        //        var ccounts = _MyTSheetSpec.CategoryTItemsCountDict.Values.ToList();
+        //        var total = ccounts.Sum();
+        //        var xx = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
+        //        var yy = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values;
+        //        var xxl = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
+        //        var yyl = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values.ToList();
 
-                var aa = _MyTSheetSpec.TItemSpecs.FirstOrDefault(a => a.TestNo == 2001);
-                //var xa = xx.FirstOrDefault(a => a.TestNo == 2001);
+        //        var aa = _MyTSheetSpec.TItemSpecs.FirstOrDefault(a => a.TestNo == 2001);
+        //        //var xa = xx.FirstOrDefault(a => a.TestNo == 2001);
 
-                //CollectTItemSpecsFinal();
+        //        //CollectTItemSpecsFinal();
 
-                //MakeCategoryObservableTItemSpecsDict();
-            }
-        }
-        private TSheetSpec _MyTSheetSpec;
+        //        //MakeCategoryObservableTItemSpecsDict();
+        //    }
+        //}
+        //private TSheetSpec _MyTSheetSpec;
 
         [Parameter]
         public EventCallback<string> TSheetInspectionCompleted { get; set; }
@@ -128,9 +129,9 @@ namespace Fims.Client.Shared.Pages
             else
                 MyTSheetSpec.TItemSpecsFinal.Clear();
 
-            foreach (var cat in _MyTSheetSpec.TCategories)
+            foreach (var cat in MyTSheetSpec.TCategories)
             {
-                var kkk = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict[cat].ToList();
+                var kkk = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[cat].ToList();
                 foreach (var k in kkk)
                 {
                     MyTSheetSpec.TItemSpecsFinal.Add(k);

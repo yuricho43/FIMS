@@ -36,18 +36,20 @@
     </TelerikStackLayout>
 </div>
 
-<div class="fims-page">
-    @if (CurrentTSheetSpec != null)
-    {
-        @*<TSheetGridComp MyTSheetSpec="@CurrentTSheetSpec"></TSheetGridComp>*@
-        @*<TSheetTableComp MyTSheetSpec="@CurrentTSheetSpec"></TSheetTableComp>*@
+
+@if (CurrentTSheetSpec != null)
+{
+    <div class="fims-page">
         <TSheetComponent MyTSheetSpec="@CurrentTSheetSpec" TSheetInspectionCompleted="OnTSheetInspectionCompleted"></TSheetComponent>
-    }
-</div>
+    </div>
+}
+
 
 @if (AddNewProductDialogVisible)
 {
-    <AddNewProductDialog ProductModels="ProductModels" ProductAdded="AddTProduct"></AddNewProductDialog>
+    @*<AddNewProductDialog ProductModels="ProductModels" ProductAdded="AddTProduct"></AddNewProductDialog>*@
+    <AddNewProductForm ProductModels="ProductModels" ProductAdded="AddTProduct"></AddNewProductForm>
+
 }
 
 

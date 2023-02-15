@@ -12,8 +12,8 @@ namespace Fims.Client.Shared.Shared.NavMenu
 {
     public partial class LoginDisplay
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
         public bool UserProfileDialogVisible { get; set; } = false;
 
         public string UserName { get; set; }
@@ -30,6 +30,8 @@ namespace Fims.Client.Shared.Shared.NavMenu
             //FIXME    {
             //FIXME        UserName = user.GetUserName();
             //FIXME    }
+
+           await base.OnInitializedAsync();
         }
 
         protected override async Task OnAfterRenderAsync(bool firstRender)

@@ -32,8 +32,8 @@ namespace Fims.Client.Shared.Pages.Management
 {
     public partial class AddUserDialog
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         [Parameter]
         public EventCallback<RegisterRequestModel> AddUserFinished { get; set; }

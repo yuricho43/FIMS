@@ -11,8 +11,8 @@ namespace Fims.Client.Shared.Pages.Account
 {
     public partial class UserProfile
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         private readonly UserProfileModel UserProfileModel = new UserProfileModel();
 

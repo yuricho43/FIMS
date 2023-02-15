@@ -43,8 +43,8 @@ namespace Fims.Client.Shared.Pages.Account
 {
     public partial class UserProfileDialog
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         [Parameter]
         public EventCallback<bool> UserProfileDialogFinished { get; set; }

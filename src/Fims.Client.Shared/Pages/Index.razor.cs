@@ -33,8 +33,8 @@ namespace Fims.Client.Shared.Pages
 {
     public partial class Index
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         private List<string>                   ProductSerials { get; set; } = new List<string>();
         private Dictionary<string, TSheetSpec> ProductSerialToTSheetSpecDict { get; set; } = new Dictionary<string, TSheetSpec>();
@@ -90,12 +90,12 @@ namespace Fims.Client.Shared.Pages
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
-            TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
-            {
-                OnSaveSessionDataByTimer();
-                // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
-                await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
-            }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
+            //FIXME BLOCK_NOW   TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
+            //FIXME BLOCK_NOW   {
+            //FIXME BLOCK_NOW       OnSaveSessionDataByTimer();
+            //FIXME BLOCK_NOW       // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
+            //FIXME BLOCK_NOW       await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
+            //FIXME BLOCK_NOW   }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
 
             _ = base.OnInitializedAsync();
         }
@@ -213,6 +213,8 @@ namespace Fims.Client.Shared.Pages
 
             ProductSerialsSelected.Keys.ToList().ForEach(serial =>{ProductSerialsSelected[serial] = false;});
             ProductSerialsSelected[productSerial] = true;
+
+            StateHasChanged();
         }
 
         private async Task<TSheetSpec> GetTSheetSpecByTModelAsync(string tModel)
