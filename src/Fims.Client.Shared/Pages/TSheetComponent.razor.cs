@@ -220,26 +220,26 @@ namespace Fims.Client.Shared.Pages
 
         private void OnTItemSpecsInCategoryCompletedCountChanged(string categoryCompletedCount)
         {
-            var pair = categoryCompletedCount.Split(':');
-            var category = pair[0];
-
-            int completedCount = 0;
-            try { completedCount = Int32.Parse(pair[1]); } catch { }
-
-            MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[category] = completedCount;
+            // var pair = categoryCompletedCount.Split(':');
+            // var category = pair[0];
+            // 
+            // int completedCount = 0;
+            // try { completedCount = Int32.Parse(pair[1]); } catch { }
+            // 
+            // MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[category] = completedCount;
 
             StateHasChanged();
         }
 
         private void OnTItemSpecsInCategoryInvalidCountChanged(string categoryInvalidCount)
         {
-            var pair = categoryInvalidCount.Split(':');
-            var category = pair[0];
-
-            int invalidCount = 0;
-            try { invalidCount = Int32.Parse(pair[1]); } catch { }
-
-            MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[category] = invalidCount;
+            // var pair = categoryInvalidCount.Split(':');
+            // var category = pair[0];
+            // 
+            // int invalidCount = 0;
+            // try { invalidCount = Int32.Parse(pair[1]); } catch { }
+            // 
+            // MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[category] = invalidCount;
 
             StateHasChanged();
         }
