@@ -133,13 +133,8 @@ namespace Fims.Client.Shared.Pages
 
         public void OnProductSerialButtonGroupClick(string productSerial)
         {
-            // foreach (var serialsel in ProductSerialToSelectionDict)
-            // {
-            //     var key = serialsel.Key;
-            //     var val = serialsel.Value;
-            // }
-
             SetProductSerialAsCurrent(productSerial);
+            //StateHasChanged();
         }
 
         public void OnTSheetInspectionCompleted(string productSerial)
@@ -169,7 +164,7 @@ namespace Fims.Client.Shared.Pages
 
         private async Task<bool> AddTProduct(TProductSpec tProductSpec)
         {
-            AddNewProductDialogVisible = false;
+            //AddNewProductDialogVisible = false;
 
             if (tProductSpec.ProductModel == "MMMMMMMM")
             {
@@ -199,6 +194,7 @@ namespace Fims.Client.Shared.Pages
                 ProductSerialsSelected.Add(tProductSpec.ProductSerial, false);
 
                 SetProductSerialAsCurrent(tProductSpec.ProductSerial);
+                //StateHasChanged();
                 return true;
             }
             else
@@ -383,13 +379,6 @@ namespace Fims.Client.Shared.Pages
         //    args.Class = "center-cell";
         //}
 
-
-        public void OnAddNewProductClicked()
-        {
-            AddNewProductDialogVisible = true;
-            //StateHasChanged();
-        }
-
         public async void OnLoadSessionData()
         {
             IsLoadingSession = true;
@@ -541,6 +530,78 @@ namespace Fims.Client.Shared.Pages
 
             return true;
         }
+
+
+        #region AddNewProductForm
+        public TelerikForm AddNewProductFormRef { get; set; }
+
+        public TProductSpec NewTProductSpec { get; set; } = new TProductSpec { ProductType = "신규" };
+
+        protected List<string> ProductTypes = new List<string>() { "신규", "수리" };
+
+        private bool BarcodeSelectionDialogVisible { get; set; } = false;
+        private bool ProgressListDialogVisible { get; set; } = false;
+
+
+        private void OnBarcodeSelectionClicked()
+        {
+            BarcodeSelectionDialogVisible = true;
+        }
+
+        private void OnProgessListClicked()
+        {
+            ProgressListDialogVisible = true;
+        }
+
+
+        public void OnAddNewProductClicked()
+        {
+            AddNewProductDialogVisible = true; //show AddNewProductDialog
+            //StateHasChanged();
+        }
+
+        //public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
+        //public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
+        //{
+        //    FormValidationMessageType.None,
+        //    FormValidationMessageType.Inline,
+        //    FormValidationMessageType.Tooltip
+        //};
+
+        public bool ValidSubmit { get; set; } = false;
+
+        async void HandleValidSubmit()
+        {
+            ValidSubmit = true;
+
+            await AddTProduct(NewTProductSpec);
+            ClearNewProductSpec();
+
+            ValidSubmit = false;
+
+            StateHasChanged();
+        }
+
+        void HandleInvalidSubmit()
+        {
+            ValidSubmit = false;
+        }
+
+        private void ClearNewProductSpec()
+        {
+            NewTProductSpec.ProductSerial = null;
+            NewTProductSpec.EndUser = null;
+            NewTProductSpec.Customer = null;
+            //StateHasChanged();
+        }
+
+        private void OnAddNewProductDialogCancel()
+        {
+            AddNewProductDialogVisible = false; //hide AddNewProductDialog
+            //StateHasChanged();
+        }
+        #endregion
+
 
         [CascadingParameter]
         public DialogFactory Dialogs { get; set; }
