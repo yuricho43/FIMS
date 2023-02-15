@@ -568,23 +568,23 @@ namespace Fims.Client.Shared.Pages
         //    FormValidationMessageType.Tooltip
         //};
 
-        public bool ValidSubmit { get; set; } = false;
+        public bool ValidNewProductSubmit { get; set; } = false;
 
-        async void HandleValidSubmit()
+        async void HandleValidNewProductSubmit()
         {
-            ValidSubmit = true;
+            ValidNewProductSubmit = true;
 
             await AddTProduct(NewTProductSpec);
             ClearNewProductSpec();
 
-            ValidSubmit = false;
+            ValidNewProductSubmit = false;
 
             StateHasChanged();
         }
 
-        void HandleInvalidSubmit()
+        void HandleInvalidNewProductSubmit()
         {
-            ValidSubmit = false;
+            ValidNewProductSubmit = false;
         }
 
         private void ClearNewProductSpec()

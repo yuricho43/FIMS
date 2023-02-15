@@ -3,46 +3,42 @@
 @attribute [Authorize]
 
 
-<div class="fims-page">
-    <TelerikStackLayout Class="bars-section" Orientation="StackLayoutOrientation.Vertical" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Width="100%">
+<TelerikStackLayout Class="bars-section" Orientation="StackLayoutOrientation.Vertical" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Width="100%">
 
-        <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
-            <TelerikButton OnClick="OnAddNewProductClicked" Icon="@FontIcon.PlusCircle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="prod-register-button"><strong>검사설비추가</strong></TelerikButton>
-            <TelerikButton OnClick="OnLoadSessionData" Icon="@FontIcon.CaretDoubleAltDown" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
-                @*@if (IsLoadingSession) {<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>}*@
-                <strong>저장목록 불러오기</strong>
-            </TelerikButton>
-            <TelerikButton OnClick="OnSaveSessionData" Icon="@FontIcon.CaretDoubleAltUp" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
-                @*@if (IsSavingSession) {<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>}*@
-                <strong>진행목록 저장</strong></TelerikButton>
-        </TelerikStackLayout>
-    
-        <TelerikStackLayout Class="serials-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
-            @if (ProductSerials != null)
-            {
-                <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
-                    @foreach (string productSerial in ProductSerials)
-                    {
-                        <ButtonGroupToggleButton @bind-Selected="@ProductSerialsSelected[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))" Enabled="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? false: true)" ThemeColor="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? ThemeConstants.Button.ThemeColor.Error: ThemeConstants.Button.ThemeColor.Base)" Class="serial-button">
-                            <strong>@productSerial</strong>
-                            &nbsp;
-                            @*<span class="badge badge-success" style="width: 30px">@TModelToTSheetSpecDict[equipmentModel].TItemSpecs.Count</span>*@
-                        </ButtonGroupToggleButton>
-                    }
-                </TelerikButtonGroup>
-            }
-        </TelerikStackLayout>
-
+    <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
+        <TelerikButton OnClick="OnAddNewProductClicked" Icon="@FontIcon.PlusCircle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="prod-register-button"><strong>검사설비추가</strong></TelerikButton>
+        <TelerikButton OnClick="OnLoadSessionData" Icon="@FontIcon.CaretDoubleAltDown" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
+            @*@if (IsLoadingSession) {<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>}*@
+            <strong>저장목록 불러오기</strong>
+        </TelerikButton>
+        <TelerikButton OnClick="OnSaveSessionData" Icon="@FontIcon.CaretDoubleAltUp" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
+            @*@if (IsSavingSession) {<span class="spinner-grow spinner-grow-sm" role="status" aria-hidden="true"></span>}*@
+            <strong>진행목록 저장</strong></TelerikButton>
     </TelerikStackLayout>
-</div>
+
+    <TelerikStackLayout Class="serials-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
+        @if (ProductSerials != null)
+        {
+            <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
+                @foreach (string productSerial in ProductSerials)
+                {
+                    <ButtonGroupToggleButton @bind-Selected="@ProductSerialsSelected[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))" Enabled="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? false: true)" ThemeColor="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? ThemeConstants.Button.ThemeColor.Error: ThemeConstants.Button.ThemeColor.Base)" Class="serial-button">
+                        <strong>@productSerial</strong>
+                        &nbsp;
+                        @*<span class="badge badge-success" style="width: 30px">@TModelToTSheetSpecDict[equipmentModel].TItemSpecs.Count</span>*@
+                    </ButtonGroupToggleButton>
+                }
+            </TelerikButtonGroup>
+        }
+    </TelerikStackLayout>
+
+</TelerikStackLayout>
 
 
 
 @if (CurrentTSheetSpec != null)
 {
-    <div class="fims-page">
-        <TSheetComponent MyTSheetSpec="@CurrentTSheetSpec" TSheetInspectionCompleted="OnTSheetInspectionCompleted"></TSheetComponent>
-    </div>
+    <TSheetComponent MyTSheetSpec="@CurrentTSheetSpec" TSheetInspectionCompleted="OnTSheetInspectionCompleted"></TSheetComponent>
 }
 
 
@@ -57,12 +53,11 @@
 
         <TelerikForm Model="@NewTProductSpec"
                      @ref="@AddNewProductFormRef"
-                     OnValidSubmit="@HandleValidSubmit"
-                     OnInvalidSubmit="@HandleInvalidSubmit"
+                     OnValidSubmit="@HandleValidNewProductSubmit"
+                     OnInvalidSubmit="@HandleInvalidNewProductSubmit"
                      Orientation="FormOrientation.Horizontal">
 
             <FormValidation>
-                @*<ErrorsList ShowErrors="ShowErrors" Errors="Errors" />*@
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
 
@@ -140,52 +135,12 @@
 </style>
 
 <style>
-    .my-button {
-        align-content: center;
-        color: black;
-        margin: 0px;
-        border-color: cornflowerblue;
-    }
-
-    .ok-button {
-        width: 200px;
-        align-content: center;
-        color: black;
-        margin: 0px;
-        border-color: cornflowerblue;
-    }
-
-</style>
-
-
-
-<style>
     .IndexNotification .k-notification-container .k-notification-wrap {
         //width: 300px;
         height: 50px;
         font-size: 1.5em;
         text-align: center;
         align-items: center;
-    }
-</style>
-
-
-<style>
-    .fims-page {
-        //margin-left: 15px;
-        //margin-right: 15px;
-    }
-
-    .bars-section {
-        //background-color:dimgrey;
-    }
-
-    .tools-bar {
-        //background-color:cadetblue;
-    }
-
-    .serials-bar {
-        //background-color:burlywood;
     }
 </style>
 
