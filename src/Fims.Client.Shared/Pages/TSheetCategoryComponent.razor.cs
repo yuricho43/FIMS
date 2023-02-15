@@ -19,6 +19,9 @@ namespace Fims.Client.Shared.Pages
     public partial class TSheetCategoryComponent
     {
         [Parameter]
+        public TSheetSpec MyTSheetSpec { get; set; }
+
+        [Parameter]
         public ObservableCollection<TItemSpec> TItemSpecsInCategory { get; set; }
 
         [Parameter]
@@ -34,9 +37,6 @@ namespace Fims.Client.Shared.Pages
 
         public bool GridIsDirty => TItemSpecsInCategory.ToList().Exists(item => item.IsDirty);
         public bool SelectionIsDirty => TItemSpecsSelected.ToList().Exists(item => item.IsDirty);
-
-        public int TItemSpecsInCategoryCompletedCount { get; set; } = 0;
-        public int TItemSpecsInCategoryInvalidCount { get; set; } = 0;
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
@@ -890,9 +890,9 @@ namespace Fims.Client.Shared.Pages
         private void CalculateTItemSpecsInputCompletedCount()
         {
             var compeletedCount = TItemSpecsInCategory.Where(x => x.Completed == true).Count();
-            if (compeletedCount != TItemSpecsInCategoryCompletedCount)
+            if (compeletedCount != MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TItemSpecsInCategory[0].Category])
             {
-                TItemSpecsInCategoryCompletedCount = compeletedCount;
+                MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TItemSpecsInCategory[0].Category] = compeletedCount;
                 TItemSpecsInCategoryCompletedCountChanged.InvokeAsync($"{TItemSpecsInCategory[0].Category}:{compeletedCount}"); // notify pass Param to parent, by calling EventCallback
             }
         }
@@ -907,10 +907,10 @@ namespace Fims.Client.Shared.Pages
             ).Count();
 
             //var ch2InvalidCount = TItemSpecsInCategory.Where(t => t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh1DataEntered == true).Count();
-
-            if (invalidCount != TItemSpecsInCategoryInvalidCount)
+            
+            if (invalidCount != MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[TItemSpecsInCategory[0].Category])
             {
-                TItemSpecsInCategoryInvalidCount = invalidCount;
+                MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[TItemSpecsInCategory[0].Category] = invalidCount;
                 TItemSpecsInCategoryInvalidCountChanged.InvokeAsync($"{TItemSpecsInCategory[0].Category}:{invalidCount}"); // notify pass Param to parent, by calling EventCallback
             }
         }

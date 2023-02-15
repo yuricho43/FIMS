@@ -28,6 +28,9 @@ namespace Fims.Data.Models.TSheetSpecs
         public Dictionary<string, List<TItemSpec>> TCategoryToTItemSpecsDict { get; set; }
         public Dictionary<string, ObservableCollection<TItemSpec>> TCategoryToObservableTItemSpecsDict { get; set; }
 
+        public Dictionary<string, int> TItemSpecsInCategoryCompletedCountDict { get; set; }
+        public Dictionary<string, int> TItemSpecsInCategoryInvalidCountDict { get; set; }
+
         public List<TItemSpec> TItemSpecs { get; set; }
         public List<TItemSpec> TItemSpecsFinal { get; set; }
     }

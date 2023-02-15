@@ -102,6 +102,7 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnParametersSetAsync()
         {
+            Console.WriteLine("Index: OnParametersSetAsync called");
             await base.OnParametersSetAsync();
         }
 
@@ -230,6 +231,9 @@ namespace Fims.Client.Shared.Pages
                     CreateDirtyFields(ref tSheetSpec); //call by ref
                     SetChXEnabled(ref tSheetSpec); //call by ref
                     MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
+                    MakeTItemSpecsInCategoryCompletedCountDict(ref tSheetSpec);
+                    MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
+                
                 }
                 else
                 {
@@ -282,6 +286,22 @@ namespace Fims.Client.Shared.Pages
                 tSheetSpecRef.TCategoryToObservableTItemSpecsDict.Add(categoryTItemspec.Key, observableTItemSpecs);
                 tSheetSpecRef.CategoryTItemsCountDict.Add(categoryTItemspec.Key, observableTItemSpecs.Count);
             }
+        }
+
+        private void MakeTItemSpecsInCategoryCompletedCountDict(ref TSheetSpec tSheetSpecRef)
+        {
+            if (tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict = new Dictionary<string, int>();
+            else
+                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.Clear();
+        }
+
+        private void MakeTItemSpecsInCategoryInvalidCountDict(ref TSheetSpec tSheetSpecRef)
+        {
+            if (tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict = new Dictionary<string, int>();
+            else
+                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.Clear();
         }
 
         private void MakeRangeToolTip(ref TSheetSpec tSheetSpecRef) //call by ref
