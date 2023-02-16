@@ -90,12 +90,12 @@ namespace Fims.Client.Shared.Pages
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
-            //FIXME BLOCK_NOW   TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
-            //FIXME BLOCK_NOW   {
-            //FIXME BLOCK_NOW       OnSaveSessionDataByTimer();
-            //FIXME BLOCK_NOW       // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
-            //FIXME BLOCK_NOW       await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
-            //FIXME BLOCK_NOW   }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
+            TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
+            {
+                OnSaveSessionDataByTimer();
+                // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
+                await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
+            }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
 
             _ = base.OnInitializedAsync();
         }
