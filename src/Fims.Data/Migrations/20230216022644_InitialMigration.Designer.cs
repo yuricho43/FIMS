@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fims.Data.Migrations
 {
     [DbContext(typeof(FimsDbContext))]
-    [Migration("20230214084940_NoUserIdInTSheet")]
-    partial class NoUserIdInTSheet
+    [Migration("20230216022644_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

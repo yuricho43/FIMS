@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Fims.Data.Migrations
 {
     /// <inheritdoc />
-    public partial class InitialMigration20230210 : Migration
+    public partial class InitialMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -34,12 +34,10 @@ namespace Fims.Data.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    HangulName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: false),
-                    EnglishName = table.Column<string>(type: "nvarchar(20)", maxLength: 20, nullable: true),
+                    HangulName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EnglishName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -58,6 +56,31 @@ namespace Fims.Data.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "TSheets",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    ProductModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductSerial = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Customer = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    EndUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductType = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SpecFile = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InspectorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    InspectionStartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    InspectionEndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsInspectionCompleted = table.Column<bool>(type: "bit", nullable: false),
+                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_TSheets", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -167,40 +190,6 @@ namespace Fims.Data.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "TSheets",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductModel = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProductSerial = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Customer = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    EndUser = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ProductType = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SpecFile = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Comment = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InspectorName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    InspectionStartDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    InspectionEndDateTime = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    IsInspectionCompleted = table.Column<bool>(type: "bit", nullable: false),
-                    UserId = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_TSheets", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_TSheets_AspNetUsers_UserId",
-                        column: x => x.UserId,
-                        principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "TItems",
                 columns: table => new
                 {
@@ -208,7 +197,7 @@ namespace Fims.Data.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Category = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     TestNo = table.Column<int>(type: "int", nullable: false),
-                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Unit = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Channels = table.Column<int>(type: "int", nullable: false),
                     ExpressionMode = table.Column<string>(type: "nvarchar(max)", nullable: true),
@@ -223,9 +212,7 @@ namespace Fims.Data.Migrations
                     InspectDateTime = table.Column<DateTime>(type: "datetime2", nullable: true),
                     TSheetId = table.Column<int>(type: "int", nullable: false),
                     CreatedOn = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true),
-                    IsDeleted = table.Column<bool>(type: "bit", nullable: false),
-                    DeletedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
+                    ModifiedOn = table.Column<DateTime>(type: "datetime2", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -235,7 +222,7 @@ namespace Fims.Data.Migrations
                         column: x => x.TSheetId,
                         principalTable: "TSheets",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(
@@ -271,11 +258,6 @@ namespace Fims.Data.Migrations
                 column: "NormalizedEmail");
 
             migrationBuilder.CreateIndex(
-                name: "IX_AspNetUsers_IsDeleted",
-                table: "AspNetUsers",
-                column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
                 name: "UserNameIndex",
                 table: "AspNetUsers",
                 column: "NormalizedUserName",
@@ -283,24 +265,9 @@ namespace Fims.Data.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
-                name: "IX_TItems_IsDeleted",
-                table: "TItems",
-                column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_TItems_TSheetId",
                 table: "TItems",
                 column: "TSheetId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TSheets_IsDeleted",
-                table: "TSheets",
-                column: "IsDeleted");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_TSheets_UserId",
-                table: "TSheets",
-                column: "UserId");
         }
 
         /// <inheritdoc />
@@ -328,10 +295,10 @@ namespace Fims.Data.Migrations
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "TSheets");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "TSheets");
         }
     }
 }
