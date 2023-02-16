@@ -77,11 +77,17 @@ namespace Fims.Client.Shared.Pages.Management
 
         public async void DeleteTSheetHandler(GridCommandEventArgs args)
         {
-            // var tSheet = (TSheet)args.Item;
-            // var result = await this.TSheetsClientService.RemoveTSheet(tSheet.Id);
-            // 
-            // TSheets = await TSheetsClientService.AllTSheetsAsync();
-            // //StateHasChanged();
+            var tSheet = (TSheet)args.Item;
+
+            bool confirmed = await Dialogs.ConfirmAsync($"검사서({tSheet.Id})를 영구 삭제합니다.", "검사서 삭제");
+
+            if (confirmed)
+            {
+                var result = await this.TSheetsClientService.RemoveTSheet(tSheet.Id);
+
+                TSheets = await TSheetsClientService.AllTSheetsAsync();
+                StateHasChanged();
+            }
         }
 
 

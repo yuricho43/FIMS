@@ -36,8 +36,8 @@ namespace Fims.Client.Shared.Pages.Management
 {
     public partial class GenerateTReportDialog
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         [Parameter]
         public List<string> TReportSpecs { get; set; }

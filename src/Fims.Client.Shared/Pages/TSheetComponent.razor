@@ -32,25 +32,25 @@
                     <span style="color:white"><strong>@TCategory</strong></span>
  
                     <span>&nbsp;</span>
-                    @if (MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory] > 0)
+                    @if (MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory] > 0)
                     {
-                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
                     }
                     else
                     {
-                        if (TItemSpecsInCategoryInvalidCountDict[TCategory] > 0)
+                        if (MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[TCategory] > 0)
                         {
-                            <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                            <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
                         }
                         else
                         {
-                            <span class="badge badge-success" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                            <span class="badge badge-success" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
                         }
                     }
                 </div>
             </HeaderTemplate>
             <Content>
-                <TSheetCategoryComponent TItemSpecsInCategory="MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory]" TItemSpecsInCategoryCompletedCountChanged="OnTItemSpecsInCategoryCompletedCountChanged" TItemSpecsInCategoryInvalidCountChanged="OnTItemSpecsInCategoryInvalidCountChanged"></TSheetCategoryComponent>
+                <TSheetCategoryComponent MyTSheetSpec="MyTSheetSpec" TCategory="@TCategory" TItemSpecsInCategoryCompletedCountChanged="OnTItemSpecsInCategoryCompletedCountChanged" TItemSpecsInCategoryInvalidCountChanged="OnTItemSpecsInCategoryInvalidCountChanged"></TSheetCategoryComponent>
             </Content>
         </TabStripTab>
     }

@@ -33,8 +33,8 @@ namespace Fims.Client.Shared.Pages
 {
     public partial class Index
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         private List<string>                   ProductSerials { get; set; } = new List<string>();
         private Dictionary<string, TSheetSpec> ProductSerialToTSheetSpecDict { get; set; } = new Dictionary<string, TSheetSpec>();
@@ -102,6 +102,7 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnParametersSetAsync()
         {
+            Console.WriteLine("Index: OnParametersSetAsync called");
             await base.OnParametersSetAsync();
         }
 
@@ -133,13 +134,8 @@ namespace Fims.Client.Shared.Pages
 
         public void OnProductSerialButtonGroupClick(string productSerial)
         {
-            // foreach (var serialsel in ProductSerialToSelectionDict)
-            // {
-            //     var key = serialsel.Key;
-            //     var val = serialsel.Value;
-            // }
-
             SetProductSerialAsCurrent(productSerial);
+            //StateHasChanged();
         }
 
         public void OnTSheetInspectionCompleted(string productSerial)
@@ -169,7 +165,7 @@ namespace Fims.Client.Shared.Pages
 
         private async Task<bool> AddTProduct(TProductSpec tProductSpec)
         {
-            AddNewProductDialogVisible = false;
+            //AddNewProductDialogVisible = false;
 
             if (tProductSpec.ProductModel == "MMMMMMMM")
             {
@@ -199,6 +195,7 @@ namespace Fims.Client.Shared.Pages
                 ProductSerialsSelected.Add(tProductSpec.ProductSerial, false);
 
                 SetProductSerialAsCurrent(tProductSpec.ProductSerial);
+                //StateHasChanged();
                 return true;
             }
             else
@@ -213,6 +210,8 @@ namespace Fims.Client.Shared.Pages
 
             ProductSerialsSelected.Keys.ToList().ForEach(serial =>{ProductSerialsSelected[serial] = false;});
             ProductSerialsSelected[productSerial] = true;
+
+            StateHasChanged();
         }
 
         private async Task<TSheetSpec> GetTSheetSpecByTModelAsync(string tModel)
@@ -232,6 +231,9 @@ namespace Fims.Client.Shared.Pages
                     CreateDirtyFields(ref tSheetSpec); //call by ref
                     SetChXEnabled(ref tSheetSpec); //call by ref
                     MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
+                    MakeTItemSpecsInCategoryCompletedCountDict(ref tSheetSpec);
+                    MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
+                
                 }
                 else
                 {
@@ -284,6 +286,22 @@ namespace Fims.Client.Shared.Pages
                 tSheetSpecRef.TCategoryToObservableTItemSpecsDict.Add(categoryTItemspec.Key, observableTItemSpecs);
                 tSheetSpecRef.CategoryTItemsCountDict.Add(categoryTItemspec.Key, observableTItemSpecs.Count);
             }
+        }
+
+        private void MakeTItemSpecsInCategoryCompletedCountDict(ref TSheetSpec tSheetSpecRef)
+        {
+            if (tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict = new Dictionary<string, int>();
+            else
+                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.Clear();
+        }
+
+        private void MakeTItemSpecsInCategoryInvalidCountDict(ref TSheetSpec tSheetSpecRef)
+        {
+            if (tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict = new Dictionary<string, int>();
+            else
+                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.Clear();
         }
 
         private void MakeRangeToolTip(ref TSheetSpec tSheetSpecRef) //call by ref
@@ -380,13 +398,6 @@ namespace Fims.Client.Shared.Pages
         //{
         //    args.Class = "center-cell";
         //}
-
-
-        public void OnAddNewProductClicked()
-        {
-            AddNewProductDialogVisible = true;
-            //StateHasChanged();
-        }
 
         public async void OnLoadSessionData()
         {
@@ -539,6 +550,78 @@ namespace Fims.Client.Shared.Pages
 
             return true;
         }
+
+
+        #region AddNewProductForm
+        public TelerikForm AddNewProductFormRef { get; set; }
+
+        public TProductSpec NewTProductSpec { get; set; } = new TProductSpec { ProductType = "신규" };
+
+        protected List<string> ProductTypes = new List<string>() { "신규", "수리" };
+
+        private bool BarcodeSelectionDialogVisible { get; set; } = false;
+        private bool ProgressListDialogVisible { get; set; } = false;
+
+
+        private void OnBarcodeSelectionClicked()
+        {
+            BarcodeSelectionDialogVisible = true;
+        }
+
+        private void OnProgessListClicked()
+        {
+            ProgressListDialogVisible = true;
+        }
+
+
+        public void OnAddNewProductClicked()
+        {
+            AddNewProductDialogVisible = true; //show AddNewProductDialog
+            //StateHasChanged();
+        }
+
+        //public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
+        //public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
+        //{
+        //    FormValidationMessageType.None,
+        //    FormValidationMessageType.Inline,
+        //    FormValidationMessageType.Tooltip
+        //};
+
+        public bool ValidNewProductSubmit { get; set; } = false;
+
+        async void HandleValidNewProductSubmit()
+        {
+            ValidNewProductSubmit = true;
+
+            await AddTProduct(NewTProductSpec);
+            ClearNewProductSpec();
+
+            ValidNewProductSubmit = false;
+
+            StateHasChanged();
+        }
+
+        void HandleInvalidNewProductSubmit()
+        {
+            ValidNewProductSubmit = false;
+        }
+
+        private void ClearNewProductSpec()
+        {
+            NewTProductSpec.ProductSerial = null;
+            NewTProductSpec.EndUser = null;
+            NewTProductSpec.Customer = null;
+            //StateHasChanged();
+        }
+
+        private void OnAddNewProductDialogCancel()
+        {
+            AddNewProductDialogVisible = false; //hide AddNewProductDialog
+            //StateHasChanged();
+        }
+        #endregion
+
 
         [CascadingParameter]
         public DialogFactory Dialogs { get; set; }

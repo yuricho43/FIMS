@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fims.Data.Migrations
 {
     [DbContext(typeof(FimsDbContext))]
-    [Migration("20230210015852_InitialMigration20230210")]
-    partial class InitialMigration20230210
+    [Migration("20230216022644_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -79,9 +79,6 @@ namespace Fims.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("Email")
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
@@ -90,16 +87,10 @@ namespace Fims.Data.Migrations
                         .HasColumnType("bit");
 
                     b.Property<string>("EnglishName")
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("HangulName")
-                        .IsRequired()
-                        .HasMaxLength(20)
-                        .HasColumnType("nvarchar(20)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("LockoutEnabled")
                         .HasColumnType("bit");
@@ -138,8 +129,6 @@ namespace Fims.Data.Migrations
                         .HasColumnType("nvarchar(256)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("NormalizedEmail")
                         .HasDatabaseName("EmailIndex");
@@ -193,17 +182,11 @@ namespace Fims.Data.Migrations
                     b.Property<DateTime>("CreatedOn")
                         .HasColumnType("datetime2");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("ExpressionMode")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("InspectDateTime")
                         .HasColumnType("datetime2");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");
@@ -215,15 +198,12 @@ namespace Fims.Data.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Title")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Unit")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
 
                     b.HasIndex("TSheetId");
 
@@ -247,9 +227,6 @@ namespace Fims.Data.Migrations
                     b.Property<string>("Customer")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime?>("DeletedOn")
-                        .HasColumnType("datetime2");
-
                     b.Property<string>("EndUser")
                         .HasColumnType("nvarchar(max)");
 
@@ -261,9 +238,6 @@ namespace Fims.Data.Migrations
 
                     b.Property<string>("InspectorName")
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<bool>("IsDeleted")
-                        .HasColumnType("bit");
 
                     b.Property<bool>("IsInspectionCompleted")
                         .HasColumnType("bit");
@@ -283,15 +257,7 @@ namespace Fims.Data.Migrations
                     b.Property<string>("SpecFile")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
                     b.HasKey("Id");
-
-                    b.HasIndex("IsDeleted");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("TSheets");
                 });
@@ -407,21 +373,10 @@ namespace Fims.Data.Migrations
                     b.HasOne("Fims.Data.Entities.TSheet", "TSheet")
                         .WithMany("TItems")
                         .HasForeignKey("TSheetId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("TSheet");
-                });
-
-            modelBuilder.Entity("Fims.Data.Entities.TSheet", b =>
-                {
-                    b.HasOne("Fims.Data.Entities.FimsUser", "User")
-                        .WithMany("TSheets")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -473,11 +428,6 @@ namespace Fims.Data.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Fims.Data.Entities.FimsUser", b =>
-                {
-                    b.Navigation("TSheets");
                 });
 
             modelBuilder.Entity("Fims.Data.Entities.TSheet", b =>

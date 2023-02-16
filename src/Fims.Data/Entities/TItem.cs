@@ -12,12 +12,12 @@ using Fims.Data.Models.TSheetSpecs;
 
 namespace Fims.Data.Entities
 {
-    public class TItem : BaseDeletableModel
+    public class TItem : BaseModel
     {
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Database Instance Id for EF
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        public int Id { get; set; } // db instance id
+        public int Id { get; set; } // Primary Key of TItem
 
 
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -61,9 +61,6 @@ namespace Fims.Data.Entities
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Navigation Properties
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-        //public string UserId { get; set; }
-        //public FimsUser User { get; set; }
         public int TSheetId { get; set; }
         public TSheet TSheet { get; set; }
     }

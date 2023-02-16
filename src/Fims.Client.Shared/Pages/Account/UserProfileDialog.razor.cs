@@ -43,8 +43,8 @@ namespace Fims.Client.Shared.Pages.Account
 {
     public partial class UserProfileDialog
     {
-        [CascadingParameter]
-        public Task<AuthenticationState> AuthenticationStateTask { get; set; }
+        //[CascadingParameter]
+        //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
 
         [Parameter]
         public EventCallback<bool> UserProfileDialogFinished { get; set; }
@@ -126,7 +126,7 @@ namespace Fims.Client.Shared.Pages.Account
 
         private void OnChangePasswordClicked()
         {
-            //ChangePasswordDialogVisible = true;
+            ChangePasswordDialogVisible = true;
         }
 
         private void OnChangePasswordDialogFinished(bool result)
@@ -146,8 +146,8 @@ namespace Fims.Client.Shared.Pages.Account
             //this.UserProfileModel.EnglishName = user.GetEnglishName();
             this.CurrentUserProfileModel.Role = user.GetUserRole();
 
-            //StateHasChanged();
-            this.NavigationManager.NavigateTo("/account/userprofiledialog", forceLoad: false);
+            //this.NavigationManager.NavigateTo("/account/userprofiledialog", forceLoad: false);
+            StateHasChanged();
         }
     }
 }

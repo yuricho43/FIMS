@@ -28,35 +28,38 @@ namespace Fims.Client.Shared.Pages
     public partial class TSheetComponent
     {
         [Parameter]
-        public TSheetSpec MyTSheetSpec
-        {
-            get { return _MyTSheetSpec; }
+        public TSheetSpec MyTSheetSpec { get; set; } 
+        //public TSheetSpec MyTSheetSpec
+        //{
+        //    get { return _MyTSheetSpec; }
  
-            set {
-                _MyTSheetSpec = value;
+        //    set {
+        //        _MyTSheetSpec = value;
 
-                //debug
-                var tmodel = _MyTSheetSpec.ProductModel;
-                var ccounts = _MyTSheetSpec.CategoryTItemsCountDict.Values.ToList();
-                var total = ccounts.Sum();
-                var xx = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
-                var yy = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values;
-                var xxl = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
-                var yyl = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values.ToList();
+        //        //debug
+        //        var tmodel = _MyTSheetSpec.ProductModel;
+        //        var ccounts = _MyTSheetSpec.CategoryTItemsCountDict.Values.ToList();
+        //        var total = ccounts.Sum();
+        //        var xx = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
+        //        var yy = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values;
+        //        var xxl = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
+        //        var yyl = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values.ToList();
 
-                var aa = _MyTSheetSpec.TItemSpecs.FirstOrDefault(a => a.TestNo == 2001);
-                //var xa = xx.FirstOrDefault(a => a.TestNo == 2001);
+        //        var aa = _MyTSheetSpec.TItemSpecs.FirstOrDefault(a => a.TestNo == 2001);
+        //        //var xa = xx.FirstOrDefault(a => a.TestNo == 2001);
 
-                //CollectTItemSpecsFinal();
+        //        //CollectTItemSpecsFinal();
 
-                //MakeCategoryObservableTItemSpecsDict();
-            }
-        }
-        private TSheetSpec _MyTSheetSpec;
+        //        //MakeCategoryObservableTItemSpecsDict();
+        //    }
+        //}
+        //private TSheetSpec _MyTSheetSpec;
 
         [Parameter]
         public EventCallback<string> TSheetInspectionCompleted { get; set; }
 
+        private TSheetSpec MyTSheetSpecPrev;
+        
         private IMapper Mapper { get; set; }
 
 
@@ -65,9 +68,11 @@ namespace Fims.Client.Shared.Pages
 
         TelerikNotification TSheetComponentNotificationComponent { get; set; }
 
-        public Dictionary<string,int> TItemSpecsInCategoryCompletedCountDict { get; set; } = new Dictionary<string,int>();
-        public Dictionary<string, int> TItemSpecsInCategoryInvalidCountDict { get; set; } = new Dictionary<string, int>();
 
+
+        private int TotalOnParamCalledCounter = 0;
+        private int ValidOnParamCalledCounter = 0;
+        private int InvalidOnParamCalledCounter = 0;
 
         protected override void OnInitialized()
         {
@@ -78,24 +83,72 @@ namespace Fims.Client.Shared.Pages
         {
             this.Mapper = CreateAutoMapperFromTItemSpecToTItem();
 
-            autoFillTItemSpecs();
+            MyTSheetSpecPrev = MyTSheetSpec;
 
-            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            if (MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Count() == 0)
             {
-                int completedCount = catItems.Value.Where(t => t.Completed==true).Count();
-                TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
+                autoFillTItemSpecs();
 
-                int invalidCount = catItems.Value.Where(t =>
-                                    (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
-                                    (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
-                                    (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
-                                    (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
-                ).Count();
-                TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
+                foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+                {
+                    int completedCount = catItems.Value.Where(t => t.Completed == true).Count();
+                    MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
+
+                    int invalidCount = catItems.Value.Where(t =>
+                                        (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
+                                        (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
+                                        (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
+                                        (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
+                    ).Count();
+                    MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
+                }
             }
 
             await base.OnInitializedAsync();
         }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            //autoFillTItemSpecs();
+            TotalOnParamCalledCounter++;
+
+            if (MyTSheetSpec.ProductSerial != MyTSheetSpecPrev.ProductSerial)
+            {
+                //////////////////////////////////////////////////////////////////////////////////////////////////
+                //JBH FIXME: OnParametersSetAsync called too much and unexpectedly. It seems to be the ASP.NET bug
+                //////////////////////////////////////////////////////////////////////////////////////////////////
+                ValidOnParamCalledCounter++;
+                MyTSheetSpecPrev = MyTSheetSpec;
+
+                if (MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Count() == 0)
+                {
+                    autoFillTItemSpecs();
+
+                    foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+                    {
+                        int completedCount = catItems.Value.Where(t => t.Completed == true).Count();
+                        MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
+
+                        int invalidCount = catItems.Value.Where(t =>
+                                            (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
+                                            (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
+                                            (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
+                                            (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
+                        ).Count();
+                        MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
+                    }
+                }
+            }
+            else
+            {
+                InvalidOnParamCalledCounter++;
+            }
+
+            Console.WriteLine($"TSheetComponent: OnParametersSetAsync called: Total={TotalOnParamCalledCounter} Valid={ValidOnParamCalledCounter} Invalid={InvalidOnParamCalledCounter}");
+
+            await base.OnParametersSetAsync();
+        }
+
 
         private void autoFillTItemSpecs()
         {
@@ -128,9 +181,9 @@ namespace Fims.Client.Shared.Pages
             else
                 MyTSheetSpec.TItemSpecsFinal.Clear();
 
-            foreach (var cat in _MyTSheetSpec.TCategories)
+            foreach (var cat in MyTSheetSpec.TCategories)
             {
-                var kkk = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict[cat].ToList();
+                var kkk = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[cat].ToList();
                 foreach (var k in kkk)
                 {
                     MyTSheetSpec.TItemSpecsFinal.Add(k);
@@ -159,7 +212,6 @@ namespace Fims.Client.Shared.Pages
                 InspectionEndDateTime = tSheetSpec.InspectionEndDateTime,
                 IsInspectionCompleted = tSheetSpec.IsInspectionCompleted,
 
-                UserId = tSheetSpec.UserId,
                 TItems = tItemsFinal,
             };
 
@@ -168,37 +220,37 @@ namespace Fims.Client.Shared.Pages
 
         private void OnTItemSpecsInCategoryCompletedCountChanged(string categoryCompletedCount)
         {
-            var pair = categoryCompletedCount.Split(':');
-            var category = pair[0];
+            // var pair = categoryCompletedCount.Split(':');
+            // var category = pair[0];
+            // 
+            // int completedCount = 0;
+            // try { completedCount = Int32.Parse(pair[1]); } catch { }
+            // 
+            // MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[category] = completedCount;
 
-            int completedCount = 0;
-            try { completedCount = Int32.Parse(pair[1]); } catch { }
-
-            TItemSpecsInCategoryCompletedCountDict[category] = completedCount;
-
-            //StateHasChanged();
+            StateHasChanged();
         }
 
         private void OnTItemSpecsInCategoryInvalidCountChanged(string categoryInvalidCount)
         {
-            var pair = categoryInvalidCount.Split(':');
-            var category = pair[0];
+            // var pair = categoryInvalidCount.Split(':');
+            // var category = pair[0];
+            // 
+            // int invalidCount = 0;
+            // try { invalidCount = Int32.Parse(pair[1]); } catch { }
+            // 
+            // MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[category] = invalidCount;
 
-            int invalidCount = 0;
-            try { invalidCount = Int32.Parse(pair[1]); } catch { }
-
-            TItemSpecsInCategoryInvalidCountDict[category] = invalidCount;
-
-            //StateHasChanged();
+            StateHasChanged();
         }
 
         private int GetTItemSpecsNotCompletedCount()
         {
             int notCompletedCount = 0;
 
-            foreach (var cat in TItemSpecsInCategoryCompletedCountDict)
+            foreach (var cat in MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict)
             {
-                notCompletedCount += MyTSheetSpec.CategoryTItemsCountDict[cat.Key] - TItemSpecsInCategoryCompletedCountDict[cat.Key];
+                notCompletedCount += MyTSheetSpec.CategoryTItemsCountDict[cat.Key] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[cat.Key];
             }
 
             return notCompletedCount;
@@ -208,9 +260,9 @@ namespace Fims.Client.Shared.Pages
         {
             int invalidCount = 0;
 
-            foreach (var cat in TItemSpecsInCategoryInvalidCountDict)
+            foreach (var cat in MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict)
             {
-                invalidCount += TItemSpecsInCategoryInvalidCountDict[cat.Key];
+                invalidCount += MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[cat.Key];
             }
 
             return invalidCount;

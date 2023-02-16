@@ -11,12 +11,12 @@ using Fims.Data.Models.TSheetSpecs;
 
 namespace Fims.Data.Entities
 {
-    public class TSheet : BaseDeletableModel //JBH: Do not use BaseModel, which causes a "Global Filter" error.
+    public class TSheet : BaseModel //JBH: Do not use BaseModel, which causes a "Global Filter" error.
     {
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
         // Database Instance Id for EF
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        public int Id { get; set; } // db instance id
+        public int Id { get; set; } // Primary Key of TSheet
 
 
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -36,14 +36,9 @@ namespace Fims.Data.Entities
 
 
 
-
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        // Navigation Properties
+        // EF Relation
         // !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-        public string UserId { get; set; }
-        public FimsUser User { get; set; }
-
-
-        public ICollection<TItem> TItems { get; set; } = new HashSet<TItem>();
+        public ICollection<TItem> TItems { get; set; } = new HashSet<TItem>();  // declare 1-to-many relation by the EF Convention.
     }
 }

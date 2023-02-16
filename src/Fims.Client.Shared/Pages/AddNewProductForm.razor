@@ -1,0 +1,104 @@
+﻿@page "/AddNewProductForm"
+
+
+<TelerikDialog Visible="true" Title="검사설비 추가" Width="800px" Height="600px" Class="dialog-background">
+    <DialogContent>
+        <div class="flex-center">
+            <TelerikButton Icon="@FontIcon.Barcode" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)">바코드 촬영</TelerikButton>
+        </div>
+
+        <TelerikForm Model="@NewTProductSpec"
+                     @ref="@AddNewProductFormRef"
+                     OnValidSubmit="@HandleValidSubmit"
+                     OnInvalidSubmit="@HandleInvalidSubmit"
+                     Orientation="FormOrientation.Horizontal">
+
+            <FormValidation>
+                @*<ErrorsList ShowErrors="ShowErrors" Errors="Errors" />*@
+                <DataAnnotationsValidator></DataAnnotationsValidator>
+            </FormValidation>
+
+            <FormItems>
+                <FormItem Field="@nameof(NewTProductSpec.Customer)">
+                    <Template>
+                        @*<label for="customer" class="k-label k-form-label"><TelerikIcon Icon="@FontIcon.Gears" />거래처</label>*@ 
+                        <label for="customer" class="k-label k-form-label">거래처</label>
+                        <TelerikTextBox Id="customer" @bind-Value="@NewTProductSpec.Customer"></TelerikTextBox>
+                        @*<TelerikValidationMessage For="@(() => NewTProductSpec.Customer)"></TelerikValidationMessage>*@
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(NewTProductSpec.EndUser)">
+                    <Template>
+                        <label for="enduser" class="k-label k-form-label">End User</label>
+                        <TelerikTextBox Id="enduser" @bind-Value="@NewTProductSpec.EndUser"></TelerikTextBox>
+                        @*<TelerikValidationMessage For="@(() => NewTProductSpec.EndUser)"></TelerikValidationMessage>*@
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(NewTProductSpec.ProductModel)">
+                    <Template>
+                        <label for="model" class="k-label k-form-label">Model</label>
+                        <TelerikDropDownList Id="model" Data="@ProductModels" @bind-Value="@NewTProductSpec.ProductModel"></TelerikDropDownList>
+                        @*<TelerikValidationMessage For="@(() => NewTProductSpec.ProductModel)"></TelerikValidationMessage>*@
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(NewTProductSpec.ProductType)">
+                    <Template>
+                        <label for="ptype" class="k-label k-form-label">검사형태</label>
+                        <TelerikDropDownList Id="ptype" Data="@ProductTypes" @bind-Value="@NewTProductSpec.ProductType"></TelerikDropDownList>
+                        @*<TelerikValidationMessage For="@(() => NewTProductSpec.ProductType)"></TelerikValidationMessage>*@
+                    </Template>
+                </FormItem>
+                <FormItem Field="@nameof(NewTProductSpec.ProductSerial)">
+                    <Template>
+                        <label for="sn" class="k-label k-form-label">Serial No.</label>
+                        <TelerikTextBox Id="sn" @bind-Value="@NewTProductSpec.ProductSerial"></TelerikTextBox>
+                        @*<TelerikValidationMessage For="@(() => NewTProductSpec.ProductSerial)"></TelerikValidationMessage>*@
+                    </Template>
+                </FormItem>
+            </FormItems>
+
+            <FormButtons>
+                    <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" Size="Big">추가</TelerikButton>
+                    <TelerikButton ButtonType="ButtonType.Button" OnClick="@OnAddNewProductDialogCancel" Size="Big">취소</TelerikButton>
+            </FormButtons>
+
+        </TelerikForm>
+
+    </DialogContent>
+
+@*    <DialogButtons>
+        <div class="flex-center">
+            <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" Size="Big">추가</TelerikButton>
+            <TelerikButton ButtonType="ButtonType.Button" OnClick="@OnAddNewProductDialogCancel" Size="Big">취소</TelerikButton>
+        </div>
+    </DialogButtons>
+*@
+
+</TelerikDialog>
+
+
+<style>
+    .dialog-background {
+        background-color:silver;
+    }
+
+</style>
+
+<style>
+    .my-button {
+        align-content: center;
+        color: black;
+        margin: 0px;
+        border-color: cornflowerblue;
+    }
+
+    .ok-button {
+        width: 200px;
+        align-content: center;
+        color: black;
+        margin: 0px;
+        border-color: cornflowerblue;
+    }
+
+</style>
+
