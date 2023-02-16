@@ -149,7 +149,7 @@ namespace Fims.Services.Identity
         }
 
 
-        public async Task<List<FimsRole>> Roles()
+        public List<FimsRole> Roles()
         {
             var roles = roleManager.Roles;
             var roleslist = roles.ToList();

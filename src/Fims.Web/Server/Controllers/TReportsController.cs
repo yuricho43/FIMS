@@ -53,9 +53,9 @@ namespace Fims.Web.Server.Controllers
 
         [HttpGet(nameof(AllTReportSpecs))]
         [AllowAnonymous]
-        public async Task<List<string>> AllTReportSpecs()
+        public List<string> AllTReportSpecs()
         {
-            var data = await this.tReportsService.AllTReportSpecsAsync();
+            var data = this.tReportsService.AllTReportSpecs();
             return data;
         }
 

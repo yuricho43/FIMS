@@ -70,9 +70,9 @@ namespace Fims.Web.Server.Controllers
         // GET: api/Identity/GetRoles
         [HttpGet("GetRoles")]
         [AllowAnonymous]
-        public async Task<List<FimsRole>> GetRoles()
+        public List<FimsRole> GetRoles()
         {
-            var data = await this.identityService.Roles();
+            var data = this.identityService.Roles();
             return data;
         }
 

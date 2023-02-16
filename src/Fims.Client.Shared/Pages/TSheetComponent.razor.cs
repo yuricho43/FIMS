@@ -88,20 +88,10 @@ namespace Fims.Client.Shared.Pages
             if (MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Count() == 0)
             {
                 autoFillTItemSpecs();
-
-                foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
-                {
-                    int completedCount = catItems.Value.Where(t => t.Completed == true).Count();
-                    MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
-
-                    int invalidCount = catItems.Value.Where(t =>
-                                        (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
-                                        (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
-                                        (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
-                                        (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
-                    ).Count();
-                    MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
-                }
+                InitTItemSpecsInCategoryCompletedCountDict();
+                InitTItemSpecsInCategoryInvalidCountDict();
+                InitTItemSpecsInCategoryPristineDict();
+                InitTItemSpecsInCategorySelectedDict();
             }
 
             await base.OnInitializedAsync();
@@ -123,20 +113,10 @@ namespace Fims.Client.Shared.Pages
                 if (MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Count() == 0)
                 {
                     autoFillTItemSpecs();
-
-                    foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
-                    {
-                        int completedCount = catItems.Value.Where(t => t.Completed == true).Count();
-                        MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
-
-                        int invalidCount = catItems.Value.Where(t =>
-                                            (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
-                                            (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
-                                            (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
-                                            (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
-                        ).Count();
-                        MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
-                    }
+                    InitTItemSpecsInCategoryCompletedCountDict();
+                    InitTItemSpecsInCategoryInvalidCountDict();
+                    InitTItemSpecsInCategoryPristineDict();
+                    InitTItemSpecsInCategorySelectedDict();
                 }
             }
             else
@@ -172,6 +152,45 @@ namespace Fims.Client.Shared.Pages
             tItem1003.IsCh1DataEntered = true;
             tItem1003.IsCh1DataValid = true;
             tItem1003.Completed = true;
+        }
+
+        private void InitTItemSpecsInCategoryCompletedCountDict()
+        {
+            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            {
+                int completedCount = catItems.Value.Where(t => t.Completed == true).Count();
+                MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
+            }
+        }
+
+        private void InitTItemSpecsInCategoryInvalidCountDict()
+        {
+            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            {
+                int invalidCount = catItems.Value.Where(t =>
+                                    (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
+                                    (t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh2DataEntered == true) ||
+                                    (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
+                                    (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
+                ).Count();
+                MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
+            }
+        }
+
+        private void InitTItemSpecsInCategoryPristineDict()
+        {
+            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            {
+                MyTSheetSpec.TItemSpecsInCategoryPristineDict.Add(catItems.Key, new List<TItemSpec>());
+            }
+        }
+
+        private void InitTItemSpecsInCategorySelectedDict()
+        {
+            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            {
+                MyTSheetSpec.TItemSpecsInCategorySelectedDict.Add(catItems.Key, new List<TItemSpec>());
+            }
         }
 
         public void CollectTItemSpecsFinal()

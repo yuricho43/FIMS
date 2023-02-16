@@ -53,8 +53,10 @@ namespace Fims.Client.Shared.Pages
         TelerikNotification LoadSessionNotificationComponent { get; set; }
         public List<string> ToggleButtonsThemeColor { get; set; }
 
-        private System.Timers.Timer TSheetSpecsSavingTimer;
+#nullable enable  //suppress the Warning CS8632
+        //private System.Timers.Timer TSheetSpecsSavingTimer;
         private System.Threading.Timer? TSheetSpecsSavingTimer2;
+#nullable disable
 
         public bool IsLoadingSession { get; set; } = false;
         public bool IsSavingSession { get; set; } = false;
@@ -90,14 +92,16 @@ namespace Fims.Client.Shared.Pages
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
+#if !DEBUG
             TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
             {
                 OnSaveSessionDataByTimer();
                 // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
                 await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
             }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
+#endif
 
-            _ = base.OnInitializedAsync();
+            await base.OnInitializedAsync();
         }
 
         protected override async Task OnParametersSetAsync()
@@ -233,7 +237,8 @@ namespace Fims.Client.Shared.Pages
                     MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryCompletedCountDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
-                
+                    MakeTItemSpecsInCategoryPristineDict(ref tSheetSpec);
+                    MakeTItemSpecsInCategorySelectedDict(ref tSheetSpec);
                 }
                 else
                 {
@@ -302,6 +307,22 @@ namespace Fims.Client.Shared.Pages
                 tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict = new Dictionary<string, int>();
             else
                 tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.Clear();
+        }
+
+        private void MakeTItemSpecsInCategoryPristineDict(ref TSheetSpec tSheetSpecRef)
+        {
+            if (tSheetSpecRef.TItemSpecsInCategoryPristineDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInCategoryPristineDict = new Dictionary<string, List<TItemSpec>>();
+            else
+                tSheetSpecRef.TItemSpecsInCategoryPristineDict.Clear();
+        }
+
+        private void MakeTItemSpecsInCategorySelectedDict(ref TSheetSpec tSheetSpecRef)
+        {
+            if (tSheetSpecRef.TItemSpecsInCategorySelectedDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInCategorySelectedDict = new Dictionary<string, List<TItemSpec>>();
+            else
+                tSheetSpecRef.TItemSpecsInCategorySelectedDict.Clear();
         }
 
         private void MakeRangeToolTip(ref TSheetSpec tSheetSpecRef) //call by ref

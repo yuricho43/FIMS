@@ -11,7 +11,7 @@ namespace Fims.Services.TReports
 {
     public interface ITReportsService : IService
     {
-        Task<List<string>> AllTReportSpecsAsync();
+        List<string> AllTReportSpecs();
 
         Task<Stream> GenerateTReportAsync(TReportDto tReportRequest);
 
