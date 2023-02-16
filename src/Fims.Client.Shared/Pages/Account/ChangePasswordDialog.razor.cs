@@ -58,58 +58,17 @@ namespace Fims.Client.Shared.Pages.Account
         TelerikNotification ChangePasswordNotificationComponent { get; set; }
 
 
-        protected override async Task OnInitializedAsync()
-        {
-            await this.LoadDataAsync();
-        }
-
-        private async Task SubmitAsync()
-        {
-            var response = await this.Http.PutAsJsonAsync("api/identity/changepassword", this.ChangePasswordModel);
-            if (response.IsSuccessStatusCode)
-            {
-                this.ShowErrors = false;
-                await this.AuthClientService.Logout();
-                //this.ToastService.ShowSuccess("Your account UserProfile has been changed successfully.\n Please login.");
-                this.NavigationManager.NavigateTo("/account/login");
-            }
-            else
-            {
-                this.Errors = await response.Content.ReadFromJsonAsync<string[]>();
-                this.ShowErrors = true;
-            }
-        }
         public bool ValidSubmit { get; set; } = false;
 
         async void HandleValidSubmit()
         {
             ValidSubmit = true;
 
-            await Task.Delay(2000);
-
-            ValidSubmit = false;
-
-            StateHasChanged();
-        }
-
-        void HandleInvalidSubmit()
-        {
-            ValidSubmit = false;
-        }
-
-        private async void OnCancel()
-        {
-            await ChangePasswordDialogFinished.InvokeAsync(false); // pass Param to parent, by calling EventCallback
-            //StateHasChanged();
-        }
-
-        private async void OnChangePassword()
-        {
             var response = await this.Http.PutAsJsonAsync("api/identity/changepassword", this.ChangePasswordModel);
 
             if (response.IsSuccessStatusCode)
             {
-                //this.ShowErrors = false;
+                this.ShowErrors = false;
                 //
                 //this.ChangePasswordModel.Password = null;
                 //this.ChangePasswordModel.NewPassword = null;
@@ -141,20 +100,21 @@ namespace Fims.Client.Shared.Pages.Account
                 _ = ActivateAlert("암호변경 실패", this.Errors.FirstOrDefault());
             }
 
+            ValidSubmit = false;
+
             //StateHasChanged();
         }
 
-        private async Task LoadDataAsync()
+        void HandleInvalidSubmit()
         {
-            var state = await this.AuthState.GetAuthenticationStateAsync();
-            var user = state.User;
-            //var authState = await AuthenticationStateTask;
-            //var user = authState.User;
-            this.Email = user.GetEmail();
-            //this.ChangePasswordModel.HangulName = user.GetHangulName();
-            //this.ChangePasswordModel.EnglishName = user.GetEnglishName();
+            ValidSubmit = false;
         }
 
+        private async void OnCancel()
+        {
+            await ChangePasswordDialogFinished.InvokeAsync(false); // pass Param to parent, by calling EventCallback
+            //StateHasChanged();
+        }
 
 
         [CascadingParameter]
