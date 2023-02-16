@@ -50,7 +50,8 @@ namespace Fims.Client.Shared.Pages.Account
         public EventCallback<bool> ChangePasswordDialogFinished { get; set; }
 
         private readonly PasswordModel ChangePasswordModel = new PasswordModel();
-        private string Email;
+        //private string Email;
+
         public bool ShowErrors { get; set; } = false;
 
         public IEnumerable<string> Errors { get; set; }

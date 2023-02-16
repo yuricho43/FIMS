@@ -22,7 +22,7 @@ namespace Fims.Services.Identity
         Task<Result> ChangePasswordAsync(PasswordModel model, string userId);
 
         Task<List<UserAuthInfoModel>> AllUsers();
-        Task<List<FimsRole>> Roles();
+        List<FimsRole> Roles();
 
         Task<Result> DeleteAsync(string username);
 

@@ -45,6 +45,7 @@ namespace Fims.Client.Shared.Pages.Management
             var userinfo = (UserAuthInfoModel)args.Item;
             //ProductService.UpdateProduct((ProductDto)args.Item);
             //await LoadData();
+            await Task.Delay(1);
         }
 
         private async Task ResetPassword(UserAuthInfoModel item)
@@ -58,6 +59,7 @@ namespace Fims.Client.Shared.Pages.Management
                 //ClearSelection();
             }
 
+            await Task.Delay(1);
             StateHasChanged();
         }
 

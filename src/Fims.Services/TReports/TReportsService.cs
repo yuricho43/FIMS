@@ -44,7 +44,7 @@ namespace Fims.Services.TReports
         }
 
 
-        public async Task<List<string>> AllTReportSpecsAsync()
+        public List<string> AllTReportSpecs()
         {
             string searchPattern = Constants.FimsTReportSpecsFileNameBase + "_" + "*" + ".xlsx";
             string[] filePaths = Directory.GetFiles(Constants.FimsTReportSpecsRepoPath, searchPattern);

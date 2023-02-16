@@ -33,11 +33,11 @@ namespace Fims.Client.Shared.Pages
 
         public int MaxChannels { get; set; }
 
-        private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
-        public IEnumerable<TItemSpec> TItemSpecsSelected { get; set; } = Enumerable.Empty<TItemSpec>();
+        //private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
+        //public IEnumerable<TItemSpec> TItemSpecsSelected { get; set; } = Enumerable.Empty<TItemSpec>();
 
         public bool GridIsDirty => MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].ToList().Exists(item => item.IsDirty);
-        public bool SelectionIsDirty => TItemSpecsSelected.ToList().Exists(item => item.IsDirty);
+        public bool SelectionIsDirty => MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory].ToList().Exists(item => item.IsDirty);
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
@@ -55,8 +55,8 @@ namespace Fims.Client.Shared.Pages
             MaxChannels = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Select(x => x.Channels).Max();
 
             //TItemSpecsInCategoryCompletedCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(x => x.Completed==true).Count();
-            CalculateTItemSpecsInputCompletedCount();
-            CalculateTItemSpecsInputInvalidCount();
+            CalculateTItemSpecsInCategoryInputCompletedCount();
+            CalculateTItemSpecsInCategoryInputInvalidCount();
 
             Layout.DocsTitle = Localizer["HumanCapital"];
             base.OnInitialized();
@@ -552,11 +552,13 @@ namespace Fims.Client.Shared.Pages
 
             if (!itemspec.IsDirty)
             {
-                TItemSpec pristineItem = GetItemFromCollection(TItemSpecsPristine, itemspec);
+                TItemSpec pristineItem = GetItemFromCollection(MyTSheetSpec.TItemSpecsInCategoryPristineDict[TCategory], itemspec);
                 if (pristineItem == null)
                 {
                     //add only the first time a field is edited, later it is no longer pristine
-                    TItemSpecsPristine.Add(GetItemFromCollection(MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory], itemspec));
+                    var items = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory];
+                    var itemInCollection = GetItemFromCollection(MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory], itemspec);
+                    MyTSheetSpec.TItemSpecsInCategoryPristineDict[TCategory].Add(GetItemFromCollection(MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory], itemspec));
                 }
             }
 
@@ -567,8 +569,8 @@ namespace Fims.Client.Shared.Pages
 
             ChangeLocalItem(itemspec);
 
-            CalculateTItemSpecsInputCompletedCount();
-            CalculateTItemSpecsInputInvalidCount();
+            CalculateTItemSpecsInCategoryInputCompletedCount();
+            CalculateTItemSpecsInCategoryInputInvalidCount();
         }
 
         public void CreateHandler(GridCommandEventArgs args)
@@ -790,22 +792,22 @@ namespace Fims.Client.Shared.Pages
         #region Grid Toolbar commands
         public void DeleteSelected()
         {
-            foreach (TItemSpec item in TItemSpecsSelected)
+            foreach (TItemSpec item in MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory])
             {
                 DeleteItem(item);
             }
 
-            TItemSpecsSelected = new List<TItemSpec>();
+            MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory] = new List<TItemSpec>();
         }
 
         public void RevertSelected()
         {
-            foreach (TItemSpec item in TItemSpecsSelected)
+            foreach (TItemSpec item in MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory])
             {
                 RevertItem(item);
             }
 
-            TItemSpecsSelected = new List<TItemSpec>();
+            MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory] = new List<TItemSpec>();
         }
 
         public void RevertAllChanges()
@@ -845,11 +847,11 @@ namespace Fims.Client.Shared.Pages
             }
             if (item.IsChanged)
             {
-                TItemSpec pristineItem = GetItemFromCollection(TItemSpecsPristine, item);
+                TItemSpec pristineItem = GetItemFromCollection(MyTSheetSpec.TItemSpecsInCategoryPristineDict[TCategory], item);
                 if (pristineItem != null)
                 {
                     ChangeLocalItem(pristineItem);
-                    TItemSpecsPristine.Remove(pristineItem);
+                    MyTSheetSpec.TItemSpecsInCategoryPristineDict[TCategory].Remove(pristineItem);
                     pristineItem.DirtyFields = new List<string>();
                 }
             }
@@ -888,17 +890,17 @@ namespace Fims.Client.Shared.Pages
             return ch1 && ch2 && ch3 && ch4;
         }
 
-        private void CalculateTItemSpecsInputCompletedCount()
+        private void CalculateTItemSpecsInCategoryInputCompletedCount()
         {
             var compeletedCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(x => x.Completed == true).Count();
-            if (compeletedCount != MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][0].Category])
+            if (compeletedCount != MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory])
             {
-                MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][0].Category] = compeletedCount;
-                TItemSpecsInCategoryCompletedCountChanged.InvokeAsync($"{MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][0].Category}:{compeletedCount}"); // notify for parent to update UI, by calling EventCallback
+                MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory] = compeletedCount;
+                TItemSpecsInCategoryCompletedCountChanged.InvokeAsync($"{TCategory}:{compeletedCount}"); // notify for parent to update UI, by calling EventCallback
             }
         }
 
-        private void CalculateTItemSpecsInputInvalidCount()
+        private void CalculateTItemSpecsInCategoryInputInvalidCount()
         {
             int invalidCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(t =>
                                 (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
@@ -909,10 +911,10 @@ namespace Fims.Client.Shared.Pages
 
             //var ch2InvalidCount = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Where(t => t.IsCh2DataValid == false && t.IsCh2DataEnabled == true && t.IsCh1DataEntered == true).Count();
             
-            if (invalidCount != MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][0].Category])
+            if (invalidCount != MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[TCategory])
             {
-                MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][0].Category] = invalidCount;
-                TItemSpecsInCategoryInvalidCountChanged.InvokeAsync($"{MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][0].Category}:{invalidCount}"); // notify for parent to update UI, by calling EventCallback
+                MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[TCategory] = invalidCount;
+                TItemSpecsInCategoryInvalidCountChanged.InvokeAsync($"{TCategory}:{invalidCount}"); // notify for parent to update UI, by calling EventCallback
             }
         }
 
@@ -924,16 +926,16 @@ namespace Fims.Client.Shared.Pages
             {
                 var existingItem = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][index];
 
-                if (TItemSpecsSelected.Contains(existingItem))
+                if (MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory].Contains(existingItem))
                 {
-                    var tempSelectedItems = TItemSpecsSelected.ToList();
+                    var tempSelectedItems = MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory].ToList();
 
                     tempSelectedItems.Remove(existingItem);
                     tempSelectedItems.Add(itemspec);
 
                     MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory][index] = itemspec;
 
-                    TItemSpecsSelected = new List<TItemSpec>(tempSelectedItems);
+                    MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory] = new List<TItemSpec>(tempSelectedItems);
                 }
                 else
                 {
@@ -944,6 +946,11 @@ namespace Fims.Client.Shared.Pages
 
         private TItemSpec GetItemFromCollection(IList<TItemSpec> collection, TItemSpec itmToFind)
         {
+            if (collection == null)
+            {
+                return null;
+            }
+
             var index = collection.ToList().FindIndex(i => i.TestNo == itmToFind.TestNo);
             if (index != -1)
             {
@@ -963,7 +970,7 @@ namespace Fims.Client.Shared.Pages
 
             // clean up current data and selection
             MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory].Clear();
-            TItemSpecsSelected = Enumerable.Empty<TItemSpec>();
+            MyTSheetSpec.TItemSpecsInCategorySelectedDict[TCategory].Clear();
 
             // update the grid with the data from the service
             List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
