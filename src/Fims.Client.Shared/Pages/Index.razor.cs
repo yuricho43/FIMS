@@ -235,7 +235,7 @@ namespace Fims.Client.Shared.Pages
                     CreateDirtyFields(ref tSheetSpec); //call by ref
                     SetChXEnabled(ref tSheetSpec); //call by ref
                     MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
-                    MakeTItemSpecsInCategoryCompletedCountDict(ref tSheetSpec);
+                    MakeTItemSpecsCompletedCountInCategoryDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryPristineDict(ref tSheetSpec);
                     MakeTItemSpecsInCategorySelectedDict(ref tSheetSpec);
@@ -247,7 +247,7 @@ namespace Fims.Client.Shared.Pages
             //FIXME  }
 
             var tmodel = tSheetSpec.ProductModel;
-            var tcounts = tSheetSpec.CategoryTItemsCountDict.Values.ToList();
+            var tcounts = tSheetSpec.TItemsCountInCategoryDict.Values.ToList();
             return tSheetSpec;
         }
 
@@ -260,7 +260,7 @@ namespace Fims.Client.Shared.Pages
             tSheetSpecRef.TCategories = (List<string>)tItemSpecs.GroupBy(s => s.Category).Select(s => s.First()).Select(g => g.Category).ToList();
 
             //Group TItemSpecs by Category, Put into a Dictionary.
-            tSheetSpecRef.TCategoryToTItemSpecsDict = tItemSpecs.GroupBy(s => s.Category).ToDictionary(g => g.Key, g => g.ToList());
+            tSheetSpecRef.TItemSpecsInCategoryDict = tItemSpecs.GroupBy(s => s.Category).ToDictionary(g => g.Key, g => g.ToList());
 
             tSheetSpecRef.InspectionStartDateTime = DateTime.Now;
             tSheetSpecRef.InspectorName = CurrentInspectorName;
@@ -274,55 +274,55 @@ namespace Fims.Client.Shared.Pages
             //else
             //    tSheetSpecRef.TCategories.Clear();
 
-            if (tSheetSpecRef.TCategoryToObservableTItemSpecsDict.IsNullOrEmpty())
-                tSheetSpecRef.TCategoryToObservableTItemSpecsDict = new Dictionary<string, ObservableCollection<TItemSpec>>();
+            if (tSheetSpecRef.ObservableTItemSpecsInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.ObservableTItemSpecsInCategoryDict = new Dictionary<string, ObservableCollection<TItemSpec>>();
             else
-                tSheetSpecRef.TCategoryToObservableTItemSpecsDict.Clear();
+                tSheetSpecRef.ObservableTItemSpecsInCategoryDict.Clear();
 
-            if (tSheetSpecRef.CategoryTItemsCountDict.IsNullOrEmpty())
-                tSheetSpecRef.CategoryTItemsCountDict = new Dictionary<string, int>();
+            if (tSheetSpecRef.TItemsCountInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemsCountInCategoryDict = new Dictionary<string, int>();
             else
-                tSheetSpecRef.CategoryTItemsCountDict.Clear();
+                tSheetSpecRef.TItemsCountInCategoryDict.Clear();
 
-            foreach (var categoryTItemspec in tSheetSpecRef.TCategoryToTItemSpecsDict)
+            foreach (var categoryTItemspec in tSheetSpecRef.TItemSpecsInCategoryDict)
             {
                 //tSheetSpecRef.TCategories.Add(categoryTItemspec.Key);
                 ObservableCollection<TItemSpec> observableTItemSpecs = new ObservableCollection<TItemSpec>(categoryTItemspec.Value);
-                tSheetSpecRef.TCategoryToObservableTItemSpecsDict.Add(categoryTItemspec.Key, observableTItemSpecs);
-                tSheetSpecRef.CategoryTItemsCountDict.Add(categoryTItemspec.Key, observableTItemSpecs.Count);
+                tSheetSpecRef.ObservableTItemSpecsInCategoryDict.Add(categoryTItemspec.Key, observableTItemSpecs);
+                tSheetSpecRef.TItemsCountInCategoryDict.Add(categoryTItemspec.Key, observableTItemSpecs.Count);
             }
         }
 
-        private void MakeTItemSpecsInCategoryCompletedCountDict(ref TSheetSpec tSheetSpecRef)
+        private void MakeTItemSpecsCompletedCountInCategoryDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict = new Dictionary<string, int>();
+            if (tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict = new Dictionary<string, int>();
             else
-                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.Clear();
+                tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict.Clear();
         }
 
         private void MakeTItemSpecsInCategoryInvalidCountDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict = new Dictionary<string, int>();
+            if (tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict = new Dictionary<string, int>();
             else
-                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.Clear();
+                tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict.Clear();
         }
 
         private void MakeTItemSpecsInCategoryPristineDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategoryPristineDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategoryPristineDict = new Dictionary<string, List<TItemSpec>>();
+            if (tSheetSpecRef.TItemSpecsPristineInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsPristineInCategoryDict = new Dictionary<string, List<TItemSpec>>();
             else
-                tSheetSpecRef.TItemSpecsInCategoryPristineDict.Clear();
+                tSheetSpecRef.TItemSpecsPristineInCategoryDict.Clear();
         }
 
         private void MakeTItemSpecsInCategorySelectedDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategorySelectedDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategorySelectedDict = new Dictionary<string, List<TItemSpec>>();
+            if (tSheetSpecRef.TItemSpecsSelectedInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsSelectedInCategoryDict = new Dictionary<string, List<TItemSpec>>();
             else
-                tSheetSpecRef.TItemSpecsInCategorySelectedDict.Clear();
+                tSheetSpecRef.TItemSpecsSelectedInCategoryDict.Clear();
         }
 
         private void MakeRangeToolTip(ref TSheetSpec tSheetSpecRef) //call by ref

@@ -13,7 +13,7 @@
                 <div class="tab-parent "><span class="fa fa-temperature-high"></span><strong>@TCategory</strong></div>
             </HeaderTemplate>
             <Content>
-                <TelerikGrid Data=@MyTSheetSpec.TCategoryToTItemSpecsDict[TCategory]
+                <TelerikGrid Data=@MyTSheetSpec.TItemSpecsInCategoryDict[TCategory]
                              EditMode="@GridEditMode.Incell"
                              SelectionMode="GridSelectionMode.Multiple"
                              @ref="@TItemSpecGrid"

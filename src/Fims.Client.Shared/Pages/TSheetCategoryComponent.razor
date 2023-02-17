@@ -1,7 +1,7 @@
 ﻿@using Telerik.Blazor.Components.Common.Icon
 
 
-<TelerikGrid Data=@MyTSheetSpec.TCategoryToObservableTItemSpecsDict[TCategory]
+<TelerikGrid Data=@MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory]
              EditMode="@GridEditMode.Incell"
              SelectionMode="GridSelectionMode.Multiple"
              @ref="@TItemSpecGrid"
