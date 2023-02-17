@@ -122,6 +122,25 @@ namespace Fims.Services.Identity
                 : Result.Failure(errors);
         }
 
+        public async Task<Result> ChangeRoleAsync(UserAuthInfoModel model)
+        {
+            var user = await this.userManager.FindByNameAsync(model.UserName);
+            if (user == null)
+            {
+                return InvalidErrorMessage;
+            }
+
+            var curRoles = await this.userManager.GetRolesAsync(user);
+            var res = await this.userManager.RemoveFromRoleAsync(user, curRoles[0]);
+
+            var identityResult = await this.userManager.AddToRoleAsync(user, model.Role);
+            var errors = identityResult.Errors.Select(e => e.Description);
+
+            return identityResult.Succeeded
+               ? Result.Success
+               : Result.Failure(errors);
+        }
+
         public async Task<Result> ResetPasswordAsync(UserAuthInfoModel model)
         {
             var user = await this.userManager.FindByNameAsync(model.UserName);

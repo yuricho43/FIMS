@@ -55,6 +55,13 @@ namespace Fims.Web.Server.Controllers
                 .ToActionResult();
 
         [Authorize]
+        [HttpPut(nameof(ChangeRole))]
+        public async Task<ActionResult> ChangeRole(UserAuthInfoModel model)
+            => await this.identityService
+                .ChangeRoleAsync(model)
+                .ToActionResult();
+
+        [Authorize]
         [HttpPut(nameof(ResetPassword))]
         public async Task<ActionResult> ResetPassword(UserAuthInfoModel model)
             => await this.identityService

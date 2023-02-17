@@ -43,10 +43,28 @@ namespace Fims.Client.Shared.Pages.Management
 
         private async void ChangeUserRole(GridCommandEventArgs args)
         {
-            var userinfo = (UserAuthInfoModel)args.Item;
-            //ProductService.UpdateProduct((ProductDto)args.Item);
-            //await LoadData();
-            await Task.Delay(1);
+            var model = (UserAuthInfoModel)args.Item;
+            var result = await this.AuthClientService.ChangeRole(model);
+
+            if (result.Succeeded)
+            {
+                this.ShowErrors = false;
+
+                UserManagementNotificationComponent.Show(new NotificationModel
+                {
+                    Text = $"사용자({model.UserName}) 권한변경({model.Role}) 성공",
+                    ThemeColor = "success",
+                    //CloseAfter = 3000
+                });
+
+                await LoadData();
+                StateHasChanged();
+            }
+            else
+            {
+                this.Errors = result.Errors;
+                this.ShowErrors = true;
+            }
         }
 
         private async Task ResetPassword(UserAuthInfoModel model)
