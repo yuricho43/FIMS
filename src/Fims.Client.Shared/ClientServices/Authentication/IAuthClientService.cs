@@ -18,5 +18,7 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         Task<List<FimsRole>> AllRoles();
 
         Task<Result> Delete(string username);
+
+        Task<Result> ResetPassword(UserAuthInfoModel model);
     }
 }

@@ -27,6 +27,7 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         private const string AllUsersPath = "api/identity/getallusers";
         private const string AllRolesPath = "api/identity/getroles";
         private const string DeletePath = "api/identity/deleteuser";
+        private const string ResetPasswordPath = "api/identity/resetpassword";
 
         public AuthClientService(
             HttpClient httpClient,
@@ -97,5 +98,21 @@ namespace Fims.Client.Shared.ClientServices.Authentication
             => await this.httpClient
                 .DeleteAsync(DeletePath + "/" + username)
                 .ToResult();
+
+        public async Task<Result> ResetPassword(UserAuthInfoModel model)
+        {
+            var response = await this.httpClient.PutAsJsonAsync(ResetPasswordPath, model);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                var errors = await response.Content.ReadFromJsonAsync<string[]>();
+
+                return Result.Failure(errors);
+            }
+
+            return Result.Success;
+        }
+
+
     }
 }

@@ -7,6 +7,8 @@
         public const string ReporterRole = "Reporter";
         public const string ManagerRole = "Manager";
 
+        public const string FimsDefaultPassword = "fims2023";
+
         public const string TSheetSpecNotDefined = "TSheetSpecNotDefined";
 
         public const string FimsTSheetSpecsRepoPath   = "./FimsTSheetSpecsRepository";

@@ -29,33 +29,36 @@ namespace Fims.Web.Server.Controllers
         }
 
         [HttpPost(nameof(Register))]
-        public async Task<ActionResult> Register(
-            RegisterRequestModel model)
+        public async Task<ActionResult> Register(RegisterRequestModel model)
             => await this.identityService
                 .RegisterAsync(model)
                 .ToActionResult();
 
         [HttpPost(nameof(Login))]
-        public async Task<ActionResult<LoginResponseModel>> Login(
-            LoginRequestModel model)
+        public async Task<ActionResult<LoginResponseModel>> Login(LoginRequestModel model)
             => await this.identityService
                 .LoginAsync(model)
                 .ToActionResult();
 
         [Authorize]
         [HttpPut(nameof(ChangeUserProfile))]
-        public async Task<ActionResult> ChangeUserProfile(
-            UserProfileModel model)
+        public async Task<ActionResult> ChangeUserProfile(UserProfileModel model)
             => await this.identityService
                 .ChangeUserProfileAsync(model, this.currentUserService.UserId)
                 .ToActionResult();
 
         [Authorize]
         [HttpPut(nameof(ChangePassword))]
-        public async Task<ActionResult> ChangePassword(
-            PasswordModel model)
+        public async Task<ActionResult> ChangePassword(PasswordModel model)
             => await this.identityService
                 .ChangePasswordAsync(model, this.currentUserService.UserId)
+                .ToActionResult();
+
+        [Authorize]
+        [HttpPut(nameof(ResetPassword))]
+        public async Task<ActionResult> ResetPassword(UserAuthInfoModel model)
+            => await this.identityService
+                .ResetPasswordAsync(model)
                 .ToActionResult();
 
         // GET: api/Identity/GetAllUsers

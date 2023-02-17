@@ -1,4 +1,5 @@
-﻿using Fims.Data.Entities;
+﻿using Fims.Common;
+using Fims.Data.Entities;
 using Fims.Data.Models.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
@@ -48,19 +49,27 @@ namespace Fims.Client.Shared.Pages.Management
             await Task.Delay(1);
         }
 
-        private async Task ResetPassword(UserAuthInfoModel item)
+        private async Task ResetPassword(UserAuthInfoModel model)
         {
-            if (item != null)
+            model.Password = Constants.FimsDefaultPassword;
+            var result = await this.AuthClientService.ResetPassword(model);
+
+            if (result.Succeeded)
             {
-                //selectedProduct = new ProductDto { ProductId = item.ProductId, ProductName = item.ProductName, UnitPrice = item.UnitPrice };
+                this.ShowErrors = false;
+
+                UserManagementNotificationComponent.Show(new NotificationModel
+                {
+                    Text = $"사용자({model.UserName}) 암호초기화({Constants.FimsDefaultPassword}) 성공",
+                    ThemeColor = "success",
+                    //CloseAfter = 3000
+                });
             }
             else
             {
-                //ClearSelection();
+                this.Errors = result.Errors;
+                this.ShowErrors = true;
             }
-
-            await Task.Delay(1);
-            StateHasChanged();
         }
 
         private async Task DeleteUser(GridCommandEventArgs args)
