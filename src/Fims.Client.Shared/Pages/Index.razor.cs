@@ -28,6 +28,7 @@ using Fims.Data.Models.TSheetSpecs;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Microsoft.AspNetCore.Components.Authorization;
+using Fims.Client.Shared.Pages.Account;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -50,6 +51,7 @@ namespace Fims.Client.Shared.Pages
 
         public int Page { get; set; } = 1;
 
+        public AddNewProductModal TheAddNewProductModal { get; set; }
         TelerikNotification LoadSessionNotificationComponent { get; set; }
         public List<string> ToggleButtonsThemeColor { get; set; }
 
@@ -173,11 +175,13 @@ namespace Fims.Client.Shared.Pages
 
             if (tProductSpec.ProductModel == "MMMMMMMM")
             {
-                return false; // invalid ProductModel
+                // invalid ProductModel
+                return false;
             }
 
             if (ProductSerialToTSheetSpecDict.ContainsKey(tProductSpec.ProductSerial))
             {
+                //already added
                 return false;
             }
 

@@ -26,7 +26,7 @@ using static Telerik.Blazor.ThemeConstants;
 
 namespace Fims.Client.Shared.Pages
 {
-    public partial class AddNewProductDialog
+    public partial class AddNewProductModal
     {
         //[CascadingParameter]
         //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
@@ -36,6 +36,9 @@ namespace Fims.Client.Shared.Pages
 
         [Parameter]
         public List<string> ProductModels { get; set; }
+
+        public TProductSpec NewTProductSpec { get; set; } = new TProductSpec {ProductType = "신규" };
+        public TelerikForm AddNewProductFormRef { get; set; }
 
         public string ProductSerial { get; set; }
         public string ProductModel { get; set; }
@@ -49,10 +52,10 @@ namespace Fims.Client.Shared.Pages
         private bool ProgressListDialogVisible { get; set; } = false;
 
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
+        //protected override void OnInitialized()
+        //{
+        //    base.OnInitialized();
+        //}
 
         protected override async Task OnInitializedAsync()
         {
@@ -63,6 +66,8 @@ namespace Fims.Client.Shared.Pages
             var name = user.GetHangulName();
 
             //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
+
+            _ = base.OnInitializedAsync();
         }
 
         private void OnBarcodeSelectionClicked()
@@ -102,6 +107,66 @@ namespace Fims.Client.Shared.Pages
             };
 
             ProductAdded.InvokeAsync(product);
+        }
+
+        //public TelerikNotification AddUserNotificationComponent { get; set; }
+        //public bool ShowErrors { get; set; } = false;
+        //public IEnumerable<string> Errors { get; set; }
+
+
+        //protected override void OnInitialized()
+        //{
+        //    base.OnInitialized();
+        //}
+        //
+        //protected override async Task OnInitializedAsync()
+        //{
+        //    var state = await this.AuthState.GetAuthenticationStateAsync();
+        //    var user = state.User;
+        //    //var authState = await AuthenticationStateTask;
+        //    //var user = authState.User;
+        //
+        //    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
+        //}
+
+        //public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
+        //public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
+        //{
+        //    FormValidationMessageType.None,
+        //    FormValidationMessageType.Inline,
+        //    FormValidationMessageType.Tooltip
+        //};
+
+        public bool ValidSubmit { get; set; } = false;
+
+        async void HandleValidSubmit()
+        {
+            ValidSubmit = true;
+
+            await ProductAdded.InvokeAsync(NewTProductSpec); // pass Param to parent, by calling EventCallback
+
+            //clear the product added
+            NewTProductSpec.ProductSerial = "";
+
+            ValidSubmit = false;
+
+            StateHasChanged();
+        }
+
+        void HandleInvalidSubmit()
+        {
+            ValidSubmit = false;
+        }
+
+        void OnAddUserDialogOK()
+        {
+            //ValidSubmit = false;
+        }
+
+        void OnAddUserDialogCancel()
+        {
+            //ValidSubmit = false;
+            //AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
         }
 
 
