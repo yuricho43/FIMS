@@ -16,7 +16,7 @@
 </TelerikStackLayout>
 </div>
 
-<div style="background:Gainsboro;height: 10px;"></div>
+<div style="height: 10px;"></div>
 
 <TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
@@ -50,7 +50,9 @@
                 </div>
             </HeaderTemplate>
             <Content>
-                <TSheetCategoryComponent MyTSheetSpec="MyTSheetSpec" TCategory="@TCategory" TItemSpecsCompletedCountInCategoryChanged="OnTItemSpecsCompletedCountInCategoryChanged" TItemSpecsInvalidCountInCategoryChanged="OnTItemSpecsInvalidCountInCategoryChanged"></TSheetCategoryComponent>
+                <div style="background-color:#d8d9e8;">
+                    <TSheetCategoryComponent MyTSheetSpec="MyTSheetSpec" TCategory="@TCategory" TItemSpecsCompletedCountInCategoryChanged="OnTItemSpecsCompletedCountInCategoryChanged" TItemSpecsInvalidCountInCategoryChanged="OnTItemSpecsInvalidCountInCategoryChanged"></TSheetCategoryComponent>
+                </div>
             </Content>
         </TabStripTab>
     }
