@@ -7,9 +7,10 @@
              @ref="@TItemSpecGrid"
              OnUpdate="@UpdateHandler" OnEdit="@EditHandler" OnDelete="@DeleteHandler" OnCreate="@CreateHandler"
              OnRowRender="@OnRowRenderHandler"
-             Pageable="true"
-             Resizable="true"
-             @bind-PageSize="@PageSize"
+             Height="580px"
+             RowHeight="45"
+             ScrollMode="@GridScrollMode.Virtual"
+             PageSize="20"
              @bind-Page="@CurrentPage">
 
 @*    <GridToolBar>
