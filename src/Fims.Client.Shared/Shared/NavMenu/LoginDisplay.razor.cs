@@ -15,6 +15,7 @@ namespace Fims.Client.Shared.Shared.NavMenu
         //[CascadingParameter]
         //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
         public bool UserProfileDialogVisible { get; set; } = false;
+        public UserProfileModal TheUserProfileModal { get; set; }
 
         public string UserName { get; set; }
 
