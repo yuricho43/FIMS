@@ -41,7 +41,6 @@ namespace Fims.Client.Shared.Pages
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
-        int PageSize = 10;
         int CurrentPage = 1;
 
 
