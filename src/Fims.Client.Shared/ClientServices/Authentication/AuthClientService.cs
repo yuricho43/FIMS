@@ -13,6 +13,7 @@ using Fims.Data.Models.Identity;
 using Fims.Client.Shared.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Fims.Data.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Fims.Client.Shared.ClientServices.Authentication
 {
@@ -47,14 +48,26 @@ namespace Fims.Client.Shared.ClientServices.Authentication
 
         public async Task<Result> Login(LoginRequestModel model)
         {
-            var response = await this.httpClient.PostAsJsonAsync(LoginPath, model);
+            HttpResponseMessage response;
 
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                var errors = await response.Content.ReadFromJsonAsync<string[]>();
+                response = await this.httpClient.PostAsJsonAsync(LoginPath, model);
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errors = await response.Content.ReadFromJsonAsync<string[]>();
 
+                    return Result.Failure(errors);
+                }
+            }
+            catch (Exception ex)
+            {
+                //no connection to the server
+                Console.WriteLine(ex.Message);
+                List<string> errors = new() { ex.Message};
                 return Result.Failure(errors);
             }
+
 
             var responseAsString = await response.Content.ReadAsStringAsync();
 

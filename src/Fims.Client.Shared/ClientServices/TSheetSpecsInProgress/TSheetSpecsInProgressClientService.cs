@@ -38,7 +38,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
             catch (Exception ex)
             {
                 //no connection to the server
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             return fileName;
         }
@@ -54,7 +54,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
             catch (Exception ex)
             {
                 //no connection to the server
-                Console.WriteLine(ex);
+                Console.WriteLine(ex.Message);
             }
             return tSheetSpecsInProgressDto;
         }
