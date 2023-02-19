@@ -22,8 +22,25 @@
         </div>
     </div>
 
-    <div style="background-color:#d8d9e8;padding: 10px;height: 90%;">
+    <div class="fims-full-body">
         @Body
     </div>
 
 </TelerikRootComponent>
+
+
+<style>
+    /* most styles for header are defined in main.css */
+    .header {
+        height: 60px;
+        background-color: cornflowerblue
+    }
+</style>
+
+<style>
+    .fims-full-body {
+        background-color: #d8d9e8;
+        padding: 10px;
+        height: calc(100vh - 60px);
+    }
+</style>
