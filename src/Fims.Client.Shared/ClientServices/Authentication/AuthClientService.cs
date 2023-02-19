@@ -64,7 +64,8 @@ namespace Fims.Client.Shared.ClientServices.Authentication
             {
                 //no connection to the server
                 Console.WriteLine(ex.Message);
-                List<string> errors = new() { ex.Message};
+                //List<string> errors = new() { ex.Message};
+                List<string> errors = new() { "서버 연결 실패!" };
                 return Result.Failure(errors);
             }
 
