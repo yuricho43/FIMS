@@ -11,6 +11,7 @@ using Fims.Data.Models;
 using Fims.Data.Models.TSheets;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Data.Models.TSheetSpecsInProgress;
+using Telerik.SvgIcons;
 
 namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 {
@@ -27,16 +28,34 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust)
         {
-            var path = $"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}";
-            var tSheetSpecsInProgressResponse = await this.http.PostAsJsonAsync($"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}", tSheetSpecsInProgressReqeust);
-            var fileName = await tSheetSpecsInProgressResponse.Content.ReadAsStringAsync();
+            string fileName = null;
+            try
+            {
+                var path = $"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}";
+                var tSheetSpecsInProgressResponse = await this.http.PostAsJsonAsync($"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}", tSheetSpecsInProgressReqeust);
+                fileName = await tSheetSpecsInProgressResponse.Content.ReadAsStringAsync();
+            }
+            catch (Exception ex)
+            {
+                //no connection to the server
+                Console.WriteLine(ex);
+            }
             return fileName;
         }
 
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId)
         {
-            var tSheetSpecsInProgressResponse = await this.http.GetAsync(TSheetSpecsInProgressPath + "/" + userId);
-            var tSheetSpecsInProgressDto = await tSheetSpecsInProgressResponse.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
+            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = null;
+            try
+            {
+                var tSheetSpecsInProgressResponse = await this.http.GetAsync(TSheetSpecsInProgressPath + "/" + userId);
+                tSheetSpecsInProgressDto = await tSheetSpecsInProgressResponse.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
+            }
+            catch (Exception ex)
+            {
+                //no connection to the server
+                Console.WriteLine(ex);
+            }
             return tSheetSpecsInProgressDto;
         }
 

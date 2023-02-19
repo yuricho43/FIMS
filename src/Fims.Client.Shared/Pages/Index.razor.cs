@@ -436,6 +436,18 @@ namespace Fims.Client.Shared.Pages
             CurrentInspectorUserId = user.GetUserId();
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
+            if (tSheetSpecsInProgressDto == null)
+            {
+                IsLoadingSession = false;
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "가저오기 실패: FIMS서버 연결에 문제가 있습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-down"
+                });
+                return;
+            }
 
             var userIdRx = tSheetSpecsInProgressDto.UserId;
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
@@ -501,15 +513,28 @@ namespace Fims.Client.Shared.Pages
             }
 
             bool result = await SaveSessionData();
+            if (result)
+            {
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "진행목록이 성공적으로 저장되었습니다.",
+                    ThemeColor = "success",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
+            else
+            {
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
             IsSavingSession = false;
 
-            LoadSessionNotificationComponent.Show(new NotificationModel()
-            {
-                Text = "진행목록이 성공적으로 저장되었습니다.",
-                ThemeColor = "success",
-                ShowIcon = true,
-                Icon = "caret-double-alt-up"
-            });
 
             //StateHasChanged();
         }
@@ -525,6 +550,16 @@ namespace Fims.Client.Shared.Pages
             }
 
             bool result = await SaveSessionData();
+            if ( !result )
+            {
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
 
             IsSavingSession = false;
             //StateHasChanged();
@@ -572,8 +607,14 @@ namespace Fims.Client.Shared.Pages
             }
 
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
-
-            return true;
+            if ( fileName == null )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
 
 
