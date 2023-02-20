@@ -60,16 +60,68 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
 
         public async Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync()
         {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            Dictionary<string, TSheetSpec> tSheetSpecsDict = null;
+
+            try
+            {
+                // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
+                var result = await this.http.GetFromJsonAsync<Dictionary<string, TSheetSpec>>(TSheetSpecsRoute + "/TSheetSpecsDict");
+                if (source?.IsCancellationRequested == false)
+                {
+                    tSheetSpecsDict = result;
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
             // GET: api/TSheetSpecs/TSheetSpecsDict
-            var tSheetSpecsDict = await this.http.GetFromJsonAsync<Dictionary<string, TSheetSpec>>(TSheetSpecsRoute + "/TSheetSpecsDict");
             return tSheetSpecsDict;
         }
 
         public async Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel)
         {
-            // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
-            var tSheetSpec = await this.http.GetFromJsonAsync<TSheetSpec>(TSheetSpecsRoute + "/TSheetSpecByModel/" + equipmentModel);
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            TSheetSpec tSheetSpec = null;
+
+            try
+            {
+                // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
+                var result = await this.http.GetFromJsonAsync<TSheetSpec>(TSheetSpecsRoute + "/TSheetSpecByModel/" + equipmentModel, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    tSheetSpec = result;
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
             return tSheetSpec;
+
         }
     }
 }

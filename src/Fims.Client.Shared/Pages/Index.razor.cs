@@ -29,6 +29,7 @@ using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Microsoft.AspNetCore.Components.Authorization;
 using Fims.Client.Shared.Pages.Account;
+using Azure;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -182,6 +183,7 @@ namespace Fims.Client.Shared.Pages
             if (ProductSerialToTSheetSpecDict.ContainsKey(tProductSpec.ProductSerial))
             {
                 //already added
+                await ActivateAlert("추가 실패", "이미 등록되었습니다.");
                 return false;
             }
 
@@ -208,6 +210,8 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
+                //await ActivateAlert("WARNING", $"{tProductSpec.ProductModel}에 대한 스펙파일을 찾을 수 없습니다. 서버를 점검하세요.");
+                await ActivateAlert("추가 실패", "서버연결상태를 점검하세요.");
                 return false;
             }
         }
@@ -224,14 +228,10 @@ namespace Fims.Client.Shared.Pages
 
         private async Task<TSheetSpec> GetTSheetSpecByTModelAsync(string tModel)
         {
-            TSheetSpec tSheetSpec;
-            //FIXME  if (TModelToTSheetSpecDict.ContainsKey(tModel))
-            //FIXME  {
-            //FIXME      tSheetSpec = TModelToTSheetSpecDict[tModel];
-            //FIXME  }
-            //FIXME  else
-            //FIXME  {
-                tSheetSpec = await TSheetSpecsClientService.GetTSheetSpecByEquipmentModelAsync(tModel);
+            TSheetSpec tSheetSpec = await TSheetSpecsClientService.GetTSheetSpecByEquipmentModelAsync(tModel);
+
+            if (tSheetSpec != null)
+            {
                 if (tSheetSpec.ProductModel != Constants.TSheetSpecNotDefined)
                 {
                     ExpandTSheetSpec(ref tSheetSpec); //call by ref
@@ -244,14 +244,8 @@ namespace Fims.Client.Shared.Pages
                     MakeTItemSpecsInCategoryPristineDict(ref tSheetSpec);
                     MakeTItemSpecsInCategorySelectedDict(ref tSheetSpec);
                 }
-                else
-                {
-                    await ActivateAlert("WARNING", $"Test Spec Not Found for Model: {tModel}");
-                }
-            //FIXME  }
+            }
 
-            var tmodel = tSheetSpec.ProductModel;
-            var tcounts = tSheetSpec.TItemsCountInCategoryDict.Values.ToList();
             return tSheetSpec;
         }
 
@@ -660,8 +654,15 @@ namespace Fims.Client.Shared.Pages
         {
             ValidNewProductSubmit = true;
 
-            await AddTProduct(NewTProductSpec);
-            ClearNewProductSpec();
+            bool result = await AddTProduct(NewTProductSpec);
+            if (result)
+            {
+                ClearNewProductSpec();
+            }
+            else
+            {
+                //await ActivateAlert("등록 실패", "서버연결상태를 점검하세요.");
+            }
 
             ValidNewProductSubmit = false;
 
