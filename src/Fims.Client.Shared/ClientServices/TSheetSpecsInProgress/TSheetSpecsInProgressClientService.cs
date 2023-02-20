@@ -28,36 +28,66 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust)
         {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
             string fileName = null;
+
             try
             {
                 var path = $"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}";
-                var tSheetSpecsInProgressResponse = await this.http.PostAsJsonAsync($"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}", tSheetSpecsInProgressReqeust);
-                fileName = await tSheetSpecsInProgressResponse.Content.ReadAsStringAsync();
+                var response = await this.http.PostAsJsonAsync($"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}", tSheetSpecsInProgressReqeust, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    fileName = await response.Content.ReadAsStringAsync();
+                }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //no connection to the server
-                Console.WriteLine(ex.Message);
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
             }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
             return fileName;
         }
 
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId)
         {
-            TSheetSpecsInProgressDto tSheetSpecsInProgressDto;
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = null;
+
             try
             {
-                var tSheetSpecsInProgressResponse = await this.http.GetAsync(TSheetSpecsInProgressPath + "/" + userId);
-                tSheetSpecsInProgressDto = await tSheetSpecsInProgressResponse.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
+                var response = await this.http.GetAsync(TSheetSpecsInProgressPath + "/" + userId, source.Token);
+                var result = await response.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
+                if (source?.IsCancellationRequested == false)
+                {
+                    tSheetSpecsInProgressDto = result;
+                }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //no connection to the server
-                Console.WriteLine(ex.Message);
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
                 tSheetSpecsInProgressDto = new TSheetSpecsInProgressDto();
-                tSheetSpecsInProgressDto.UserId = $"HTTPFAIL: {ex.Message}";
+                tSheetSpecsInProgressDto.UserId = $"HTTPFAIL: {Message}"; //mark as FAIL
             }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
             return tSheetSpecsInProgressDto;
         }
 

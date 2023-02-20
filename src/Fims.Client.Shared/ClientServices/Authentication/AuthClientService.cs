@@ -14,6 +14,9 @@ using Fims.Client.Shared.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Fims.Data.Entities;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using Fims.Data.Models.TSheetSpecs;
+using Fims.Client.Shared.Shared.Common;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 
 namespace Fims.Client.Shared.ClientServices.Authentication
 {
@@ -48,25 +51,42 @@ namespace Fims.Client.Shared.ClientServices.Authentication
 
         public async Task<Result> Login(LoginRequestModel model)
         {
-            HttpResponseMessage response;
-
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
             try
             {
-                response = await this.httpClient.PostAsJsonAsync(LoginPath, model);
-                if (!response.IsSuccessStatusCode)
+                // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
+                var result = await this.httpClient.PostAsJsonAsync(LoginPath, model, source.Token);
+                if (source?.IsCancellationRequested == false)
                 {
-                    var errors = await response.Content.ReadFromJsonAsync<string[]>();
-
-                    return Result.Failure(errors);
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
                 }
             }
-            catch (Exception ex)
+            catch (Exception e)
             {
-                //no connection to the server
-                Console.WriteLine(ex.Message);
-                //List<string> errors = new() { ex.Message};
-                List<string> errors = new() { "서버 연결 실패!" };
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            if (errors.Count > 0)
+            {
                 return Result.Failure(errors);
+
             }
 
 

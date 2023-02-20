@@ -67,7 +67,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
             try
             {
                 // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
-                var result = await this.http.GetFromJsonAsync<Dictionary<string, TSheetSpec>>(TSheetSpecsRoute + "/TSheetSpecsDict");
+                var result = await this.http.GetFromJsonAsync<Dictionary<string, TSheetSpec>>(TSheetSpecsRoute + "/TSheetSpecsDict", source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
                     tSheetSpecsDict = result;
