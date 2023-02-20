@@ -436,7 +436,7 @@ namespace Fims.Client.Shared.Pages
             CurrentInspectorUserId = user.GetUserId();
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
-            if (tSheetSpecsInProgressDto == null)
+            if (tSheetSpecsInProgressDto.UserId.StartsWith("HTTPFAIL"))
             {
                 IsLoadingSession = false;
                 LoadSessionNotificationComponent.Show(new NotificationModel()

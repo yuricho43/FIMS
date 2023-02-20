@@ -45,7 +45,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId)
         {
-            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = null;
+            TSheetSpecsInProgressDto tSheetSpecsInProgressDto;
             try
             {
                 var tSheetSpecsInProgressResponse = await this.http.GetAsync(TSheetSpecsInProgressPath + "/" + userId);
@@ -55,6 +55,8 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
             {
                 //no connection to the server
                 Console.WriteLine(ex.Message);
+                tSheetSpecsInProgressDto = new TSheetSpecsInProgressDto();
+                tSheetSpecsInProgressDto.UserId = $"HTTPFAIL: {ex.Message}";
             }
             return tSheetSpecsInProgressDto;
         }
