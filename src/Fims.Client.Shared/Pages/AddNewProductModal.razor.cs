@@ -67,7 +67,7 @@ namespace Fims.Client.Shared.Pages
 
             //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
-            _ = base.OnInitializedAsync();
+            await base.OnInitializedAsync();
         }
 
         private void OnBarcodeSelectionClicked()
@@ -80,62 +80,10 @@ namespace Fims.Client.Shared.Pages
             ProgressListDialogVisible = true;
         }
 
-
-        private void OnAddNewProductDialogOK()
-        {
-            var product = new TProductSpec
-            {
-                ProductSerial = ProductSerial,
-                ProductModel  = ProductModel,
-                Customer      = Customer,
-                EndUser       = EndUser,
-                ProductType   = ProductType,
-            };
-
-            ProductAdded.InvokeAsync(product); // pass Param to parent, by calling EventCallback
-        }
-
-        private void OnAddNewProductDialogCancel()
-        {
-            var product = new TProductSpec
-            {
-                ProductSerial = "SSSSSSSS",
-                ProductModel  = "MMMMMMMM", // mark Invalid
-                Customer      = Customer,
-                EndUser       = EndUser,
-                ProductType   = ProductType,
-            };
-
-            ProductAdded.InvokeAsync(product);
-        }
-
         //public TelerikNotification AddUserNotificationComponent { get; set; }
         //public bool ShowErrors { get; set; } = false;
         //public IEnumerable<string> Errors { get; set; }
 
-
-        //protected override void OnInitialized()
-        //{
-        //    base.OnInitialized();
-        //}
-        //
-        //protected override async Task OnInitializedAsync()
-        //{
-        //    var state = await this.AuthState.GetAuthenticationStateAsync();
-        //    var user = state.User;
-        //    //var authState = await AuthenticationStateTask;
-        //    //var user = authState.User;
-        //
-        //    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
-        //}
-
-        //public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
-        //public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
-        //{
-        //    FormValidationMessageType.None,
-        //    FormValidationMessageType.Inline,
-        //    FormValidationMessageType.Tooltip
-        //};
 
         public bool ValidSubmit { get; set; } = false;
 
@@ -156,17 +104,6 @@ namespace Fims.Client.Shared.Pages
         void HandleInvalidSubmit()
         {
             ValidSubmit = false;
-        }
-
-        void OnAddUserDialogOK()
-        {
-            //ValidSubmit = false;
-        }
-
-        void OnAddUserDialogCancel()
-        {
-            //ValidSubmit = false;
-            //AddUserFinished.InvokeAsync(NewUserRegisterRequestModel); // pass Param to parent, by calling EventCallback
         }
 
 
