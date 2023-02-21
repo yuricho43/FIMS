@@ -95,14 +95,14 @@ namespace Fims.Client.Shared.Pages
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
-#if !DEBUG
+//#if !DEBUG
             TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
             {
                 OnSaveSessionDataByTimer();
                 // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
                 await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
             }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
-#endif
+//#endif
 
             await base.OnInitializedAsync();
         }
