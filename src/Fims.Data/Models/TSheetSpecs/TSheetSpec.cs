@@ -24,14 +24,14 @@ namespace Fims.Data.Models.TSheetSpecs
         public string UserId { get; set; }
 
         public List<string> TCategories { get; set; }
-        public Dictionary<string, int> CategoryTItemsCountDict { get; set; }
-        public Dictionary<string, List<TItemSpec>> TCategoryToTItemSpecsDict { get; set; }
-        public Dictionary<string, ObservableCollection<TItemSpec>> TCategoryToObservableTItemSpecsDict { get; set; }
+        public Dictionary<string, int> TItemsCountInCategoryDict { get; set; }
+        public Dictionary<string, List<TItemSpec>> TItemSpecsInCategoryDict { get; set; }
+        public Dictionary<string, ObservableCollection<TItemSpec>> ObservableTItemSpecsInCategoryDict { get; set; }
 
-        public Dictionary<string, int> TItemSpecsInCategoryCompletedCountDict { get; set; }
-        public Dictionary<string, int> TItemSpecsInCategoryInvalidCountDict { get; set; }
-        public Dictionary<string, List<TItemSpec>> TItemSpecsInCategoryPristineDict { get; set; }
-        public Dictionary<string, List<TItemSpec>> TItemSpecsInCategorySelectedDict { get; set; }
+        public Dictionary<string, int> TItemSpecsCompletedCountInCategoryDict { get; set; }
+        public Dictionary<string, int> TItemSpecsInvalidCountInCategoryDict { get; set; }
+        public Dictionary<string, List<TItemSpec>> TItemSpecsPristineInCategoryDict { get; set; }
+        public Dictionary<string, List<TItemSpec>> TItemSpecsSelectedInCategoryDict { get; set; }
 
 
         public List<TItemSpec> TItemSpecs { get; set; }

@@ -83,7 +83,7 @@ namespace Fims.Client.Shared.Pages.Management
 
             if (confirmed)
             {
-                var result = await this.TSheetsClientService.RemoveTSheet(tSheet.Id);
+                var result = await this.TSheetsClientService.DeleteTSheet(tSheet.Id);
 
                 TSheets = await TSheetsClientService.AllTSheetsAsync();
                 StateHasChanged();

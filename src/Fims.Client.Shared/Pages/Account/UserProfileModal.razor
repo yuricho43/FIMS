@@ -1,0 +1,137 @@
+﻿@page "/account/userprofileform"
+
+<div class="modal @modalClass" tabindex="-1" role="dialog" style="display:@modalDisplay; overflow-y: auto;">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+        <div class="modal-content dialog-background">
+            <div class="modal-header dialog-header-background">
+                <h5 class="modal-title">@Title</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+
+
+            <div class="modal-body dialog-body-background">
+                <TelerikForm Model="@CurrentUserProfileModel"
+                             Orientation="FormOrientation.Horizontal">
+                    <FormValidation>
+                        <DataAnnotationsValidator></DataAnnotationsValidator>
+                    </FormValidation>
+                    <FormItems>
+                        <FormItem Field="@nameof(CurrentUserProfileModel.UserName)">
+                            <Template>
+                                <label for="username" class="k-label k-form-label">사용자 ID:</label>
+                                <TelerikTextBox Id="username" @bind-Value="@CurrentUserProfileModel.UserName" Enabled="false"></TelerikTextBox>
+                            </Template>
+                        </FormItem>
+                        <FormItem Field="@nameof(CurrentUserProfileModel.HangulName)">
+                            <Template>
+                                <label for="hangulname" class="k-label k-form-label">이름:</label>
+                                <TelerikTextBox Id="hangulname" @bind-Value="@CurrentUserProfileModel.HangulName" Enabled="false"></TelerikTextBox>
+                            </Template>
+                        </FormItem>
+                        <FormItem Field="@nameof(CurrentUserProfileModel.Email)">
+                            <Template>
+                                <label for="email" class="k-label k-form-label">이메일:</label>
+                                <TelerikTextBox Id="email" @bind-Value="@CurrentUserProfileModel.Email" Enabled="false"></TelerikTextBox>
+                            </Template>
+                        </FormItem>
+                        <FormItem Field="@nameof(CurrentUserProfileModel.Role)">
+                            <Template>
+                                <label for="role" class="k-label k-form-label">권한:</label>
+                                <TelerikTextBox Id="role" @bind-Value="@CurrentUserProfileModel.Role" Enabled="false"></TelerikTextBox>
+                            </Template>
+                        </FormItem>
+                    </FormItems>
+
+                    <FormButtons>
+                    </FormButtons>
+
+                </TelerikForm>
+            </div>
+
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-danger" @onclick="@(() => TheChangePasswordModal.Open())">암호 변경</button>
+                <button type="button" class="btn btn-light" data-dismiss="modal" @onclick="() => Close()">닫기</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ChangePasswordModal @ref="TheChangePasswordModal">
+    <Title>암호 변경</Title>
+
+    <Body>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Omnes enim iucundum motum, quo sensus hilaretur.</p>
+    </Body>
+
+    <Footer>
+        @*<button type="button" class="btn btn-secondary" data-dismiss="TheUserProfileModal" @onclick="() => TheUserProfileModal.Close()">Close</button>*@
+    </Footer>
+</ChangePasswordModal>
+
+
+<style>
+    .fims-dialog {
+        /* margin-left: 50px;*/ 
+        background-color: silver;
+    }
+</style>
+
+
+<style>
+    .dialog-background {
+        color: darkblue;
+        background-color:silver;
+    }
+
+    .dialog-header-background {
+        color: darkred;
+        background-color:silver;
+    }
+    .dialog-body-background {
+        color: black;
+        background-color:silver;
+    }
+
+</style>
+
+
+
+@if (showBackdrop)
+{
+    <div class="modal-backdrop fade show"></div>
+}
+
+@code {
+    private ChangePasswordModal TheChangePasswordModal { get; set; }
+
+    [Parameter]
+    public RenderFragment Title { get; set; }
+
+    [Parameter]
+    public RenderFragment Body { get; set; }
+
+    [Parameter]
+    public RenderFragment Footer { get; set; }
+
+    private string modalDisplay = "none;";
+    private string modalClass = "";
+    private bool   showBackdrop = false;
+
+    public void Open()
+    {
+        modalDisplay = "block;";
+        modalClass = "show";
+        showBackdrop = true;
+    }
+
+    public void Close()
+    {
+        modalDisplay = "none";
+        modalClass = "";
+        showBackdrop = false;
+    }
+}

@@ -28,6 +28,8 @@ using Fims.Data.Models.TSheetSpecs;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Microsoft.AspNetCore.Components.Authorization;
+using Fims.Client.Shared.Pages.Account;
+using Azure;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -50,6 +52,7 @@ namespace Fims.Client.Shared.Pages
 
         public int Page { get; set; } = 1;
 
+        public AddNewProductModal TheAddNewProductModal { get; set; }
         TelerikNotification LoadSessionNotificationComponent { get; set; }
         public List<string> ToggleButtonsThemeColor { get; set; }
 
@@ -92,14 +95,14 @@ namespace Fims.Client.Shared.Pages
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
-#if !DEBUG
+//#if !DEBUG
             TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
             {
                 OnSaveSessionDataByTimer();
                 // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
                 await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
             }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
-#endif
+//#endif
 
             await base.OnInitializedAsync();
         }
@@ -173,11 +176,14 @@ namespace Fims.Client.Shared.Pages
 
             if (tProductSpec.ProductModel == "MMMMMMMM")
             {
-                return false; // invalid ProductModel
+                // invalid ProductModel
+                return false;
             }
 
             if (ProductSerialToTSheetSpecDict.ContainsKey(tProductSpec.ProductSerial))
             {
+                //already added
+                await ActivateAlert("추가 실패", "이미 등록되었습니다.");
                 return false;
             }
 
@@ -204,6 +210,8 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
+                //await ActivateAlert("WARNING", $"{tProductSpec.ProductModel}에 대한 스펙파일을 찾을 수 없습니다. 서버를 점검하세요.");
+                await ActivateAlert("추가 실패", "서버연결상태를 점검하세요.");
                 return false;
             }
         }
@@ -220,14 +228,10 @@ namespace Fims.Client.Shared.Pages
 
         private async Task<TSheetSpec> GetTSheetSpecByTModelAsync(string tModel)
         {
-            TSheetSpec tSheetSpec;
-            //FIXME  if (TModelToTSheetSpecDict.ContainsKey(tModel))
-            //FIXME  {
-            //FIXME      tSheetSpec = TModelToTSheetSpecDict[tModel];
-            //FIXME  }
-            //FIXME  else
-            //FIXME  {
-                tSheetSpec = await TSheetSpecsClientService.GetTSheetSpecByEquipmentModelAsync(tModel);
+            TSheetSpec tSheetSpec = await TSheetSpecsClientService.GetTSheetSpecByEquipmentModelAsync(tModel);
+
+            if (tSheetSpec != null)
+            {
                 if (tSheetSpec.ProductModel != Constants.TSheetSpecNotDefined)
                 {
                     ExpandTSheetSpec(ref tSheetSpec); //call by ref
@@ -235,19 +239,13 @@ namespace Fims.Client.Shared.Pages
                     CreateDirtyFields(ref tSheetSpec); //call by ref
                     SetChXEnabled(ref tSheetSpec); //call by ref
                     MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
-                    MakeTItemSpecsInCategoryCompletedCountDict(ref tSheetSpec);
+                    MakeTItemSpecsCompletedCountInCategoryDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryPristineDict(ref tSheetSpec);
                     MakeTItemSpecsInCategorySelectedDict(ref tSheetSpec);
                 }
-                else
-                {
-                    await ActivateAlert("WARNING", $"Test Spec Not Found for Model: {tModel}");
-                }
-            //FIXME  }
+            }
 
-            var tmodel = tSheetSpec.ProductModel;
-            var tcounts = tSheetSpec.CategoryTItemsCountDict.Values.ToList();
             return tSheetSpec;
         }
 
@@ -260,7 +258,7 @@ namespace Fims.Client.Shared.Pages
             tSheetSpecRef.TCategories = (List<string>)tItemSpecs.GroupBy(s => s.Category).Select(s => s.First()).Select(g => g.Category).ToList();
 
             //Group TItemSpecs by Category, Put into a Dictionary.
-            tSheetSpecRef.TCategoryToTItemSpecsDict = tItemSpecs.GroupBy(s => s.Category).ToDictionary(g => g.Key, g => g.ToList());
+            tSheetSpecRef.TItemSpecsInCategoryDict = tItemSpecs.GroupBy(s => s.Category).ToDictionary(g => g.Key, g => g.ToList());
 
             tSheetSpecRef.InspectionStartDateTime = DateTime.Now;
             tSheetSpecRef.InspectorName = CurrentInspectorName;
@@ -274,55 +272,55 @@ namespace Fims.Client.Shared.Pages
             //else
             //    tSheetSpecRef.TCategories.Clear();
 
-            if (tSheetSpecRef.TCategoryToObservableTItemSpecsDict.IsNullOrEmpty())
-                tSheetSpecRef.TCategoryToObservableTItemSpecsDict = new Dictionary<string, ObservableCollection<TItemSpec>>();
+            if (tSheetSpecRef.ObservableTItemSpecsInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.ObservableTItemSpecsInCategoryDict = new Dictionary<string, ObservableCollection<TItemSpec>>();
             else
-                tSheetSpecRef.TCategoryToObservableTItemSpecsDict.Clear();
+                tSheetSpecRef.ObservableTItemSpecsInCategoryDict.Clear();
 
-            if (tSheetSpecRef.CategoryTItemsCountDict.IsNullOrEmpty())
-                tSheetSpecRef.CategoryTItemsCountDict = new Dictionary<string, int>();
+            if (tSheetSpecRef.TItemsCountInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemsCountInCategoryDict = new Dictionary<string, int>();
             else
-                tSheetSpecRef.CategoryTItemsCountDict.Clear();
+                tSheetSpecRef.TItemsCountInCategoryDict.Clear();
 
-            foreach (var categoryTItemspec in tSheetSpecRef.TCategoryToTItemSpecsDict)
+            foreach (var categoryTItemspec in tSheetSpecRef.TItemSpecsInCategoryDict)
             {
                 //tSheetSpecRef.TCategories.Add(categoryTItemspec.Key);
                 ObservableCollection<TItemSpec> observableTItemSpecs = new ObservableCollection<TItemSpec>(categoryTItemspec.Value);
-                tSheetSpecRef.TCategoryToObservableTItemSpecsDict.Add(categoryTItemspec.Key, observableTItemSpecs);
-                tSheetSpecRef.CategoryTItemsCountDict.Add(categoryTItemspec.Key, observableTItemSpecs.Count);
+                tSheetSpecRef.ObservableTItemSpecsInCategoryDict.Add(categoryTItemspec.Key, observableTItemSpecs);
+                tSheetSpecRef.TItemsCountInCategoryDict.Add(categoryTItemspec.Key, observableTItemSpecs.Count);
             }
         }
 
-        private void MakeTItemSpecsInCategoryCompletedCountDict(ref TSheetSpec tSheetSpecRef)
+        private void MakeTItemSpecsCompletedCountInCategoryDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict = new Dictionary<string, int>();
+            if (tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict = new Dictionary<string, int>();
             else
-                tSheetSpecRef.TItemSpecsInCategoryCompletedCountDict.Clear();
+                tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict.Clear();
         }
 
         private void MakeTItemSpecsInCategoryInvalidCountDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict = new Dictionary<string, int>();
+            if (tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict = new Dictionary<string, int>();
             else
-                tSheetSpecRef.TItemSpecsInCategoryInvalidCountDict.Clear();
+                tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict.Clear();
         }
 
         private void MakeTItemSpecsInCategoryPristineDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategoryPristineDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategoryPristineDict = new Dictionary<string, List<TItemSpec>>();
+            if (tSheetSpecRef.TItemSpecsPristineInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsPristineInCategoryDict = new Dictionary<string, List<TItemSpec>>();
             else
-                tSheetSpecRef.TItemSpecsInCategoryPristineDict.Clear();
+                tSheetSpecRef.TItemSpecsPristineInCategoryDict.Clear();
         }
 
         private void MakeTItemSpecsInCategorySelectedDict(ref TSheetSpec tSheetSpecRef)
         {
-            if (tSheetSpecRef.TItemSpecsInCategorySelectedDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInCategorySelectedDict = new Dictionary<string, List<TItemSpec>>();
+            if (tSheetSpecRef.TItemSpecsSelectedInCategoryDict.IsNullOrEmpty())
+                tSheetSpecRef.TItemSpecsSelectedInCategoryDict = new Dictionary<string, List<TItemSpec>>();
             else
-                tSheetSpecRef.TItemSpecsInCategorySelectedDict.Clear();
+                tSheetSpecRef.TItemSpecsSelectedInCategoryDict.Clear();
         }
 
         private void MakeRangeToolTip(ref TSheetSpec tSheetSpecRef) //call by ref
@@ -432,6 +430,18 @@ namespace Fims.Client.Shared.Pages
             CurrentInspectorUserId = user.GetUserId();
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
+            if (tSheetSpecsInProgressDto.UserId.StartsWith("HTTPFAIL"))
+            {
+                IsLoadingSession = false;
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "가저오기 실패: FIMS서버 연결에 문제가 있습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-down"
+                });
+                return;
+            }
 
             var userIdRx = tSheetSpecsInProgressDto.UserId;
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
@@ -497,15 +507,28 @@ namespace Fims.Client.Shared.Pages
             }
 
             bool result = await SaveSessionData();
+            if (result)
+            {
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "진행목록이 성공적으로 저장되었습니다.",
+                    ThemeColor = "success",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
+            else
+            {
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
             IsSavingSession = false;
 
-            LoadSessionNotificationComponent.Show(new NotificationModel()
-            {
-                Text = "진행목록이 성공적으로 저장되었습니다.",
-                ThemeColor = "success",
-                ShowIcon = true,
-                Icon = "caret-double-alt-up"
-            });
 
             //StateHasChanged();
         }
@@ -521,6 +544,16 @@ namespace Fims.Client.Shared.Pages
             }
 
             bool result = await SaveSessionData();
+            if ( !result )
+            {
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
 
             IsSavingSession = false;
             //StateHasChanged();
@@ -568,80 +601,15 @@ namespace Fims.Client.Shared.Pages
             }
 
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
-
-            return true;
+            if ( fileName == null )
+            {
+                return false;
+            }
+            else
+            {
+                return true;
+            }
         }
-
-
-        #region AddNewProductForm
-        public TelerikForm AddNewProductFormRef { get; set; }
-
-        public TProductSpec NewTProductSpec { get; set; } = new TProductSpec { ProductType = "신규" };
-
-        protected List<string> ProductTypes = new List<string>() { "신규", "수리" };
-
-        private bool BarcodeSelectionDialogVisible { get; set; } = false;
-        private bool ProgressListDialogVisible { get; set; } = false;
-
-
-        private void OnBarcodeSelectionClicked()
-        {
-            BarcodeSelectionDialogVisible = true;
-        }
-
-        private void OnProgessListClicked()
-        {
-            ProgressListDialogVisible = true;
-        }
-
-
-        public void OnAddNewProductClicked()
-        {
-            AddNewProductDialogVisible = true; //show AddNewProductDialog
-            //StateHasChanged();
-        }
-
-        //public FormValidationMessageType ValidationMessageType { get; set; } = FormValidationMessageType.Tooltip;
-        //public List<FormValidationMessageType> ValidationMessageTypes { get; set; } = new List<FormValidationMessageType>()
-        //{
-        //    FormValidationMessageType.None,
-        //    FormValidationMessageType.Inline,
-        //    FormValidationMessageType.Tooltip
-        //};
-
-        public bool ValidNewProductSubmit { get; set; } = false;
-
-        async void HandleValidNewProductSubmit()
-        {
-            ValidNewProductSubmit = true;
-
-            await AddTProduct(NewTProductSpec);
-            ClearNewProductSpec();
-
-            ValidNewProductSubmit = false;
-
-            StateHasChanged();
-        }
-
-        void HandleInvalidNewProductSubmit()
-        {
-            ValidNewProductSubmit = false;
-        }
-
-        private void ClearNewProductSpec()
-        {
-            NewTProductSpec.ProductSerial = null;
-            NewTProductSpec.EndUser = null;
-            NewTProductSpec.Customer = null;
-            //StateHasChanged();
-        }
-
-        private void OnAddNewProductDialogCancel()
-        {
-            AddNewProductDialogVisible = false; //hide AddNewProductDialog
-            //StateHasChanged();
-        }
-        #endregion
 
 
         [CascadingParameter]

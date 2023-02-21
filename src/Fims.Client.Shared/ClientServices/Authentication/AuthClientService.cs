@@ -13,6 +13,12 @@ using Fims.Data.Models.Identity;
 using Fims.Client.Shared.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Fims.Data.Entities;
+using static System.Runtime.InteropServices.JavaScript.JSType;
+using Fims.Data.Models.TSheetSpecs;
+using Fims.Client.Shared.Shared.Common;
+using Microsoft.EntityFrameworkCore.Update.Internal;
+using System.Collections.Generic;
+using Telerik.SvgIcons;
 
 namespace Fims.Client.Shared.ClientServices.Authentication
 {
@@ -27,6 +33,10 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         private const string AllUsersPath = "api/identity/getallusers";
         private const string AllRolesPath = "api/identity/getroles";
         private const string DeletePath = "api/identity/deleteuser";
+        private const string ChangeRolePath = "api/identity/changerole";
+        private const string ChangeProfilePath = "api/identity/changeprofile";
+        private const string ChangePasswordPath = "api/identity/changepassword";
+        private const string ResetPasswordPath = "api/identity/resetpassword";
 
         public AuthClientService(
             HttpClient httpClient,
@@ -39,20 +49,88 @@ namespace Fims.Client.Shared.ClientServices.Authentication
         }
 
         public async Task<Result> Register(RegisterRequestModel model)
-            => await this.httpClient
-                .PostAsJsonAsync(RegisterPath, model)
-                .ToResult();
+        {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
+
+            try
+            {
+                var result = await this.httpClient.PostAsJsonAsync(RegisterPath, model, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            if (errors.Count > 0)
+            {
+                return Result.Failure(errors);
+            }
+            else
+            {
+                return Result.Success;
+            }
+        }
 
         public async Task<Result> Login(LoginRequestModel model)
         {
-            var response = await this.httpClient.PostAsJsonAsync(LoginPath, model);
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
 
-            if (!response.IsSuccessStatusCode)
+            try
             {
-                var errors = await response.Content.ReadFromJsonAsync<string[]>();
+                var result = await this.httpClient.PostAsJsonAsync(LoginPath, model, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
 
+            if (errors.Count > 0)
+            {
                 return Result.Failure(errors);
             }
+
 
             var responseAsString = await response.Content.ReadAsStringAsync();
 
@@ -83,19 +161,288 @@ namespace Fims.Client.Shared.ClientServices.Authentication
 
         public async Task<List<UserAuthInfoModel>> AllUsers()
         {
-            var response = await this.httpClient.GetFromJsonAsync<List<UserAuthInfoModel>>(AllUsersPath);
-            return response;
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            List< UserAuthInfoModel>  users = new List<UserAuthInfoModel>();
+
+            try
+            {
+                var result = await this.httpClient.GetFromJsonAsync<List<UserAuthInfoModel>>(AllUsersPath, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    users = result;
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            return users;
         }
 
         public async Task<List<FimsRole>> AllRoles()
         {
-            var response = await this.httpClient.GetFromJsonAsync<List<FimsRole>>(AllRolesPath);
-            return response;
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            List<FimsRole> roles = new List<FimsRole>();
+
+            try
+            {
+                var result = await this.httpClient.GetFromJsonAsync<List<FimsRole>>(AllRolesPath, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    roles = result;
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            return roles;
         }
 
         public async Task<Result> Delete(string username)
-            => await this.httpClient
-                .DeleteAsync(DeletePath + "/" + username)
-                .ToResult();
+        {
+            //return await this.httpClient.DeleteAsync(DeletePath + "/" + username).ToResult();
+
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
+
+            try
+            {
+                var result = await this.httpClient.DeleteAsync(DeletePath + "/" + username, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            if (errors.Count > 0)
+            {
+                return Result.Failure(errors);
+            }
+            else
+            {
+                return Result.Success;
+            }
+        }
+
+        public async Task<Result> ChangeRole(UserAuthInfoModel model)
+        {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
+
+            try
+            {
+                var result = await this.httpClient.PutAsJsonAsync(ChangeRolePath, model, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            if (errors.Count > 0)
+            {
+                return Result.Failure(errors);
+            }
+            else
+            {
+                return Result.Success;
+            }
+        }
+
+
+        public async Task<Result> ChangeProfile(UserProfileModel model)
+        {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
+
+            try
+            {           
+                var result = await this.httpClient.PutAsJsonAsync(ChangeProfilePath, model, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            if (errors.Count > 0)
+            {
+                return Result.Failure(errors);
+            }
+            else
+            {
+                return Result.Success;
+            }
+        }
+
+
+        public async Task<Result> ChangePassword(PasswordModel model)
+        {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
+
+            try
+            {
+                var result = await this.httpClient.PutAsJsonAsync(ChangePasswordPath, model, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            if (errors.Count > 0)
+            {
+                return Result.Failure(errors);
+            }
+            else
+            {
+                return Result.Success;
+            }
+        }
+
+        public async Task<Result> ResetPassword(UserAuthInfoModel model)
+        {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            HttpResponseMessage response = null;
+            List<string> errors = new List<string>();
+
+            try
+            {
+                var result = await this.httpClient.PutAsJsonAsync(ResetPasswordPath, model, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    if (!response.IsSuccessStatusCode)
+                    {
+                        errors = await response.Content.ReadFromJsonAsync<List<string>>();
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                errors.Add("서버 연결 실패!");
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            if (errors.Count > 0)
+            {
+                return Result.Failure(errors);
+            }
+            else
+            {
+                return Result.Success;
+            }
+        }
     }
 }

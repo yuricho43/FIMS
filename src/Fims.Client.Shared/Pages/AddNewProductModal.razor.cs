@@ -26,7 +26,7 @@ using static Telerik.Blazor.ThemeConstants;
 
 namespace Fims.Client.Shared.Pages
 {
-    public partial class AddNewProductDialog
+    public partial class AddNewProductModal
     {
         //[CascadingParameter]
         //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
@@ -36,6 +36,9 @@ namespace Fims.Client.Shared.Pages
 
         [Parameter]
         public List<string> ProductModels { get; set; }
+
+        public TProductSpec NewTProductSpec { get; set; } = new TProductSpec {ProductType = "신규" };
+        public TelerikForm AddNewProductFormRef { get; set; }
 
         public string ProductSerial { get; set; }
         public string ProductModel { get; set; }
@@ -49,10 +52,10 @@ namespace Fims.Client.Shared.Pages
         private bool ProgressListDialogVisible { get; set; } = false;
 
 
-        protected override void OnInitialized()
-        {
-            base.OnInitialized();
-        }
+        //protected override void OnInitialized()
+        //{
+        //    base.OnInitialized();
+        //}
 
         protected override async Task OnInitializedAsync()
         {
@@ -63,6 +66,8 @@ namespace Fims.Client.Shared.Pages
             var name = user.GetHangulName();
 
             //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
+
+            await base.OnInitializedAsync();
         }
 
         private void OnBarcodeSelectionClicked()
@@ -75,33 +80,30 @@ namespace Fims.Client.Shared.Pages
             ProgressListDialogVisible = true;
         }
 
+        //public TelerikNotification AddUserNotificationComponent { get; set; }
+        //public bool ShowErrors { get; set; } = false;
+        //public IEnumerable<string> Errors { get; set; }
 
-        private void OnAddNewProductDialogOK()
+
+        public bool ValidSubmit { get; set; } = false;
+
+        async void HandleValidSubmit()
         {
-            var product = new TProductSpec
-            {
-                ProductSerial = ProductSerial,
-                ProductModel  = ProductModel,
-                Customer      = Customer,
-                EndUser       = EndUser,
-                ProductType   = ProductType,
-            };
+            ValidSubmit = true;
 
-            ProductAdded.InvokeAsync(product); // pass Param to parent, by calling EventCallback
+            await ProductAdded.InvokeAsync(NewTProductSpec); // pass Param to parent, by calling EventCallback
+
+            //clear the product added
+            NewTProductSpec.ProductSerial = "";
+
+            ValidSubmit = false;
+
+            StateHasChanged();
         }
 
-        private void OnAddNewProductDialogCancel()
+        void HandleInvalidSubmit()
         {
-            var product = new TProductSpec
-            {
-                ProductSerial = "SSSSSSSS",
-                ProductModel  = "MMMMMMMM", // mark Invalid
-                Customer      = Customer,
-                EndUser       = EndUser,
-                ProductType   = ProductType,
-            };
-
-            ProductAdded.InvokeAsync(product);
+            ValidSubmit = false;
         }
 
 

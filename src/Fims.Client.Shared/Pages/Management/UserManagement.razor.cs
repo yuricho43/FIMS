@@ -1,4 +1,5 @@
-﻿using Fims.Data.Entities;
+﻿using Fims.Common;
+using Fims.Data.Entities;
 using Fims.Data.Models.Identity;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Identity;
@@ -42,25 +43,51 @@ namespace Fims.Client.Shared.Pages.Management
 
         private async void ChangeUserRole(GridCommandEventArgs args)
         {
-            var userinfo = (UserAuthInfoModel)args.Item;
-            //ProductService.UpdateProduct((ProductDto)args.Item);
-            //await LoadData();
-            await Task.Delay(1);
-        }
+            var model = (UserAuthInfoModel)args.Item;
+            var result = await this.AuthClientService.ChangeRole(model);
 
-        private async Task ResetPassword(UserAuthInfoModel item)
-        {
-            if (item != null)
+            if (result.Succeeded)
             {
-                //selectedProduct = new ProductDto { ProductId = item.ProductId, ProductName = item.ProductName, UnitPrice = item.UnitPrice };
+                this.ShowErrors = false;
+
+                UserManagementNotificationComponent.Show(new NotificationModel
+                {
+                    Text = $"사용자({model.UserName}) 권한변경({model.Role}) 성공",
+                    ThemeColor = "success",
+                    //CloseAfter = 3000
+                });
+
+                await LoadData();
+                StateHasChanged();
             }
             else
             {
-                //ClearSelection();
+                this.Errors = result.Errors;
+                this.ShowErrors = true;
             }
+        }
 
-            await Task.Delay(1);
-            StateHasChanged();
+        private async Task ResetPassword(UserAuthInfoModel model)
+        {
+            model.Password = Constants.FimsDefaultPassword;
+            var result = await this.AuthClientService.ResetPassword(model);
+
+            if (result.Succeeded)
+            {
+                this.ShowErrors = false;
+
+                UserManagementNotificationComponent.Show(new NotificationModel
+                {
+                    Text = $"사용자({model.UserName}) 암호초기화({Constants.FimsDefaultPassword}) 성공",
+                    ThemeColor = "success",
+                    //CloseAfter = 3000
+                });
+            }
+            else
+            {
+                this.Errors = result.Errors;
+                this.ShowErrors = true;
+            }
         }
 
         private async Task DeleteUser(GridCommandEventArgs args)

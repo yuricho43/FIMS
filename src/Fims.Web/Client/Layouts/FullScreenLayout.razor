@@ -13,49 +13,34 @@
 <TelerikRootComponent>
     <div class="header">
         <div class="nav-container" style="margin-left: 2em; margin-right: 2em;">
-            <img style="width: 30px;" src="_content/Fims.Client.Shared/images/fimsapp.svg">
+            <img style="width: 30px;" src="_content/Fims.Client.Shared/images/fimsinspect.svg">
             <div class="title">
                 <h1>@Localizer["Fims_Title"]</h1>
             </div>
+            <DigitalClock></DigitalClock>
             <LoginDisplay></LoginDisplay>
         </div>
     </div>
 
-    @Body
+    <div class="fims-full-body">
+        @Body
+    </div>
 
 </TelerikRootComponent>
 
 
 <style>
-    .k-drawer-item {
-        align-items: center;
+    /* most styles for header are defined in main.css */
+    .header {
+        height: 60px;
+        background-color: cornflowerblue
     }
+</style>
 
-    .k-drawer-container {
-        position: relative;
-        width: 100%;
-        height: 90%;
-        //background-color: crimson;
-    }
-
-    .k-drawer-content {
-        padding: 15px;
-        //font-size: 18px;
-        //background-color: lightseagreen;
-    }
-
-        .k-drawer-content h6 {
-            margin-top: 15px;
-            //background-color: darksalmon;
-        }
-
-    .custom-toolbar {
-        width: 100%;
-        background-color: coral;
-        line-height: 10px;
-        border-bottom: inset;
-        border-bottom-width: 1px;
-        padding: 3px 8px;
-        color: #656565;
+<style>
+    .fims-full-body {
+        background-color: #d8d9e8;
+        padding: 10px;
+        height: calc(100vh - 60px);
     }
 </style>

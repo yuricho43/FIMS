@@ -16,7 +16,7 @@
 </TelerikStackLayout>
 </div>
 
-<div style="background:Gainsboro;height: 10px;"></div>
+<div style="height: 10px;"></div>
 
 <TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
@@ -32,25 +32,27 @@
                     <span style="color:white"><strong>@TCategory</strong></span>
  
                     <span>&nbsp;</span>
-                    @if (MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory] > 0)
+                    @if (MyTSheetSpec.TItemsCountInCategoryDict[TCategory] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[TCategory] > 0)
                     {
-                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                        <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.TItemsCountInCategoryDict[TCategory] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[TCategory])</span>
                     }
                     else
                     {
-                        if (MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[TCategory] > 0)
+                        if (MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict[TCategory] > 0)
                         {
-                            <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                            <span class="badge badge-warning" style="width: 30px">@(MyTSheetSpec.TItemsCountInCategoryDict[TCategory] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[TCategory])</span>
                         }
                         else
                         {
-                            <span class="badge badge-success" style="width: 30px">@(MyTSheetSpec.CategoryTItemsCountDict[TCategory] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[TCategory])</span>
+                            <span class="badge badge-success" style="width: 30px">@(MyTSheetSpec.TItemsCountInCategoryDict[TCategory] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[TCategory])</span>
                         }
                     }
                 </div>
             </HeaderTemplate>
             <Content>
-                <TSheetCategoryComponent MyTSheetSpec="MyTSheetSpec" TCategory="@TCategory" TItemSpecsInCategoryCompletedCountChanged="OnTItemSpecsInCategoryCompletedCountChanged" TItemSpecsInCategoryInvalidCountChanged="OnTItemSpecsInCategoryInvalidCountChanged"></TSheetCategoryComponent>
+                <div style="background-color:#d8d9e8;">
+                    <TSheetCategoryComponent MyTSheetSpec="MyTSheetSpec" TCategory="@TCategory" TItemSpecsCompletedCountInCategoryChanged="OnTItemSpecsCompletedCountInCategoryChanged" TItemSpecsInvalidCountInCategoryChanged="OnTItemSpecsInvalidCountInCategoryChanged"></TSheetCategoryComponent>
+                </div>
             </Content>
         </TabStripTab>
     }

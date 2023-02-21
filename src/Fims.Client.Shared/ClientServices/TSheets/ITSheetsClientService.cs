@@ -11,12 +11,11 @@ namespace Fims.Client.Shared.ClientServices.TSheets
 
         Task<Result> UpdateTSheet(int id, TSheet tSheet);
 
-        Task<Result> RemoveTSheet(int id);
+        Task<Result> DeleteTSheet(int id);
 
         Task<IEnumerable<TSheet>> AllTSheetsAsync();
 
-        // Task<TSheet> FindTSheetByIdAsync(int id);
-        Task<TSheet> FindTSheetWithDetailsByIdAsync(int id);
+        Task<TSheet> FindTSheetWithTItems(int id);
 
         Task<TSheetsComplexSearchResponseModel> ComplexSearchAsync(TSheetsComplexSearchRequestModel searchRequest);
     }

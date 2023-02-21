@@ -9,6 +9,7 @@ using Fims.Data.Models;
 using Fims.Data.Models.TSheetSpecs;
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.Forms;
 using Microsoft.AspNetCore.Components.Web;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.EntityFrameworkCore;
@@ -26,7 +27,7 @@ using static Telerik.Blazor.ThemeConstants;
 
 namespace Fims.Client.Shared.Pages
 {
-    public partial class AddNewProductForm
+    public partial class AddNewProductModal2
     {
         //[CascadingParameter]
         //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
@@ -36,9 +37,10 @@ namespace Fims.Client.Shared.Pages
 
         [Parameter]
         public List<string> ProductModels { get; set; }
+        public List<string> ProductModelsPrev { get; set; }
 
-        public TProductSpec NewTProductSpec { get; set; } = new TProductSpec {ProductType = "신규" };
-        public TelerikForm AddNewProductFormRef { get; set; }
+        public TProductSpec NewTProductSpec { get; set; } = new TProductSpec { ProductType = "신규" };
+        public EditForm AddNewProductFormRef2 { get; set; }
 
         public string ProductSerial { get; set; }
         public string ProductModel { get; set; }
@@ -51,6 +53,9 @@ namespace Fims.Client.Shared.Pages
         private bool BarcodeSelectionDialogVisible { get; set; } = false;
         private bool ProgressListDialogVisible { get; set; } = false;
 
+        private int TotalOnParamCalledCounter = 0;
+        private int ValidOnParamCalledCounter = 0;
+        private int InvalidOnParamCalledCounter = 0;
 
         //protected override void OnInitialized()
         //{
@@ -67,7 +72,41 @@ namespace Fims.Client.Shared.Pages
 
             //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
-            _ = base.OnInitializedAsync();
+            await base.OnInitializedAsync();
+        }
+
+        protected override async Task OnParametersSetAsync()
+        {
+            //autoFillTItemSpecs();
+            TotalOnParamCalledCounter++;
+
+            if (ProductModelsPrev?.Count != ProductModels?.Count)
+            {
+                //////////////////////////////////////////////////////////////////////////////////////////////////
+                //JBH FIXME: OnParametersSetAsync called too much and unexpectedly. It seems to be the ASP.NET bug
+                //////////////////////////////////////////////////////////////////////////////////////////////////
+                ValidOnParamCalledCounter++;
+                ProductModelsPrev = ProductModels;
+            }
+            else
+            {
+                InvalidOnParamCalledCounter++;
+            }
+
+            Console.WriteLine($"TSheetComponent: OnParametersSetAsync called: Total={TotalOnParamCalledCounter} Valid={ValidOnParamCalledCounter} Invalid={InvalidOnParamCalledCounter}");
+
+            await base.OnParametersSetAsync();
+        }
+
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            await base.OnAfterRenderAsync(firstRender);
+            if (firstRender)
+            {
+                //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
+                //StateHasChanged();
+            }
         }
 
         private void OnBarcodeSelectionClicked()
@@ -145,9 +184,12 @@ namespace Fims.Client.Shared.Pages
 
             await ProductAdded.InvokeAsync(NewTProductSpec); // pass Param to parent, by calling EventCallback
 
+            //clear the product added
+            NewTProductSpec.ProductSerial = "";
+
             ValidSubmit = false;
 
-            //StateHasChanged();
+            StateHasChanged();
         }
 
         void HandleInvalidSubmit()

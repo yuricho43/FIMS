@@ -12,9 +12,9 @@
                      OnInvalidSubmit="@HandleInvalidSubmit"
                      Orientation="FormOrientation.Vertical">
             <FormValidation>
-                <ErrorsList ShowErrors="ShowErrors" Errors="Errors" />
                 <DataAnnotationsValidator></DataAnnotationsValidator>
             </FormValidation>
+ 
             <FormItems>
                 <FormItem Field="@nameof(RegisterRequestModel.UserName)">
                     <Template>

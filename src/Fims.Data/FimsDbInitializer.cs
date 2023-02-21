@@ -82,7 +82,7 @@ namespace Fims.Data
                         Email = "admin@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(adminUser, "fims2023");
+                    await this.userManager.CreateAsync(adminUser, FimsDefaultPassword);
                     await this.userManager.AddToRoleAsync(adminUser, AdministratorRole);
 
 
@@ -97,7 +97,7 @@ namespace Fims.Data
                         Email = "manager1@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(managerUser, "fims2023");
+                    await this.userManager.CreateAsync(managerUser, FimsDefaultPassword);
                     await this.userManager.AddToRoleAsync(managerUser, ManagerRole);
 
 
@@ -112,7 +112,7 @@ namespace Fims.Data
                         Email = "inspector1@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(inspectorUser, "fims2023");
+                    await this.userManager.CreateAsync(inspectorUser, FimsDefaultPassword);
                     await this.userManager.AddToRoleAsync(inspectorUser, InspectorRole);
 
 
@@ -127,7 +127,7 @@ namespace Fims.Data
                         Email = "reporter1@fstc.co.kr",
                         SecurityStamp = "RandomSecurityStamp"
                     };
-                    await this.userManager.CreateAsync(reporterUser, "fims2023");
+                    await this.userManager.CreateAsync(reporterUser, FimsDefaultPassword);
                     await this.userManager.AddToRoleAsync(reporterUser, ReporterRole);
                 })
                 .GetAwaiter()

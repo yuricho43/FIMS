@@ -52,8 +52,11 @@ namespace Fims.Client.Shared.Pages.Management
 
         protected override async Task OnInitializedAsync()
         {
-            TSheetWithTItems = await TSheetsClientService.FindTSheetWithDetailsByIdAsync(Int32.Parse(TSheetIdString));
-            MaxChannels = TSheetWithTItems.TItems.Select(x => x.Channels).Max();
+            TSheetWithTItems = await TSheetsClientService.FindTSheetWithTItems(Int32.Parse(TSheetIdString));
+            if (TSheetWithTItems != null)
+            {
+                MaxChannels = TSheetWithTItems.TItems.Select(x => x.Channels).Max();
+            }
             await base.OnInitializedAsync();
         }
 

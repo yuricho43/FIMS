@@ -41,7 +41,7 @@ using Fims.Data.Models.Identity;
 
 namespace Fims.Client.Shared.Pages.Account
 {
-    public partial class UserProfileDialog
+    public partial class UserProfileModal
     {
         //[CascadingParameter]
         //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
@@ -51,7 +51,6 @@ namespace Fims.Client.Shared.Pages.Account
 
         [Parameter]
         public bool DialogVisible { get; set; } = false;
-
 
         //private UserProfileModel UserProfileModel = new UserProfileModel();
         public UserProfileModel CurrentUserProfileModel { get; set; } = new UserProfileModel();
@@ -86,8 +85,9 @@ namespace Fims.Client.Shared.Pages.Account
 
         private async Task SubmitAsync()
         {
-            var response = await this.Http.PutAsJsonAsync("api/identity/changeuserprofile", this.CurrentUserProfileModel);
-            if (response.IsSuccessStatusCode)
+            var result = await this.AuthClientService.ChangeProfile(this.CurrentUserProfileModel);
+
+            if (result.Succeeded)
             {
                 this.ShowErrors = false;
                 await this.AuthClientService.Logout();
@@ -96,7 +96,7 @@ namespace Fims.Client.Shared.Pages.Account
             }
             else
             {
-                this.Errors = await response.Content.ReadFromJsonAsync<string[]>();
+                this.Errors = result.Errors;
                 this.ShowErrors = true;
             }
         }

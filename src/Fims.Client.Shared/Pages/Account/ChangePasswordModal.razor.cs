@@ -41,7 +41,7 @@ using Fims.Data.Models.Identity;
 
 namespace Fims.Client.Shared.Pages.Account
 {
-    public partial class ChangePasswordDialog
+    public partial class ChangePasswordModal
     {
         //[CascadingParameter]
         //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
@@ -65,9 +65,9 @@ namespace Fims.Client.Shared.Pages.Account
         {
             ValidSubmit = true;
 
-            var response = await this.Http.PutAsJsonAsync("api/identity/changepassword", this.ChangePasswordModel);
+            var result = await this.AuthClientService.ChangePassword(this.ChangePasswordModel);
 
-            if (response.IsSuccessStatusCode)
+            if (result.Succeeded)
             {
                 this.ShowErrors = false;
                 //
@@ -82,13 +82,13 @@ namespace Fims.Client.Shared.Pages.Account
 
                 //ChangePasswordNotificationComponent.Show(new NotificationModel()
                 //{
-                //    Text = "¾ÏÈ£°¡ ¼º°øÀûÀ¸·Î º¯°æµÇ¾ú½À´Ï´Ù.",
+                //    Text = "ì•”í˜¸ê°€ ì„±ê³µì ìœ¼ë¡œ ë³€ê²½ë˜ì—ˆìŠµë‹ˆë‹¤.",
                 //    ThemeColor = "primary",
                 //    ShowIcon = true,
                 //    Icon = "caret-double-alt-up"
                 //});
 
-                _ = ActivateAlert("¾ÏÈ£º¯°æ", "¼º°øÀûÀ¸·Î º¯°æµÇ¾ú½À´Ï´Ù.");
+                _ = ActivateAlert("ì•”í˜¸ë³€ê²½", "ì„±ê³µì ìœ¼ë¡œ ë³€ê²½ë˜ì—ˆìŠµë‹ˆë‹¤.");
 
                 //StateHasChanged();
 
@@ -96,9 +96,9 @@ namespace Fims.Client.Shared.Pages.Account
             }
             else
             {
-                this.Errors = await response.Content.ReadFromJsonAsync<string[]>();
+                this.Errors = result.Errors;
                 this.ShowErrors = true;
-                _ = ActivateAlert("¾ÏÈ£º¯°æ ½ÇÆĞ", this.Errors.FirstOrDefault());
+                _ = ActivateAlert("ì•”í˜¸ë³€ê²½ ì‹¤íŒ¨", this.Errors.FirstOrDefault());
             }
 
             ValidSubmit = false;

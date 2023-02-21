@@ -28,22 +28,22 @@ namespace Fims.Client.Shared.Pages
     public partial class TSheetComponent
     {
         [Parameter]
-        public TSheetSpec MyTSheetSpec { get; set; } 
+        public TSheetSpec MyTSheetSpec { get; set; }
         //public TSheetSpec MyTSheetSpec
         //{
         //    get { return _MyTSheetSpec; }
- 
+
         //    set {
         //        _MyTSheetSpec = value;
 
         //        //debug
         //        var tmodel = _MyTSheetSpec.ProductModel;
-        //        var ccounts = _MyTSheetSpec.CategoryTItemsCountDict.Values.ToList();
+        //        var ccounts = _MyTSheetSpec.TItemsCountInCategoryDict.Values.ToList();
         //        var total = ccounts.Sum();
-        //        var xx = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
-        //        var yy = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values;
-        //        var xxl = _MyTSheetSpec.TCategoryToTItemSpecsDict.Values;
-        //        var yyl = _MyTSheetSpec.TCategoryToObservableTItemSpecsDict.Values.ToList();
+        //        var xx = _MyTSheetSpec.TItemSpecsInCategoryDict.Values;
+        //        var yy = _MyTSheetSpec.ObservableTItemSpecsInCategoryDict.Values;
+        //        var xxl = _MyTSheetSpec.TItemSpecsInCategoryDict.Values;
+        //        var yyl = _MyTSheetSpec.ObservableTItemSpecsInCategoryDict.Values.ToList();
 
         //        var aa = _MyTSheetSpec.TItemSpecs.FirstOrDefault(a => a.TestNo == 2001);
         //        //var xa = xx.FirstOrDefault(a => a.TestNo == 2001);
@@ -85,10 +85,10 @@ namespace Fims.Client.Shared.Pages
 
             MyTSheetSpecPrev = MyTSheetSpec;
 
-            if (MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Count() == 0)
+            if (MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict.Count() == 0)
             {
                 autoFillTItemSpecs();
-                InitTItemSpecsInCategoryCompletedCountDict();
+                InitTItemSpecsCompletedCountInCategoryDict();
                 InitTItemSpecsInCategoryInvalidCountDict();
                 InitTItemSpecsInCategoryPristineDict();
                 InitTItemSpecsInCategorySelectedDict();
@@ -110,10 +110,10 @@ namespace Fims.Client.Shared.Pages
                 ValidOnParamCalledCounter++;
                 MyTSheetSpecPrev = MyTSheetSpec;
 
-                if (MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Count() == 0)
+                if (MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict.Count() == 0)
                 {
                     autoFillTItemSpecs();
-                    InitTItemSpecsInCategoryCompletedCountDict();
+                    InitTItemSpecsCompletedCountInCategoryDict();
                     InitTItemSpecsInCategoryInvalidCountDict();
                     InitTItemSpecsInCategoryPristineDict();
                     InitTItemSpecsInCategorySelectedDict();
@@ -154,18 +154,18 @@ namespace Fims.Client.Shared.Pages
             tItem1003.Completed = true;
         }
 
-        private void InitTItemSpecsInCategoryCompletedCountDict()
+        private void InitTItemSpecsCompletedCountInCategoryDict()
         {
-            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
             {
                 int completedCount = catItems.Value.Where(t => t.Completed == true).Count();
-                MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict.Add(catItems.Key, completedCount);
+                MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict.Add(catItems.Key, completedCount);
             }
         }
 
         private void InitTItemSpecsInCategoryInvalidCountDict()
         {
-            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
             {
                 int invalidCount = catItems.Value.Where(t =>
                                     (t.IsCh1DataValid == false && t.IsCh1DataEnabled == true && t.IsCh1DataEntered == true) ||
@@ -173,23 +173,23 @@ namespace Fims.Client.Shared.Pages
                                     (t.IsCh3DataValid == false && t.IsCh3DataEnabled == true && t.IsCh3DataEntered == true) ||
                                     (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
                 ).Count();
-                MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict.Add(catItems.Key, invalidCount);
+                MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict.Add(catItems.Key, invalidCount);
             }
         }
 
         private void InitTItemSpecsInCategoryPristineDict()
         {
-            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
             {
-                MyTSheetSpec.TItemSpecsInCategoryPristineDict.Add(catItems.Key, new List<TItemSpec>());
+                MyTSheetSpec.TItemSpecsPristineInCategoryDict.Add(catItems.Key, new List<TItemSpec>());
             }
         }
 
         private void InitTItemSpecsInCategorySelectedDict()
         {
-            foreach (var catItems in MyTSheetSpec.TCategoryToObservableTItemSpecsDict)
+            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
             {
-                MyTSheetSpec.TItemSpecsInCategorySelectedDict.Add(catItems.Key, new List<TItemSpec>());
+                MyTSheetSpec.TItemSpecsSelectedInCategoryDict.Add(catItems.Key, new List<TItemSpec>());
             }
         }
 
@@ -202,7 +202,7 @@ namespace Fims.Client.Shared.Pages
 
             foreach (var cat in MyTSheetSpec.TCategories)
             {
-                var kkk = MyTSheetSpec.TCategoryToObservableTItemSpecsDict[cat].ToList();
+                var kkk = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[cat].ToList();
                 foreach (var k in kkk)
                 {
                     MyTSheetSpec.TItemSpecsFinal.Add(k);
@@ -237,7 +237,7 @@ namespace Fims.Client.Shared.Pages
             return tSheet;
         }
 
-        private void OnTItemSpecsInCategoryCompletedCountChanged(string categoryCompletedCount)
+        private void OnTItemSpecsCompletedCountInCategoryChanged(string categoryCompletedCount)
         {
             // var pair = categoryCompletedCount.Split(':');
             // var category = pair[0];
@@ -245,12 +245,12 @@ namespace Fims.Client.Shared.Pages
             // int completedCount = 0;
             // try { completedCount = Int32.Parse(pair[1]); } catch { }
             // 
-            // MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[category] = completedCount;
+            // MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[category] = completedCount;
 
             StateHasChanged();
         }
 
-        private void OnTItemSpecsInCategoryInvalidCountChanged(string categoryInvalidCount)
+        private void OnTItemSpecsInvalidCountInCategoryChanged(string categoryInvalidCount)
         {
             // var pair = categoryInvalidCount.Split(':');
             // var category = pair[0];
@@ -267,9 +267,9 @@ namespace Fims.Client.Shared.Pages
         {
             int notCompletedCount = 0;
 
-            foreach (var cat in MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict)
+            foreach (var cat in MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict)
             {
-                notCompletedCount += MyTSheetSpec.CategoryTItemsCountDict[cat.Key] - MyTSheetSpec.TItemSpecsInCategoryCompletedCountDict[cat.Key];
+                notCompletedCount += MyTSheetSpec.TItemsCountInCategoryDict[cat.Key] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[cat.Key];
             }
 
             return notCompletedCount;
@@ -279,9 +279,9 @@ namespace Fims.Client.Shared.Pages
         {
             int invalidCount = 0;
 
-            foreach (var cat in MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict)
+            foreach (var cat in MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict)
             {
-                invalidCount += MyTSheetSpec.TItemSpecsInCategoryInvalidCountDict[cat.Key];
+                invalidCount += MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict[cat.Key];
             }
 
             return invalidCount;

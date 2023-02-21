@@ -14,6 +14,10 @@ using Fims.Services.TSheets;
 using Fims.Services.TSheetSpecs;
 using Fims.Services.TSheetSpecsInProgress;
 using Fims.Services.TReports;
+using Microsoft.AspNetCore.Identity;
+using Telerik.SvgIcons;
+using Fims.Data.Entities;
+using Fims.Data;
 
 namespace Fims.Web.Server
 {
@@ -37,17 +41,31 @@ namespace Fims.Web.Server
             // NOTE: ITSheetsService and ITReportsService inherits "IService",
             //       So those will be registered in AddApplicationServices().
 
-            services
-                .AddDatabase(this.Configuration) //add/register a DbContext (FimsDbContext) and initial db datas (CategoriesData, ProductsData) and db initializer (FimsDbInitializer) to the DI container (IServiceCollection)
-                .AddIdentity()
-                .AddJwtAuthentication(services.GetApplicationSettings(this.Configuration))
-                .AddAutoMapper(Assembly.GetExecutingAssembly())
-                .AddApplicationServices()   //add/register all my application services (under the directory "Fims.Services") to the DI container.
-                .AddApiControllers()        //call AddControllers() and  AddRazorPages()
-                // JBH:
-                // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-                .AddEndpointsApiExplorer()
-                .AddSwaggerGen();
+            services.AddDatabase(this.Configuration); //add/register a DbContext (FimsDbContext) and initial db datas (CategoriesData, ProductsData) and db initializer (FimsDbInitializer) to the DI container (IServiceCollection)
+
+            //services.AddIdentity();
+            services.AddIdentity<FimsUser, FimsRole>(opt =>
+                    {
+                        opt.Password.RequiredLength = 6;
+                        opt.Password.RequireDigit = false;
+                        opt.Password.RequireUppercase = false;
+                        opt.Password.RequireLowercase = false;
+                        opt.Password.RequireNonAlphanumeric = false;
+                        //opt.User.RequireUniqueEmail = true;
+                    })
+                    .AddEntityFrameworkStores<FimsDbContext>()
+                    .AddDefaultTokenProviders(); //required for UserManager.GeneratePasswordResetTokenAsync(user)
+
+            services.AddJwtAuthentication(services.GetApplicationSettings(this.Configuration));
+
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+
+            services.AddApplicationServices();  //add/register all my application services (under the directory "Fims.Services") to the DI container.
+
+            services.AddApiControllers();       //call AddControllers() and  AddRazorPages()
+
+            services.AddEndpointsApiExplorer(); // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+            services.AddSwaggerGen();
             /*
              * this.Configuration.Providers	Count = 4
              *     [0]	{Microsoft.Extensions.Configuration.ChainedConfigurationProvider}
@@ -76,6 +94,7 @@ namespace Fims.Web.Server
             app.UseAuthentication();
             app.UseAuthorization();
             app.UseEndpoints();
+
             app.Initialize();  //call FimsDbInitializer which initializes/fills my db with initial db datas (CategoriesData, ProductsData)
         }
     }

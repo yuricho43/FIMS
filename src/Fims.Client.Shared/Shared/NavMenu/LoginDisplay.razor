@@ -16,17 +16,13 @@
             <div>
                 @if (context.User.Identity.Name != null)
                 {
-@*                    <a href="/Account/UserProfile" class="username">@context.User.Identity.Name</a>
-*@
-                    <TelerikButton OnClick="@(() => ShowUserProfileDialogVisible())">
+                    <TelerikButton OnClick="@(() => TheUserProfileModal.Open())">
                         <img src="_content/Fims.Client.Shared/images/user.svg" style="width: 30px;" />@context.User.Identity.Name
                     </TelerikButton>
                 }
                 else
                 {
-@*                    <a href="/Account/UserProfile" class="username">@UserName</a>
-*@
-                    <TelerikButton OnClick="@(() => ShowUserProfileDialogVisible())">
+                    <TelerikButton OnClick="@(() => TheUserProfileModal.Open())">
                         <img src="_content/Fims.Client.Shared/images/user.svg" style="width: 30px;" />@UserName
                     </TelerikButton>
 
@@ -34,14 +30,10 @@
             </div>
             &nbsp;
             <div>
-@*                <button class="btn btn-link username" @onclick="BeginSignOut">로그아웃</button>
-*@
                 <TelerikButton Icon="FontIcon.Logout" OnClick="BeginLogOut">로그아웃</TelerikButton>
             </div>
         </Authorized>
         <NotAuthorized>
-@*            <a class="sign-in username" href="/Account/Login">로그인</a>
-*@
             <TelerikButton Icon="FontIcon.Login" OnClick="BeginLogIn">로그인</TelerikButton>
 
         </NotAuthorized>
@@ -49,29 +41,18 @@
 </div>
 
 
-@if (UserProfileDialogVisible)
-{
-    <UserProfileDialog DialogVisible="@UserProfileDialogVisible" UserProfileDialogFinished="OnUserProfileDialogFinished"></UserProfileDialog>
-}
+<UserProfileModal @ref="TheUserProfileModal">
+    <Title>사용자 정보</Title>
 
+    <Body>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Omnes enim iucundum motum, quo sensus hilaretur.</p>
+    </Body>
 
-@*<div id="component-container">
-    @DynamicRender
-</div>
-*@
+    <Footer>
+        @*<button type="button" class="btn btn-secondary" data-dismiss="TheUserProfileModal" @onclick="() => TheUserProfileModal.Close()">Close</button>*@
+    </Footer>
+</UserProfileModal>
 
-@*<AuthorizeView>
-    <Authorized>
-        <TelerikButton Icon="@FontIcon.User" @onclick="BeginSignOut">Log out</TelerikButton>
-        <img class="k-avatar-rounded" src="@HashEmailForGravatar(context.User.Identity.Name)" />
-        <a href="authentication/profile">[@context.User.Identity.Name]</a>
-    </Authorized>
-    <NotAuthorized>
-        <a href="authentication/register">Register</a>
-        <a href="authentication/login">Log in</a>
-    </NotAuthorized>
-</AuthorizeView>
-*@
 
 
 <style>

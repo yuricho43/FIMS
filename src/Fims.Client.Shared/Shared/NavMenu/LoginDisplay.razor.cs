@@ -15,6 +15,7 @@ namespace Fims.Client.Shared.Shared.NavMenu
         //[CascadingParameter]
         //public Task<AuthenticationState> AuthenticationStateTask { get; set; }
         public bool UserProfileDialogVisible { get; set; } = false;
+        public UserProfileModal TheUserProfileModal { get; set; }
 
         public string UserName { get; set; }
 
@@ -62,7 +63,7 @@ namespace Fims.Client.Shared.Shared.NavMenu
 
         private RenderFragment CreateComponent() => builder =>
         {
-            builder.OpenComponent(0, typeof(UserProfileDialog));
+            builder.OpenComponent(0, typeof(UserProfileModal));
             builder.AddAttribute(1, "UserProfileDialogFinished", "OnUserProfileDialogFinished");
             builder.CloseComponent();
         };

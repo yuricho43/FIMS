@@ -1,0 +1,34 @@
+﻿@using System.Timers
+@implements IDisposable
+
+
+<h3>@CurrentTime</h3>
+
+@code {
+   private string CurrentTime = DateTime.Now.ToString("HH:mm:ss");
+   
+   private Timer? secondsTimer;
+
+   protected override void OnInitialized()
+   {
+      //one second interval
+      secondsTimer = new Timer(1000);
+      secondsTimer.Enabled = true;
+      secondsTimer.AutoReset = true;
+      secondsTimer.Elapsed += (sender, e) => UpdateTime();
+   }
+
+  private void UpdateTime()
+  {
+     CurrentTime = DateTime.Now.ToString("HH:mm:ss");
+     InvokeAsync(() =>
+     {
+         StateHasChanged();
+     });
+  }
+
+  public void Dispose()
+  {
+      secondsTimer?.Dispose();
+  }
+}
