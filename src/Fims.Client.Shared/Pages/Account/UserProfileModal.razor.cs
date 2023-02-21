@@ -85,8 +85,9 @@ namespace Fims.Client.Shared.Pages.Account
 
         private async Task SubmitAsync()
         {
-            var response = await this.Http.PutAsJsonAsync("api/identity/changeuserprofile", this.CurrentUserProfileModel);
-            if (response.IsSuccessStatusCode)
+            var result = await this.AuthClientService.ChangeProfile(this.CurrentUserProfileModel);
+
+            if (result.Succeeded)
             {
                 this.ShowErrors = false;
                 await this.AuthClientService.Logout();
@@ -95,7 +96,7 @@ namespace Fims.Client.Shared.Pages.Account
             }
             else
             {
-                this.Errors = await response.Content.ReadFromJsonAsync<string[]>();
+                this.Errors = result.Errors;
                 this.ShowErrors = true;
             }
         }

@@ -8,13 +8,6 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
         public Task<List<string>> GetEquipmentModelsAsync();
         public Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync();
         public Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel);
-
-        /*
-        Task<Result> AddProduct(TSheetRequest model);
-        Task<Result> UpdateProduct(TSheetRequest model);
-        Task<Result> RemoveProduct(int id);
-        Task<int> TotalProductsCount();
-        Task<IEnumerable<TSheetResponse>> Mine();
-        */
+        public Task<string> UploadSpecFile(MultipartFormDataContent content);
     }
 }

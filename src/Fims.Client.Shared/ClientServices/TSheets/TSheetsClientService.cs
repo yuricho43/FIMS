@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Fims.Client.Shared.Infrastructure.Extensions;
 using Fims.Data.Entities;
 using Fims.Data.Models;
+using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheets;
 
 
@@ -15,12 +16,12 @@ namespace Fims.Client.Shared.ClientServices.TSheets
     {
         private readonly HttpClient http;
 
-        private const string TSheetsPath = "api/tsheets";
+        private const string AllTSheetsPath = "api/tsheets";
         private const string CreateTSheetPath = "api/tsheets/CreateTSheet";
         private const string UpdateTSheetPath = "api/tsheets/UpdateTSheet";
         private const string DeleteTSheetPath = "api/tsheets/DeleteTSheet";
         private const string FindTSheetWithTItemsPath = "api/tsheets/FindTSheetWithTItems";
-        private const string TSheetsSearchPath = TSheetsPath + "?customer={0}&minDateTime={1}&maxDateTime={2}&model={3}&page={4}";
+        private const string TSheetsSearchPath = "api/tsheets?customer={0}&minDateTime={1}&maxDateTime={2}&model={3}&page={4}";
 
         public TSheetsClientService(HttpClient http)
         {
@@ -150,15 +151,34 @@ namespace Fims.Client.Shared.ClientServices.TSheets
 
         public async Task<IEnumerable<TSheet>> AllTSheetsAsync()
         {
-            var response = await this.http.GetFromJsonAsync<IEnumerable<TSheet>>(TSheetsPath);
-            return response;
-        }
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            IEnumerable<TSheet> tSheets = Enumerable.Empty<TSheet>();
 
-        // public async Task<TSheet> FindTSheetByIdAsync(int id)
-        // {
-        //     var response = await this.http.GetFromJsonAsync<TSheet>($"{TSheetsPath}/{nameof(this.FindTSheetByIdAsync)}/{id}");
-        //     return response;
-        // }
+            try
+            {
+                var result = await this.http.GetFromJsonAsync<IEnumerable<TSheet>>(AllTSheetsPath, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    tSheets = result;
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            return tSheets;
+        }
 
         public async Task<TSheet> FindTSheetWithTItems(int id)
         {
@@ -193,14 +213,32 @@ namespace Fims.Client.Shared.ClientServices.TSheets
 
         public async Task<TSheetsComplexSearchResponseModel> ComplexSearchAsync(TSheetsComplexSearchRequestModel searchRequest)
         {
-            var searchResponse = await this.http.GetFromJsonAsync<TSheetsComplexSearchResponseModel>(
-                string.Format(
-                    TSheetsSearchPath,
-                    searchRequest.Customer,
-                    searchRequest.MinDateTime,
-                    searchRequest.MaxDateTime,
-                    searchRequest.Model,
-                    searchRequest.Page));
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            TSheetsComplexSearchResponseModel searchResponse = null;
+
+            try
+            {
+                var requestPath = string.Format(TSheetsSearchPath, searchRequest.Customer, searchRequest.MinDateTime, searchRequest.MaxDateTime, searchRequest.Model, searchRequest.Page);
+                var result = await this.http.GetFromJsonAsync<TSheetsComplexSearchResponseModel>(requestPath, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    searchResponse = result;
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
 
             return searchResponse;
         }

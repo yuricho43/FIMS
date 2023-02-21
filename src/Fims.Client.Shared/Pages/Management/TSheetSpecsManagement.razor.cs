@@ -80,9 +80,8 @@ namespace Fims.Client.Shared.Pages.Management
                 FileNamesToUpload.Clear(); //allow only one file to upload at a time.
                 FileNamesToUpload.Add(file.Name);
                 content.Add(content: fileContent, name: "\"files\"", fileName: file.Name);
-                var response = await Http.PostAsync("api/TSheetSpecs/UploadSpecFile", content);
-                var uploadResult = await response.Content.ReadAsStringAsync();
 
+                var uploadResult = await TSheetSpecsClientService.UploadSpecFile(content);
                 if (uploadResult.StartsWith("SUCCESS"))
                 {
                     UploadTSheetSpecsNotificationComponent.Show(new NotificationModel()

@@ -12,19 +12,16 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
     {
         private readonly HttpClient http;
 
-        private const string TSheetSpecsRoute = "api/TSheetSpecs";
+        private const string GetEquipmentModelsPath = "api/TSheetSpecs/TSheetModels";
+        private const string GetTSheetSpecsDictPath = "api/TSheetSpecs/TSheetSpecsDict";
+        private const string GetTSheetSpecByEquipmentModelPath = "api/TSheetSpecs/TSheetSpecByModel";
+        private const string UploadSpecFilePath = "api/TSheetSpecs/UploadSpecFile";
 
         public TSheetSpecsClientService(HttpClient http)
         {
             this.http = http;
         }
 
-        //public async Task<List<string>> GetEquipmentModelsAsync()
-        //{
-        //    // GET: api/TSheetSpecs/TSheetModels
-        //    var equipmentModels = await this.http.GetFromJsonAsync<List<string>>(TSheetSpecsRoute + "/TSheetModels");
-        //    return equipmentModels;
-        //}
         public async Task<List<string>> GetEquipmentModelsAsync()
         {
             // set the member, not a local variable
@@ -34,7 +31,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
 
             try
             {
-                var result = await this.http.GetFromJsonAsync<List<string>>(TSheetSpecsRoute + "/TSheetModels", source.Token);
+                var result = await this.http.GetFromJsonAsync<List<string>>(GetEquipmentModelsPath, source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
                     equipmentModels = result;
@@ -66,8 +63,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
 
             try
             {
-                // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
-                var result = await this.http.GetFromJsonAsync<Dictionary<string, TSheetSpec>>(TSheetSpecsRoute + "/TSheetSpecsDict", source.Token);
+                var result = await this.http.GetFromJsonAsync<Dictionary<string, TSheetSpec>>(GetTSheetSpecsDictPath, source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
                     tSheetSpecsDict = result;
@@ -87,7 +83,6 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
                 //StateHasChanged();
             }
 
-            // GET: api/TSheetSpecs/TSheetSpecsDict
             return tSheetSpecsDict;
         }
 
@@ -99,8 +94,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
 
             try
             {
-                // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
-                var result = await this.http.GetFromJsonAsync<TSheetSpec>(TSheetSpecsRoute + "/TSheetSpecByModel/" + equipmentModel, source.Token);
+                var result = await this.http.GetFromJsonAsync<TSheetSpec>(GetTSheetSpecByEquipmentModelPath + "/" + equipmentModel, source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
                     tSheetSpec = result;
@@ -121,7 +115,38 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
             }
 
             return tSheetSpec;
-
         }
+
+        public async Task<string> UploadSpecFile(MultipartFormDataContent content)
+        {
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            string Message = null;
+            string uploadResult = string.Empty;
+
+            try
+            {
+                var response = await http.PostAsync(UploadSpecFilePath, content);
+                if (source?.IsCancellationRequested == false)
+                {
+                    uploadResult = await response.Content.ReadAsStringAsync();
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
+            return uploadResult;
+        }
+
     }
 }

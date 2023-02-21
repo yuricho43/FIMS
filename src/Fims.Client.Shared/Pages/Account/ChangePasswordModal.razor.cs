@@ -65,9 +65,9 @@ namespace Fims.Client.Shared.Pages.Account
         {
             ValidSubmit = true;
 
-            var response = await this.Http.PutAsJsonAsync("api/identity/changepassword", this.ChangePasswordModel);
+            var result = await this.AuthClientService.ChangePassword(this.ChangePasswordModel);
 
-            if (response.IsSuccessStatusCode)
+            if (result.Succeeded)
             {
                 this.ShowErrors = false;
                 //
@@ -96,7 +96,7 @@ namespace Fims.Client.Shared.Pages.Account
             }
             else
             {
-                this.Errors = await response.Content.ReadFromJsonAsync<string[]>();
+                this.Errors = result.Errors;
                 this.ShowErrors = true;
                 _ = ActivateAlert("암호변경 실패", this.Errors.FirstOrDefault());
             }

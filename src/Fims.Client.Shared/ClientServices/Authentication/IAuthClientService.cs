@@ -21,6 +21,10 @@ namespace Fims.Client.Shared.ClientServices.Authentication
 
         Task<Result> ChangeRole(UserAuthInfoModel model);
 
+        Task<Result> ChangeProfile(UserProfileModel model);
+
+        Task<Result> ChangePassword(PasswordModel model);
+
         Task<Result> ResetPassword(UserAuthInfoModel model);
     }
 }

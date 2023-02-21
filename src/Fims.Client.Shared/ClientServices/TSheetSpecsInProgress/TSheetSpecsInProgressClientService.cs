@@ -19,7 +19,9 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
     {
         private readonly HttpClient http;
 
-        private const string TSheetSpecsInProgressPath = "api/tsheetspecsinprogress";
+        private const string SaveTSheetSpecsInProgressByUserPath = "api/tsheetspecsinprogress/SaveTSheetSpecsInProgressByUser";
+        private const string GetTSheetSpecsInProgressByUserPath = "api/tsheetspecsinprogress";
+        private const string DeleteTSheetSpecsInProgressByUserIdProductSerialPath = "api/tsheetspecsinprogress/DeleteTSheetSpecsInProgressBySerial";
 
         public TSheetSpecsInProgressClientService(HttpClient http)
         {
@@ -34,8 +36,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
             try
             {
-                var path = $"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}";
-                var response = await this.http.PostAsJsonAsync($"{TSheetSpecsInProgressPath}/{nameof(this.SaveTSheetSpecsInProgressByUser)}", tSheetSpecsInProgressReqeust, source.Token);
+                var response = await this.http.PostAsJsonAsync(SaveTSheetSpecsInProgressByUserPath, tSheetSpecsInProgressReqeust, source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
                     fileName = await response.Content.ReadAsStringAsync();
@@ -66,7 +67,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
             try
             {
-                var response = await this.http.GetAsync(TSheetSpecsInProgressPath + "/" + userId, source.Token);
+                var response = await this.http.GetAsync(GetTSheetSpecsInProgressByUserPath + "/" + userId, source.Token);
                 var result = await response.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
                 if (source?.IsCancellationRequested == false)
                 {
@@ -93,9 +94,35 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<string> DeleteTSheetSpecsInProgressByUserIdProductSerial(string productSerial)
         {
-            var path = $"{TSheetSpecsInProgressPath}/DeleteTSheetSpecsInProgressBySerial/{productSerial}";
-            var tSheetSpecsInProgressResponse = await this.http.DeleteAsync(path);
-            var deletedProductSerial = await tSheetSpecsInProgressResponse.Content.ReadAsStringAsync();
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            HttpResponseMessage response = null;
+            string Message = null;
+            string deletedProductSerial = string.Empty;
+
+            try
+            {
+                var path = $"{DeleteTSheetSpecsInProgressByUserIdProductSerialPath}/{productSerial}";
+                var result = await this.http.DeleteAsync(path, source.Token);
+                if (source?.IsCancellationRequested == false)
+                {
+                    response = result;
+                    deletedProductSerial = await response.Content.ReadAsStringAsync(); ;
+                }
+            }
+            catch (Exception e)
+            {
+                Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                Console.WriteLine(Message);
+                //_logger.LogError(e, "couldn't retrieve forecast");
+            }
+            finally
+            {
+                source = null;
+                // poke blazor to reset 
+                // in case an error has occurred
+                //StateHasChanged();
+            }
+
             return deletedProductSerial;
         }
 
