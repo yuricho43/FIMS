@@ -109,6 +109,7 @@ namespace Fims.Client.Shared.ClientServices.TReports
             catch (Exception e)
             {
                 Message = (source?.IsCancellationRequested == true) ? "Request to API timed out" : e.Message;
+                uploadResult = "NOSERVER: " + Message;
                 Console.WriteLine(Message);
                 //_logger.LogError(e, "couldn't retrieve forecast");
             }

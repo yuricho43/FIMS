@@ -58,7 +58,7 @@ namespace Fims.Client.Shared.Pages.Management
         {
             if (FileSelectFileInfos.Count < 1)
             {
-                _ = ActivateAlert("업로드 실패", "업로드할 검사스펙파일을 선택하세요.");
+                await ActivateAlert("업로드 실패", "업로드할 검사스펙파일을 선택하세요.");
                 return;
             }
 
@@ -93,9 +93,13 @@ namespace Fims.Client.Shared.Pages.Management
                     });
                     StateHasChanged();
                 }
+                else if (uploadResult.StartsWith("NOSERVER"))
+                {
+                    await ActivateAlert("교체 실패", "서버연결이 안됩니다.\n" + uploadResult);
+                }
                 else
                 {
-                    _ = ActivateAlert("교체 실패", "검사스펙에 오류가 있습니다.\n스펙파일 내용을 점검하세요.\n\n" + uploadResult);
+                    await ActivateAlert("교체 실패", "검사스펙에 오류가 있습니다.\n스펙파일 내용을 점검하세요.\n\n" + uploadResult);
                 }
             }
 
