@@ -95,6 +95,7 @@ namespace Fims.Client.Shared.Pages.Management
             {
                 this.Errors = result.Errors;
                 this.ShowErrors = true;
+                await ActivateAlert("사용자등록 실패", "서버연결상태를 점검하세요.");
             }
 
             ValidSubmit = false;

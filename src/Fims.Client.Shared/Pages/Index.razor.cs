@@ -52,7 +52,7 @@ namespace Fims.Client.Shared.Pages
 
         public int Page { get; set; } = 1;
 
-        public AddNewProductModal TheAddNewProductModal { get; set; }
+        public AddNewProductModal2 TheAddNewProductModal { get; set; }
         TelerikNotification LoadSessionNotificationComponent { get; set; }
         public List<string> ToggleButtonsThemeColor { get; set; }
 
