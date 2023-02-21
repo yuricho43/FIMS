@@ -343,16 +343,23 @@ namespace Fims.Client.Shared.Pages
 
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
             int invalidCount      = GetTItemSpecsInvalidCount();
-            if (notCompletedCount > 0 || invalidCount > 0)
+
+            if (notCompletedCount > 0)
             {
-                bool notConfirmed = await Dialogs.ConfirmAsync($"아직 제대로 입력되지 않은 항목들이 있습니다.\n\n- 미입력 항목: {notCompletedCount} 개\n- 데이터오류 항목: {invalidCount} 개\n\n그래도 DB에 저장할까요?", "Database 저장");
+                await ActivateAlert("Database 저장", $"저장 불가!\n\n아직 입력되지 않은 항목들이 있습니다.\n미입력 항목: {notCompletedCount} 개");
+                return;
+            }
+
+            if (invalidCount > 0)
+            {
+                bool notConfirmed = await Dialogs.ConfirmAsync($"입력 데이터에 오류가 있습니다.\n\n데이터오류 항목: {invalidCount} 개\n\n그래도 DB에 저장할까요?", "Database 저장");
                 if (!notConfirmed)
                 {
                     return;
                 }
             }
 
-            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 저장된 검사서는 더 이상 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림\n\n저장된 검사서는 더 이상 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
             if (!saveConfirmed)
             {
                 return;

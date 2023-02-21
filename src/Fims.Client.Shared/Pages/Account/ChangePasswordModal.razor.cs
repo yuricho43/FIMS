@@ -88,7 +88,7 @@ namespace Fims.Client.Shared.Pages.Account
                 //    Icon = "caret-double-alt-up"
                 //});
 
-                _ = ActivateAlert("암호변경", "성공적으로 변경되었습니다.");
+                await ActivateAlert("암호변경", "성공적으로 변경되었습니다.");
 
                 //StateHasChanged();
 
@@ -98,7 +98,7 @@ namespace Fims.Client.Shared.Pages.Account
             {
                 this.Errors = result.Errors;
                 this.ShowErrors = true;
-                _ = ActivateAlert("암호변경 실패", this.Errors.FirstOrDefault());
+                await ActivateAlert("암호변경 실패", this.Errors.FirstOrDefault());
             }
 
             ValidSubmit = false;
