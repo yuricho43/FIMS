@@ -24,6 +24,7 @@ namespace Fims.Data.Models.TSheetSpecs
         public string UserId { get; set; }
 
         public List<string> TCategories { get; set; }
+        public int ActiveCategoryTabIndex { get; set; } = 0;
         public Dictionary<string, int> TItemsCountInCategoryDict { get; set; }
         public Dictionary<string, List<TItemSpec>> TItemSpecsInCategoryDict { get; set; }
         public Dictionary<string, ObservableCollection<TItemSpec>> ObservableTItemSpecsInCategoryDict { get; set; }
