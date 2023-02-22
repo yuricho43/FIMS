@@ -30,7 +30,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust)
         {
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             string Message = null;
             string fileName = null;
 
@@ -61,17 +61,16 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId)
         {
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(10));
             string Message = null;
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = null;
 
             try
             {
-                var response = await this.http.GetAsync(GetTSheetSpecsInProgressByUserPath + "/" + userId, source.Token);
-                var result = await response.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
+                var response = await this.http.GetAsync($"{GetTSheetSpecsInProgressByUserPath}/{userId}", source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
-                    tSheetSpecsInProgressDto = result;
+                    tSheetSpecsInProgressDto = await response.Content.ReadFromJsonAsync<TSheetSpecsInProgressDto>();
                 }
             }
             catch (Exception e)
@@ -101,8 +100,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
             try
             {
-                var path = $"{DeleteTSheetSpecsInProgressByUserIdProductSerialPath}/{productSerial}";
-                var result = await this.http.DeleteAsync(path, source.Token);
+                var result = await this.http.DeleteAsync($"{DeleteTSheetSpecsInProgressByUserIdProductSerialPath}/{productSerial}", source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
                     response = result;
