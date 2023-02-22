@@ -73,8 +73,8 @@ namespace Fims.Services.TSheetSpecsInProgress
 
             foreach (var filePath in filePaths)
             {
-                //filePath: ".\\FimsTSheetSpecsInProgress_ANONYMOUS_2023010207.json"
-                var productSerial = filePath.Split('.').ToList()[1].Split('_').Last();
+                //filePath: "D:/FIMS-REPO/FimsTSheetSpecsInProgressRepository/FimsTSheetSpecsInProgress_f74dc493-b079-4ea6-9dee-6e7186388e5d_23452354.json"
+                var productSerial = Path.GetFileNameWithoutExtension(filePath).Split('_').Last();
                 string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
                 tSheetSpecsInProgressDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
             }
