@@ -28,46 +28,15 @@ namespace Fims.Client.Shared.Pages
     public partial class TSheetComponent
     {
         [Parameter]
-        public TSheetSpec MyTSheetSpec { get; set; }
-        //public TSheetSpec MyTSheetSpec
-        //{
-        //    get { return _MyTSheetSpec; }
-
-        //    set {
-        //        _MyTSheetSpec = value;
-
-        //        //debug
-        //        var tmodel = _MyTSheetSpec.ProductModel;
-        //        var ccounts = _MyTSheetSpec.TItemsCountInCategoryDict.Values.ToList();
-        //        var total = ccounts.Sum();
-        //        var xx = _MyTSheetSpec.TItemSpecsInCategoryDict.Values;
-        //        var yy = _MyTSheetSpec.ObservableTItemSpecsInCategoryDict.Values;
-        //        var xxl = _MyTSheetSpec.TItemSpecsInCategoryDict.Values;
-        //        var yyl = _MyTSheetSpec.ObservableTItemSpecsInCategoryDict.Values.ToList();
-
-        //        var aa = _MyTSheetSpec.TItemSpecs.FirstOrDefault(a => a.TestNo == 2001);
-        //        //var xa = xx.FirstOrDefault(a => a.TestNo == 2001);
-
-        //        //CollectTItemSpecsFinal();
-
-        //        //MakeCategoryObservableTItemSpecsDict();
-        //    }
-        //}
-        //private TSheetSpec _MyTSheetSpec;
+        public  TSheetSpec MyTSheetSpec { get; set; }
+        private TSheetSpec MyTSheetSpecPrev;
 
         [Parameter]
         public EventCallback<string> TSheetInspectionCompleted { get; set; }
-
-        private TSheetSpec MyTSheetSpecPrev;
-        
+      
         private IMapper Mapper { get; set; }
 
-
-        public int ActiveCategoryTabIndex { get; set; } = 0;
-        public bool IsSaveEnabled { get; set; } = true;
-
         TelerikNotification TSheetComponentNotificationComponent { get; set; }
-
 
 
         private int TotalOnParamCalledCounter = 0;
@@ -287,46 +256,6 @@ namespace Fims.Client.Shared.Pages
             return invalidCount;
         }
 
-        private IMapper CreateAutoMapperFromTItemSpecToTItem()
-        {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<TItemSpec, TItem>()
-                             .ForMember(d => d.Category,    act => act.MapFrom(s => s.Category))
-                             .ForMember(d => d.TestNo,      act => act.MapFrom(s => s.TestNo))
-                             .ForMember(d => d.Title,       act => act.MapFrom(s => s.Title))
-            );
-            var mapper = config.CreateMapper();
-            return mapper;
-        }
-
-        private void AutoMapperTest()
-        {
-            var config = new MapperConfiguration(cfg => cfg.CreateMap<Source, Destination>());
-            var mapper = config.CreateMapper();
-
-            var sources = new[]
-                {
-                    new Source { Value = 5 },
-                    new Source { Value = 6 },
-                    new Source { Value = 7 }
-                };
-
-            IEnumerable<Destination> ienumerableDest = mapper.Map<Source[], IEnumerable<Destination>>(sources);
-            ICollection<Destination> icollectionDest = mapper.Map<Source[], ICollection<Destination>>(sources);
-            IList<Destination> ilistDest = mapper.Map<Source[], IList<Destination>>(sources);
-            List<Destination> listDest = mapper.Map<Source[], List<Destination>>(sources);
-            Destination[] arrayDest = mapper.Map<Source[], Destination[]>(sources);
-        }
-
-        [CascadingParameter]
-        public DialogFactory Dialogs { get; set; }
-        public async Task ActivateAlert(string title, string message)
-        {
-            if (string.IsNullOrWhiteSpace(title))   title = "Warning!";
-            if (string.IsNullOrWhiteSpace(message)) message = "Something went wrong!";
-
-            await Dialogs.AlertAsync(message, title);
-        }
-
         public async Task SaveTSheetToDb()
         {
             //  List<TItemSpec> deletedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsDeleted == true).ToList();
@@ -342,7 +271,7 @@ namespace Fims.Client.Shared.Pages
             //  MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
 
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
-            int invalidCount      = GetTItemSpecsInvalidCount();
+            int invalidCount = GetTItemSpecsInvalidCount();
 
             if (notCompletedCount > 0)
             {
@@ -382,115 +311,52 @@ namespace Fims.Client.Shared.Pages
                 ShowIcon = true,
                 Icon = "caret-double-alt-up"
             });
-
         }
 
-        /*
-        private TItemSpec GetItemFromCollection(IList<TItemSpec> collection, TItemSpec itmToFind)
+        void ActiveTabIndexChangedHandler(int newIndex)
         {
-            var index = collection.ToList().FindIndex(i => i.TestNo == itmToFind.TestNo);
-            if (index != -1)
-            {
-                return collection[index];
-            }
-            return null;
+            MyTSheetSpec.ActiveCategoryTabIndex = newIndex;
         }
 
-        private List<TItemSpec> Data { get; set; }
-        public Task<List<TItemSpec>> BatchUpdate(
-            List<TItemSpec> deletedItems, List<TItemSpec> insertedItems, List<TItemSpec> updatedItems)
+        private IMapper CreateAutoMapperFromTItemSpecToTItem()
         {
-            //just sample CRUD operations
-            //this is a singleton service to cater for all users at the same time
-            //in a real app it may be transient instead
-            //also, this code does not cater for concurrency conflicts and errors
-            //while a real service should take them into account
-            //e.g., insert instead of attempt an update on a missing item that another user deleted
-            //in this example this also returns the newly updated data for the grid
-            foreach (TItemSpec item in deletedItems)
-            {
-                Data.Remove(item);
-            }
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<TItemSpec, TItem>()
+                             .ForMember(d => d.Category,    act => act.MapFrom(s => s.Category))
+                             .ForMember(d => d.TestNo,      act => act.MapFrom(s => s.TestNo))
+                             .ForMember(d => d.Title,       act => act.MapFrom(s => s.Title))
+            );
+            var mapper = config.CreateMapper();
+            return mapper;
+        }
 
-            foreach (TItemSpec item in insertedItems)
-            {
-                item.TestNo = Data.Max(item => item.TestNo) + 1;
-                Data.Insert(0, item);
-            }
+        private void AutoMapperTest()
+        {
+            var config = new MapperConfiguration(cfg => cfg.CreateMap<Source, Destination>());
+            var mapper = config.CreateMapper();
 
-            foreach (TItemSpec item in updatedItems)
-            {
-                var index = Data.FindIndex(i => i.TestNo == item.TestNo);
-                if (index != -1)
+            var sources = new[]
                 {
-                    Data[index] = item;
-                }
-            }
+                    new Source { Value = 5 },
+                    new Source { Value = 6 },
+                    new Source { Value = 7 }
+                };
 
-            //clean up the view model information to be sure we do not "predefine" user actions
-            foreach (TItemSpec item in Data)
-            {
-                item.IsChanged = false;
-                item.IsDeleted = false;
-                item.IsNew = false;
-            }
-
-            return Task.FromResult(Data);
+            IEnumerable<Destination> ienumerableDest = mapper.Map<Source[], IEnumerable<Destination>>(sources);
+            ICollection<Destination> icollectionDest = mapper.Map<Source[], ICollection<Destination>>(sources);
+            IList<Destination> ilistDest = mapper.Map<Source[], IList<Destination>>(sources);
+            List<Destination> listDest = mapper.Map<Source[], List<Destination>>(sources);
+            Destination[] arrayDest = mapper.Map<Source[], Destination[]>(sources);
         }
 
-
-        public void RevertAllChanges()
+        [CascadingParameter]
+        public DialogFactory Dialogs { get; set; }
+        public async Task ActivateAlert(string title, string message)
         {
-            for (int i = MyObservableTItemSpecs.Count - 1; i >= 0; i--)
-            {
-                if (MyObservableTItemSpecs[i].IsDirty)
-                {
-                    RevertItem(MyObservableTItemSpecs[i]);
-                }
-            }
-            StateHasChanged();
-        }
+            if (string.IsNullOrWhiteSpace(title))   title = "Warning!";
+            if (string.IsNullOrWhiteSpace(message)) message = "Something went wrong!";
 
-        public void RestoreItem(TItemSpec item)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyObservableTItemSpecs, item);
-            if (localItem != null)
-            {
-                localItem.IsDeleted = false;
-            }
+            await Dialogs.AlertAsync(message, title);
         }
-
-        public void RevertItem(TItemSpec item)
-        {
-            if (item.IsNew)
-            {
-                MyObservableTItemSpecs.Remove(item);
-            }
-            if (item.IsDeleted)
-            {
-                item.IsDeleted = false;
-                ChangeLocalItem(item);
-            }
-            if (item.IsChanged)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, item);
-                if (pristineItem != null)
-                {
-                    ChangeLocalItem(pristineItem);
-                    PristineItems.Remove(pristineItem);
-                }
-            }
-        }
-
-        public void RevertSelected()
-        {
-            foreach (TItemSpec item in SelectedItems)
-            {
-                RevertItem(item);
-            }
-        }
-        */
-
     }
 
     public class Source

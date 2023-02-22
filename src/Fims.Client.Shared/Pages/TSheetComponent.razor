@@ -11,7 +11,7 @@
         <div class="toolbar-block">검사자:&nbsp;<strong>@MyTSheetSpec.InspectorName</strong></div>
     </TelerikStackLayout>
     <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px">
-            <TelerikButton Enabled="@IsSaveEnabled" Icon="@FontIcon.Save" OnClick="@SaveTSheetToDb" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button"><strong>입력완료/저장</strong></TelerikButton>
+            <TelerikButton Icon="@FontIcon.Save" OnClick="@SaveTSheetToDb" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button"><strong>입력완료/저장</strong></TelerikButton>
     </TelerikStackLayout>
 </TelerikStackLayout>
 </div>
@@ -20,7 +20,8 @@
 <div style="height: 10px;"></div>
 
 
-<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">
+@*<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">*@
+<TelerikTabStrip ActiveTabIndex="@MyTSheetSpec.ActiveCategoryTabIndex" ActiveTabIndexChanged="@((int i) => ActiveTabIndexChangedHandler(i))">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
     {
         <TabStripTab>
