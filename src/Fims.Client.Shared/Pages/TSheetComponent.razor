@@ -16,19 +16,16 @@
 </TelerikStackLayout>
 </div>
 
+
 <div style="height: 10px;"></div>
+
 
 <TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
     {
         <TabStripTab>
             <HeaderTemplate>
-                @*                <span class="k-icon flag italy-flag"></span>*@
-                @*                <span class="fa fa-car" style="font-size:20px;color:red;"></span>*@
-                @*                  <span class="fa fa-temperature-high"></span><strong>@TCategory</strong>*@
-                @*                    <div style="background-color:orange;color:@SelectedColor;padding:20px;"><span class="fa fa-temperature-high"></span><strong>@TCategory</strong></div>*@
                 <div>
-                    @*<span class="fa fa-temperature-high"></span><strong>@TCategory</strong>*@
                     <span style="color:white"><strong>@TCategory</strong></span>
  
                     <span>&nbsp;</span>
@@ -57,6 +54,7 @@
         </TabStripTab>
     }
 </TelerikTabStrip>
+
 
 <TelerikNotification @ref="@TSheetComponentNotificationComponent"
                      Class="demo-notification"
