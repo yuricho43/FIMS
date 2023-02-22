@@ -14,6 +14,7 @@ using Fims.Common;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Fims.Data.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TSheetSpecsInProgress
 {
@@ -25,15 +26,18 @@ namespace Fims.Services.TSheetSpecsInProgress
         public string FimsTSheetSpecsInProgressFileName { get; set; }
         public string FimsTSheetSpecsInProgressFileFullPath { get; set; }
 
-        public TSheetSpecsInProgressService()
+        private string FimsTSheetSpecsInProgressRepoPath;
+
+        public TSheetSpecsInProgressService(IConfiguration configuration)
         {
+            FimsTSheetSpecsInProgressRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepository");
         }
 
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
-            if ( !Directory.Exists(Constants.FimsTSheetSpecsInProgressRepoPath) )
+            if ( !Directory.Exists(FimsTSheetSpecsInProgressRepoPath) )
             {
-                Directory.CreateDirectory(Constants.FimsTSheetSpecsInProgressRepoPath);
+                Directory.CreateDirectory(FimsTSheetSpecsInProgressRepoPath);
             }
  
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
@@ -43,7 +47,7 @@ namespace Fims.Services.TSheetSpecsInProgress
                 var tSheetSpecJsonString = serialToTSheetSpecPair.Value;
 
                 string fileName = $"{Constants.FimsTSheetSpecsInProgressFileNameBase}_{userId}_{productSerial}.json";
-                string filePath = Path.Combine(Constants.FimsTSheetSpecsInProgressRepoPath, fileName);
+                string filePath = Path.Combine(FimsTSheetSpecsInProgressRepoPath, fileName);
                 if (File.Exists(filePath))
                 {
                     File.Delete(filePath);
@@ -59,7 +63,7 @@ namespace Fims.Services.TSheetSpecsInProgress
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressAsync(string userId)
         {
             string searchPattern = Constants.FimsTSheetSpecsInProgressFileNameBase + "_" + userId + "_" + "*" + ".json";
-            string[] filePaths = Directory.GetFiles(Constants.FimsTSheetSpecsInProgressRepoPath, searchPattern);
+            string[] filePaths = Directory.GetFiles(FimsTSheetSpecsInProgressRepoPath, searchPattern);
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = new TSheetSpecsInProgressDto
             {
@@ -82,7 +86,7 @@ namespace Fims.Services.TSheetSpecsInProgress
         {
             string searchPattern = Constants.FimsTSheetSpecsInProgressFileNameBase + "_" + "*" + "_" + productSerial + ".json";
 
-            string[] filePaths = Directory.GetFiles(Constants.FimsTSheetSpecsInProgressRepoPath, searchPattern);
+            string[] filePaths = Directory.GetFiles(FimsTSheetSpecsInProgressRepoPath, searchPattern);
             filePaths.ToList().ForEach(filePath => File.Delete(filePath));
             return (filePaths.Length > 0) ? productSerial : null;
         }

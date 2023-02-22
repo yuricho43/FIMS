@@ -32,10 +32,10 @@ namespace Fims.Web.Server
         {
             //JBH: Instantiate and AddSingleton TSheetSpecsService here,
             //     so that BuildTSheetSpecsFromFiles() @ TSheetSpecsService will run immediately upon the server startup.
-            ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService();
+            ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService(Configuration);
             services.AddSingleton(tSheetSpecsService);
 
-            ITSheetSpecsInProgressService tSheetSpecsInProgressService = new TSheetSpecsInProgressService();
+            ITSheetSpecsInProgressService tSheetSpecsInProgressService = new TSheetSpecsInProgressService(Configuration);
             services.AddSingleton(tSheetSpecsInProgressService);
 
             // NOTE: ITSheetsService and ITReportsService inherits "IService",

@@ -22,7 +22,7 @@ using Fims.Data.Models;
 using Fims.Services.TSheets;
 using Fims.Data.Entities;
 using Fims.Data.Models.TSheetSpecsInProgress;
-
+using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TReports
 {
@@ -36,10 +36,16 @@ namespace Fims.Services.TReports
 
 
         public ITSheetsService TSheetsService { get; set; }
+        public IConfiguration _configuration { get; set; }
 
-        public TReportsService(ITSheetsService tSheetsService)
+        private string FimsTReportSpecsRepoPath;
+        private string FimsTReportOutputRepoPath;
+
+        public TReportsService(ITSheetsService tSheetsService, IConfiguration configuration)
         {
             TSheetsService = tSheetsService;
+            FimsTReportSpecsRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTReportSpecsRepository");
+            FimsTReportOutputRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTReportOutputRepository");
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
 
@@ -47,7 +53,7 @@ namespace Fims.Services.TReports
         public List<string> AllTReportSpecs()
         {
             string searchPattern = Constants.FimsTReportSpecsFileNameBase + "_" + "*" + ".xlsx";
-            string[] filePaths = Directory.GetFiles(Constants.FimsTReportSpecsRepoPath, searchPattern);
+            string[] filePaths = Directory.GetFiles(FimsTReportSpecsRepoPath, searchPattern);
 
             List<string> tReportSpecsList = new List<string>();
 
@@ -65,12 +71,12 @@ namespace Fims.Services.TReports
 
         public async Task<Stream> GenerateTReportAsync(TReportDto tReportRequest)
         {
-            if (!Directory.Exists(Constants.FimsTReportOutputRepoPath))
+            if (!Directory.Exists(FimsTReportOutputRepoPath))
             {
-                Directory.CreateDirectory(Constants.FimsTReportOutputRepoPath);
+                Directory.CreateDirectory(FimsTReportOutputRepoPath);
             }
 
-            string reportFilePath = Path.Combine(Constants.FimsTReportOutputRepoPath, tReportRequest.TReportOutputFile);
+            string reportFilePath = Path.Combine(FimsTReportOutputRepoPath, tReportRequest.TReportOutputFile);
             if (File.Exists(reportFilePath))
             {
                 File.Delete(reportFilePath);
@@ -78,7 +84,7 @@ namespace Fims.Services.TReports
 
             TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tReportRequest.TSheetId);
 
-            string specFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, tReportRequest.TReportSpec);
+            string specFilePath = Path.Combine(FimsTReportSpecsRepoPath, tReportRequest.TReportSpec);
             using ExcelPackage package = new ExcelPackage(new FileInfo(specFilePath));
 
             foreach (var ws in package.Workbook.Worksheets)
@@ -204,7 +210,7 @@ namespace Fims.Services.TReports
             // Some browsers send file names with full path.
             // We are only interested in the file name.
             var newSpecFileName = Path.GetFileName(newSpecFileContent.FileName.ToString().Trim('"'));
-            var newSpecFilePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, newSpecFileName);
+            var newSpecFilePath = Path.Combine(FimsTReportSpecsRepoPath, newSpecFileName);
             if (File.Exists(newSpecFilePath))
             {
                 //File.Delete(newSpecFilePath);
@@ -253,61 +259,5 @@ namespace Fims.Services.TReports
 
             return buildresult;
         }
-
-
-        /*
-        public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
-        {
-            var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
-            foreach (var serialToTSheetSpecPair in serialToTSheetSpecPairs)
-            {
-                var productSerial = serialToTSheetSpecPair.Key;
-                var tSheetSpecJsonString = serialToTSheetSpecPair.Value;
-
-                string fileName = $"{Constants.FimsTReportSpecsFileNameBase}_{userId}_{productSerial}.json";
-                string filePath = Path.Combine(Constants.FimsTReportSpecsRepoPath, fileName);
-                if (File.Exists(filePath))
-                {
-                    File.Delete(filePath);
-                }
-
-                await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
-            }
-
-            return userId;
-        }
-
-
-        public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressAsync(string userId)
-        {
-            string searchPattern = Constants.FimsTReportSpecsFileNameBase + "_" + userId + "_" + "*" + ".json";
-            string[] filePaths = Directory.GetFiles(Constants.FimsTReportSpecsRepoPath, searchPattern);
-
-            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = new TSheetSpecsInProgressDto
-            {
-                UserId = userId,
-                SerialToTSheetSpecPairs = new Dictionary<string, string>()
-            };
-
-            foreach (var filePath in filePaths)
-            {
-                //filePath: ".\\FimsTSheetSpecsInProgress_ANONYMOUS_2023010207.json"
-                var productSerial = filePath.Split('.').ToList()[1].Split('_').Last();
-                string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
-                tSheetSpecsInProgressDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
-            }
-
-            return tSheetSpecsInProgressDto;
-        }
-
-        public string DeleteTSheetSpecsInProgressByProductSerial(string productSerial)
-        {
-            string searchPattern = Constants.FimsTReportSpecsFileNameBase + "_" + "*" + "_" + productSerial + ".json";
-
-            string[] filePaths = Directory.GetFiles(Constants.FimsTReportSpecsRepoPath, searchPattern);
-            filePaths.ToList().ForEach(filePath => File.Delete(filePath));
-            return (filePaths.Length > 0) ? productSerial : null;
-        }
-        */
     }
 }
