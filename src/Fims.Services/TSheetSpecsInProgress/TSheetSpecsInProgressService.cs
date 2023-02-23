@@ -36,11 +36,6 @@ namespace Fims.Services.TSheetSpecsInProgress
 
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
-            if ( !Directory.Exists(FimsTSheetSpecsInProgressRepoPath) )
-            {
-                Directory.CreateDirectory(FimsTSheetSpecsInProgressRepoPath);
-            }
- 
             var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
             foreach (var serialToTSheetSpecPair in serialToTSheetSpecPairs)
             {
