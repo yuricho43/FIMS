@@ -32,6 +32,8 @@ namespace Fims.Services.TSheetSpecs
         public TSheetSpecsService(IConfiguration configuration)
         {
             FimsTSheetSpecsRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsRepository");
+            if (!Directory.Exists(FimsTSheetSpecsRepoPath)) { Directory.CreateDirectory(FimsTSheetSpecsRepoPath); }
+
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
 

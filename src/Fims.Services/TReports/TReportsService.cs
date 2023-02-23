@@ -44,8 +44,13 @@ namespace Fims.Services.TReports
         public TReportsService(ITSheetsService tSheetsService, IConfiguration configuration)
         {
             TSheetsService = tSheetsService;
+
             FimsTReportSpecsRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTReportSpecsRepository");
+            if (!Directory.Exists(FimsTReportSpecsRepoPath)) { Directory.CreateDirectory(FimsTReportSpecsRepoPath); }
+
             FimsTReportOutputRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTReportOutputRepository");
+            if (!Directory.Exists(FimsTReportOutputRepoPath)) { Directory.CreateDirectory(FimsTReportOutputRepoPath); }
+
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
 
