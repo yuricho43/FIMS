@@ -20,7 +20,7 @@
 <div style="height: 10px;"></div>
 
 
-@*<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="tab-parent">*@
+@*<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="fims-tab">*@
 <TelerikTabStrip ActiveTabIndex="@MyTSheetSpec.ActiveCategoryTabIndex" ActiveTabIndexChanged="@((int i) => ActiveTabIndexChangedHandler(i))">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
     {
@@ -79,15 +79,16 @@
     }
 </style>
 
+@*
 <style>
-    .tab-parent .k-tabstrip-items-wrapper .k-item:active, .k-tabstrip-items-wrapper .k-item.k-active, .k-tabstrip-items-wrapper .k-item.k-selected {
+    .fims-tab .k-tabstrip-items-wrapper .k-item:active, .k-tabstrip-items-wrapper .k-item.k-active, .k-tabstrip-items-wrapper .k-item.k-selected {
         border-color: cornflowerblue;
         border-width: 0;
         color: orange;
         background-color: cornflowerblue;
     }
 
-    .tab-parent .k-tabstrip-items-wrapper li {
+    .fims-tab .k-tabstrip-items-wrapper li {
         margin-left: 5px;
         margin-right: 5px;
         border-color: silver;
@@ -96,10 +97,54 @@
         height: 30px;
     }
 
-    .tab-parent .k-tabstrip-items-wrapper li.k-active {
+    .fims-tab .k-tabstrip-items-wrapper li.k-active {
         color: forestgreen;
         background: cornflowerblue;
     }
+</style>
+*@
+
+<style>
+    .k-tabstrip-items *,
+    .k-tabstrip-items *::before,
+    .k-tabstrip-items *::after {
+        color: black;
+        font-weight: normal;
+/*      font-size: 1rem;*/        
+/*      box-sizing: border-box;*/
+    }
+
+/*
+    .k-tabstrip-top > .k-tabstrip-items-wrapper {
+        border-bottom-width: 1px;
+    }
+*/
+
+    .k-tabstrip-top > .k-tabstrip-items-wrapper .k-item {
+/*      border-top-left-radius: 0.25rem;
+        border-top-right-radius: 0.25rem;
+        margin-bottom: -1px;
+*/
+        background-color: silver;
+        margin-left: 3px;
+        margin-right: 3px;
+    }
+
+    .k-tabstrip-top > .k-tabstrip-items-wrapper .k-item.k-active {
+/*      border-bottom-color: transparent;*/
+/*      background-color: cornflowerblue;*/
+        background-color: teal;
+    }
+
+    .k-tabstrip-top > .k-content,
+    .k-tabstrip-top > .k-tabstrip-content {
+/*      border-bottom-right-radius: 0.25rem;
+        border-bottom-left-radius: 0.25rem;
+        border-top-width: 0 !important;
+*/
+        padding: 0;
+    }
+
 </style>
 
 <style>
