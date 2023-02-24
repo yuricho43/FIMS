@@ -12,7 +12,7 @@ using ExcelMapper;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Common;
 using Fims.Data.Models;
-
+using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TSheetSpecs
 {
@@ -27,15 +27,18 @@ namespace Fims.Services.TSheetSpecs
 
         private readonly List<string> EquipmentModels;
         private readonly Dictionary<string, TSheetSpec> EquipmentModelTSheetSpecDict;
+        private string FimsTSheetSpecsRepoPath;
 
-        public TSheetSpecsService()
+        public TSheetSpecsService(IConfiguration configuration)
         {
+            FimsTSheetSpecsRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsRepository");
+
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
 
             // find SpecSheet files
             string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
-            string[] fimsTSheetSpecsFilePaths = Directory.GetFiles(Constants.FimsTSheetSpecsRepoPath, specsFilePattern);
+            string[] fimsTSheetSpecsFilePaths = Directory.GetFiles(FimsTSheetSpecsRepoPath, specsFilePattern);
 
             if (fimsTSheetSpecsFilePaths.Length > 0)
             {
@@ -183,7 +186,7 @@ namespace Fims.Services.TSheetSpecs
         {
             // backup the current SpecSheet file.
             string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
-            string[] specFiles = Directory.GetFiles(Constants.FimsTSheetSpecsRepoPath, specsFilePattern);
+            string[] specFiles = Directory.GetFiles(FimsTSheetSpecsRepoPath, specsFilePattern);
             string prevSpecFilePath = (specFiles.Length > 0) ? specFiles[0] : null;
             if (prevSpecFilePath != null)
             {
@@ -200,7 +203,7 @@ namespace Fims.Services.TSheetSpecs
             // Some browsers send file names with full path.
             // We are only interested in the file name.
             var newSpecFileName = Path.GetFileName(newSpecFileContent.FileName.ToString().Trim('"'));
-            var newSpecFilePath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, newSpecFileName);
+            var newSpecFilePath = Path.Combine(FimsTSheetSpecsRepoPath, newSpecFileName);
             if (File.Exists(newSpecFilePath))
             {
                 File.Delete(newSpecFilePath);
@@ -252,7 +255,7 @@ namespace Fims.Services.TSheetSpecs
                 foreach (var fullName in files)
                 {
                     var fileName = Path.GetFileName(fullName);
-                    var physicalPath = Path.Combine(Constants.FimsTSheetSpecsRepoPath, fileName);
+                    var physicalPath = Path.Combine(FimsTSheetSpecsRepoPath, fileName);
                     if (File.Exists(physicalPath))
                     {
                         File.Delete(physicalPath);
@@ -290,6 +293,4 @@ namespace Fims.Services.TSheetSpecs
             Map(tItem => tItem.Ch4LCL).MakeOptional().WithEmptyFallback(null).WithInvalidFallback(null);
         }
     }
-
-
 }

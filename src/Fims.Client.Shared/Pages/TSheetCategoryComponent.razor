@@ -3,11 +3,9 @@
 
 <TelerikGrid Data=@MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory]
              EditMode="@GridEditMode.Incell"
-             SelectionMode="GridSelectionMode.Multiple"
              @ref="@TItemSpecGrid"
              OnUpdate="@UpdateHandler" OnEdit="@EditHandler" OnDelete="@DeleteHandler" OnCreate="@CreateHandler"
-             OnRowRender="@OnRowRenderHandler"
-             Height="580px"
+             Height="592px"
              RowHeight="50"
              ScrollMode="@GridScrollMode.Virtual"
              PageSize="20"
@@ -24,7 +22,7 @@
         <GridColumn Field="@nameof(TItemSpec.TestNo)" Width="50px" Title="TestNo" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center">
             <HeaderTemplate><strong>Test No</strong></HeaderTemplate>
             <Template>
-                <span class="k-badge k-badge-lg k-badge-solid k-badge-solid-success k-rounded-lg">@((context as TItemSpec).TestNo)</span>
+                <span class="k-badge k-badge-lg k-badge-solid k-badge-solid-success k-rounded-lg" style="background-color:teal">@((context as TItemSpec).TestNo)</span>
             </Template>
         </GridColumn>
 
@@ -226,51 +224,41 @@
 
 <style>
     .k-grid td, .k-grid tr {
-        background-color: #E0E0E0;
+        background-color: #CACACA;
         color: black;
         border-width: 0px 1px 1px 0px !important;
-        border-color: white !important;
+        border-color: #ABB2B9 !important;
     }
 
     .k-grid-header-wrap th {
         background-color: teal;
         color: white;
         border-width: 0px 1px 1px 0px !important;
-        border-color: white !important;
+        border-color: #ABB2B9 !important;
     }
-
-    /*   
-    .k-grid-header {
-        color: whitesmoke;
-        background-color: teal;
-    }
-    */
  
-    .k-grid .k-focused-cell {
+/*    .k-grid .k-focused-cell {
         background-color: cornflowerblue;
     }
-
+*/
     .k-grid .k-disabled-cell {
         background-color: #CACACA;
     }
 
     .k-grid .userinput-empty {
-        //color: dodgerblue;
-        background-color: #E0FAFA;
-        //font-weight: bold;
+        background-color: #e6f3ff;
     }
 
     .k-grid .userinput-valid {
         color: dodgerblue;
-        background-color: #C0D8DA;
+        background-color: #b3daff;
         font-weight: bold;
     }
 
     .k-grid .userinput-invalid {
         color: red !important;
-        background-color: sandybrown;
+        background-color: #ffeecc;
         font-weight: bold !important;
-        //opacity: 0.7;
     }
 
     /* CENTER */
