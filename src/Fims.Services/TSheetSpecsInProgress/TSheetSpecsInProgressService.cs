@@ -31,7 +31,6 @@ namespace Fims.Services.TSheetSpecsInProgress
         public TSheetSpecsInProgressService(IConfiguration configuration)
         {
             FimsTSheetSpecsInProgressRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepository");
-            if (!Directory.Exists(FimsTSheetSpecsInProgressRepoPath)) { Directory.CreateDirectory(FimsTSheetSpecsInProgressRepoPath); }
         }
 
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)

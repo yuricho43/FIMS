@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Identity;
 using Telerik.SvgIcons;
 using Fims.Data.Entities;
 using Fims.Data;
+using System.IO;
 
 namespace Fims.Web.Server
 {
@@ -30,6 +31,18 @@ namespace Fims.Web.Server
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var fimsTSheetSpecsRepoPath = Configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsRepository");
+            if (!Directory.Exists(fimsTSheetSpecsRepoPath)) { Directory.CreateDirectory(fimsTSheetSpecsRepoPath); }
+
+            var fimsTReportSpecsRepoPath = Configuration.GetValue<string>("FimsRepositories:FimsTReportSpecsRepository");
+            if (!Directory.Exists(fimsTReportSpecsRepoPath)) { Directory.CreateDirectory(fimsTReportSpecsRepoPath); }
+
+            var fimsTReportOutputRepoPath = Configuration.GetValue<string>("FimsRepositories:FimsTReportOutputRepository");
+            if (!Directory.Exists(fimsTReportOutputRepoPath)) { Directory.CreateDirectory(fimsTReportOutputRepoPath); }
+
+            var fimsTSheetSpecsInProgressRepoPath = Configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepository");
+            if (!Directory.Exists(fimsTSheetSpecsInProgressRepoPath)) { Directory.CreateDirectory(fimsTSheetSpecsInProgressRepoPath); }
+
             //JBH: Instantiate and AddSingleton TSheetSpecsService here,
             //     so that BuildTSheetSpecsFromFiles() @ TSheetSpecsService will run immediately upon the server startup.
             ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService(Configuration);

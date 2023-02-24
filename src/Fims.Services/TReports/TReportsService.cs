@@ -46,10 +46,7 @@ namespace Fims.Services.TReports
             TSheetsService = tSheetsService;
 
             FimsTReportSpecsRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTReportSpecsRepository");
-            if (!Directory.Exists(FimsTReportSpecsRepoPath)) { Directory.CreateDirectory(FimsTReportSpecsRepoPath); }
-
             FimsTReportOutputRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTReportOutputRepository");
-            if (!Directory.Exists(FimsTReportOutputRepoPath)) { Directory.CreateDirectory(FimsTReportOutputRepoPath); }
 
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
         }
@@ -76,11 +73,6 @@ namespace Fims.Services.TReports
 
         public async Task<Stream> GenerateTReportAsync(TReportDto tReportRequest)
         {
-            if (!Directory.Exists(FimsTReportOutputRepoPath))
-            {
-                Directory.CreateDirectory(FimsTReportOutputRepoPath);
-            }
-
             string reportFilePath = Path.Combine(FimsTReportOutputRepoPath, tReportRequest.TReportOutputFile);
             if (File.Exists(reportFilePath))
             {
