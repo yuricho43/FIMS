@@ -40,12 +40,25 @@
                                 <TelerikTextBox Id="enduser" @bind-Value="@NewTProductSpec.EndUser"></TelerikTextBox>
                             </Template>
                         </FormItem>
+
                         <FormItem Field="@nameof(NewTProductSpec.ProductModel)">
                             <Template>
                                 <label for="model" class="k-label k-form-label">모델</label>
-                                <TelerikDropDownList Id="model" Data="@ProductModels" @bind-Value="@NewTProductSpec.ProductModel"></TelerikDropDownList>
+                                <TelerikDropDownList Id="model"
+                                                      Data="@ProductModels" @bind-Value="@NewTProductSpec.ProductModel"
+                                                      Filterable="true"
+                                                      FilterOperator="@StringFilterOperator.Contains"
+                                                      FilterDebounceDelay="100">
+                                    <NoDataTemplate>
+                                        <div>
+                                            <TelerikFontIcon Icon="@FontIcon.InfoCircle" Size="@ThemeConstants.FontIcon.Size.Large" />
+                                            모델정보가 없습니다. 서버연결을 확인하세요.
+                                        </div>
+                                    </NoDataTemplate>
+                                </TelerikDropDownList>
                             </Template>
                         </FormItem>
+
                         <FormItem Field="@nameof(NewTProductSpec.ProductType)">
                             <Template>
                                 <label for="ptype" class="k-label k-form-label">검사형태</label>

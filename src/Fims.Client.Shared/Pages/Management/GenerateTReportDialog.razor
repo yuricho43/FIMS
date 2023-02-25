@@ -20,15 +20,26 @@
             <FormItems>
                 <FormItem Field="@nameof(TReportDto.TSheetId)">
                     <Template>
-                        <label for="fname" class="k-label k-form-label">검사번호*:</label>
-                        <TelerikNumericTextBox Id="fname" @bind-Value="NewTReportRequestDto.TSheetId" Enabled="false"></TelerikNumericTextBox>
+                        <label for="sheetid" class="k-label k-form-label">검사번호*:</label>
+                        <TelerikNumericTextBox Id="sheetid" @bind-Value="NewTReportRequestDto.TSheetId" Enabled="false"></TelerikNumericTextBox>
                     </Template>
                 </FormItem>
 
                 <FormItem Field="@nameof(TReportDto.TReportSpec)">
                     <Template>
-                        <label for="role" class="k-label k-form-label">성적서 양식*:</label>
-                        <TelerikDropDownList Id="role" Data="@TReportSpecs" @bind-Value="NewTReportRequestDto.TReportSpec"></TelerikDropDownList>
+                        <label for="reportspec" class="k-label k-form-label">성적서 양식*:</label>
+                        <TelerikDropDownList Id="reportspec"
+                                              Data="@TReportSpecs" @bind-Value="@NewTReportRequestDto.TReportSpec"
+                                              Filterable="true"
+                                              FilterOperator="@StringFilterOperator.Contains"
+                                              FilterDebounceDelay="100">
+                            <NoDataTemplate>
+                                <div>
+                                    <TelerikFontIcon Icon="@FontIcon.InfoCircle" Size="@ThemeConstants.FontIcon.Size.Large" />
+                                    양식정보가 없습니다. 서버연결을 확인하세요.
+                                </div>
+                            </NoDataTemplate>
+                        </TelerikDropDownList>
                     </Template>
                 </FormItem>
 
