@@ -32,6 +32,7 @@ namespace Fims.Client.Shared.Pages.Management
         public TelerikFileSelect TReportFileSelector { get; set; }
 
         TelerikNotification UploadTReportNotificationComponent { get; set; }
+        public bool IsUploadingTReportSpecs { get; set; } = false;
 
 
         protected override void OnInitialized()
@@ -70,6 +71,8 @@ namespace Fims.Client.Shared.Pages.Management
             if (FileSelectFileInfos.Count < 1) return;
             var file = FileSelectFileInfos[0];
 
+            IsUploadingTReportSpecs = true;
+
             if (!file.InvalidExtension)
             {
                 using var content = new MultipartFormDataContent();
@@ -103,6 +106,9 @@ namespace Fims.Client.Shared.Pages.Management
 
             hideFileSelectedList();
             FileSelectFileInfos.Clear(); //remove from the selected files list
+
+            IsUploadingTReportSpecs = false;
+            StateHasChanged();
         }
 
         public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();

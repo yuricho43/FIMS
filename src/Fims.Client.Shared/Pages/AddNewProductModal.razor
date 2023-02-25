@@ -74,7 +74,10 @@
                     </FormItems>
 
                     <FormButtons>
-                            <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Icon="FontIcon.PlusCircle" Size="Big">추가</TelerikButton>
+                        <TelerikButton ButtonType="ButtonType.Submit" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Icon="FontIcon.PlusCircle" Size="Big">
+                            <strong>추가</strong>
+                            <TelerikLoader Class="loader-indicator" ThemeColor="success" Visible="@IsAddingProduct"></TelerikLoader>
+                        </TelerikButton>
                     </FormButtons>
 
                 </TelerikForm>

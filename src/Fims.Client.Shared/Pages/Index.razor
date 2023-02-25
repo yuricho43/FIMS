@@ -29,7 +29,6 @@
                     <ButtonGroupToggleButton @bind-Selected="@ProductSerialsSelected[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))" Enabled="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? false: true)" ThemeColor="@(ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted ? ThemeConstants.Button.ThemeColor.Error: ThemeConstants.Button.ThemeColor.Base)" Class="serial-button">
                         <strong>@productSerial</strong>
                         &nbsp;
-                        @*<span class="badge badge-success" style="width: 30px">@TModelToTSheetSpecDict[equipmentModel].TItemSpecs.Count</span>*@
                     </ButtonGroupToggleButton>
                 }
             </TelerikButtonGroup>
