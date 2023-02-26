@@ -28,7 +28,7 @@ namespace Fims.Web.Server.Controllers
             this.currentUserService = currentUserService;
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpPost(nameof(Register))]
         public async Task<ActionResult> Register(RegisterRequestModel model)
             => await this.identityService
@@ -56,14 +56,14 @@ namespace Fims.Web.Server.Controllers
                 .ChangePasswordAsync(model, this.currentUserService.UserId)
                 .ToActionResult();
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpPut(nameof(ChangeRole))]
         public async Task<ActionResult> ChangeRole(UserAuthInfoModel model)
             => await this.identityService
                 .ChangeRoleAsync(model)
                 .ToActionResult();
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpPut(nameof(ResetPassword))]
         public async Task<ActionResult> ResetPassword(UserAuthInfoModel model)
             => await this.identityService
@@ -89,7 +89,7 @@ namespace Fims.Web.Server.Controllers
         }
 
         //[HttpDelete(Id)]
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin,Manager")]
         [HttpDelete("DeleteUser/{username}")]
         public async Task<ActionResult> Delete(string username)
             => await this.identityService.DeleteAsync(username).ToActionResult();
