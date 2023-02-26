@@ -38,8 +38,8 @@ namespace Fims.Web.Client
             builder.Services.AddScoped<LocalStorageInterop>();
 
             builder.Services.AddAuthorizationCore();
-            builder.Services.AddScoped<ApiAuthenticationStateProvider>();
-            builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
+            builder.Services.AddScoped<FimsClientAuthenticationStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider, FimsClientAuthenticationStateProvider>();
 
             builder.Services.AddScoped(sp => sp
                 .GetRequiredService<IHttpClientFactory>()

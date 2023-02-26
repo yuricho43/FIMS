@@ -37,17 +37,16 @@ namespace Fims.Web.Server.Controllers
             this.currentUserService = currentUserService;
         }
 
+        [Authorize]
         [HttpGet]
-        //[HttpGet(Name = "TSheets")] //JBH
-        [AllowAnonymous] //JBH
         public async Task<IEnumerable<TSheet>> All()
         {
             var data = await this.tSheetsService.AllTSheetsAsync();
             return data;
         }
 
+        [Authorize]
         [HttpGet("FindTSheetWithTItems/{id}")]
-        [AllowAnonymous] //JBH
         public async Task<ActionResult<TSheet>> FindTSheetWithTItems(int id)
             => await this.tSheetsService.FindTSheetWithTItemsByIdAsync(id);
 
@@ -57,21 +56,22 @@ namespace Fims.Web.Server.Controllers
         //     [FromQuery] TSheetsComplexSearchRequestModel searchRequest)
         //     => await this.tSheetsService.ComplexSearchAsync(searchRequest);
 
+        [Authorize]
         [HttpPost(nameof(CreateTSheet))]
-        //[HttpPost]
         public async Task<ActionResult> CreateTSheet(TSheet tSheet)
         {
             var id = await this.tSheetsService.CreateAsync(tSheet, this.currentUserService.UserId);
             return Created(nameof(this.CreateTSheet), id);
         }
 
+        [Authorize]
         [HttpPut(nameof(UpdateTSheet))]
-        //[HttpPut(Id)]
         public async Task<ActionResult> UpdateTSheet(int id, TSheet tSheet)
             => await this.tSheetsService
                 .UpdateAsync(id, tSheet, this.currentUserService.UserId)
                 .ToActionResult();
 
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteTSheet/{id}")]
         public async Task<ActionResult> DeleteTSheet(int id)
             => await this.tSheetsService

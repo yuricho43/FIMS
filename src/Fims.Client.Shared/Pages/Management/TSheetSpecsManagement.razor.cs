@@ -34,6 +34,7 @@ namespace Fims.Client.Shared.Pages.Management
         public TelerikFileSelect TSheetSpecsFileSelector { get; set; }
 
         TelerikNotification UploadTSheetSpecsNotificationComponent { get; set; }
+        public bool IsUploadingTSheetSpecs { get; set; } = false;
 
 
         protected override void OnInitialized()
@@ -72,6 +73,8 @@ namespace Fims.Client.Shared.Pages.Management
             if (FileSelectFileInfos.Count < 1) return;
             var file = FileSelectFileInfos[0];
 
+            IsUploadingTSheetSpecs = true;
+
             if (!file.InvalidExtension)
             {
                 using var content = new MultipartFormDataContent();
@@ -105,6 +108,10 @@ namespace Fims.Client.Shared.Pages.Management
 
             hideFileSelectedList();
             FileSelectFileInfos.Clear(); //remove from the selected files list
+
+            IsUploadingTSheetSpecs = false;
+            StateHasChanged();
+
         }
 
         public Dictionary<string, CancellationTokenSource> Tokens { get; set; } = new Dictionary<string, CancellationTokenSource>();

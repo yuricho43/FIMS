@@ -32,7 +32,10 @@
             <br />
             <br />
             <div class="text-center">
-                <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@OnUploadSpec">성적서스펙 업로드/교체</TelerikButton>
+                <TelerikButton ThemeColor="@(ThemeConstants.Button.ThemeColor.Primary)" OnClick="@OnUploadSpec">
+                    <strong>성적서스펙 업로드</strong>
+                    <TelerikLoader Class="loader-indicator" ThemeColor="error" Visible="@IsUploadingTReportSpecs"></TelerikLoader>
+                </TelerikButton>
             </div>
         </div>
     </CardBody>

@@ -27,7 +27,6 @@ namespace Fims.Client.Shared.ClientServices.TReports
         public async Task<List<string>> AllTReportSpecs()
         {
             var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
-            HttpResponseMessage response = null;
             string Message = null;
             List<string> tReportSpecs = new List<string>();
 
@@ -37,6 +36,7 @@ namespace Fims.Client.Shared.ClientServices.TReports
                 if (source?.IsCancellationRequested == false)
                 {
                     tReportSpecs = result;
+                    tReportSpecs.Sort();
                 }
             }
             catch (Exception e)

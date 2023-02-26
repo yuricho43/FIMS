@@ -11,12 +11,13 @@
 
 
 <TelerikRootComponent>
+
     <div class="header">
         <div class="nav-container" style="margin-right: 2em;">
             <div class="menu-button">
                 <TelerikButton Icon="@FontIcon.Menu" OnClick="ToggleMenuDrawer" />
             </div>
-            <img style="width: 30px;" src="_content/Fims.Client.Shared/images/fimsinspect.svg">
+            <img style="width: 30px;" src="_content/Fims.Client.Shared/images/fimsadmin.svg">
             <div class="title">
                 <h1>@Localizer["Fims_Title"]</h1>
             </div>
@@ -24,21 +25,22 @@
                 if (!WindowWidthSmall)
                 {
                     <DigitalClock></DigitalClock>
-                    <span>&nbsp;</span>           
                     <LoginDisplay></LoginDisplay>
                 }
             }
         </div>
     </div>
 
-    <TelerikDrawer @ref="MenuDrawer"
+    <TelerikDrawer @ref="FimsDrawer"
+                   Data="@FimsDrawerItems"
                    Expanded="@DrawerExpanded"
                    ExpandedChanged="((bool newValue) => ExpandedChangedHandler(newValue))"
-                   Width="190px" Data="DrawerItems" Mode="DrawerMode.Push" Position="DrawerPosition.Start" MiniMode="true">
+                   Width="190px" Mode="DrawerMode.Push" Position="DrawerPosition.Start" MiniMode="true">
         <DrawerContent>
             @Body
         </DrawerContent>
     </TelerikDrawer>
+
 </TelerikRootComponent>
 
 
@@ -46,14 +48,32 @@
 
 
 @code {
-    TelerikDrawer<DrawerItem> MenuDrawer { get; set; }
+    TelerikDrawer<DrawerItem> FimsDrawer { get; set; }
+    public IEnumerable<DrawerItem> FimsDrawerItems { get; set; }
 
     bool DrawerExpanded { get; set; }
     bool SettingsExpanded { get; set; }
-    bool WindowWidthSmall {get; set; }
+    bool WindowWidthSmall { get; set; }
 
-    IEnumerable<DrawerItem> DrawerItems =>
-    new List<DrawerItem>
+    static IEnumerable<DrawerItem> DrawerItems_Inspector = new List<DrawerItem>
+    {
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+    };
+
+    static IEnumerable<DrawerItem> DrawerItems_Reporter = new List<DrawerItem>
+    {
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+        new DrawerItem{ Text = "검사서 관리", Icon = FontIcon.Data, Url="/Management/TSheetManagement", Group = "ext"},
+    };
+
+    static IEnumerable<DrawerItem> DrawerItems_Manager = new List<DrawerItem>
+    {
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+        new DrawerItem{ Text = "검사서 관리", Icon = FontIcon.Data, Url="/Management/TSheetManagement", Group = "ext"},
+        new DrawerItem{ Text = "사용자 관리", Icon = FontIcon.Myspace, Url="/Management/UserManagement", Group = "ext"},
+    };
+
+    static IEnumerable<DrawerItem> DrawerItems_Admin = new List<DrawerItem>
     {
         new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
         // new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = FontIcon.Gear, Url="/BarcodeScanner", Group = "app"},
@@ -63,16 +83,25 @@
         new DrawerItem{ Text = "성적서스펙 관리", Icon = FontIcon.FileData, Url="/Management/TReportManagement", Group = "ext"},
         new DrawerItem{ Text = "사용자 관리", Icon = FontIcon.Myspace, Url="/Management/UserManagement", Group = "ext"},
     };
-      
+
+    static Dictionary<string, IEnumerable<DrawerItem>> RoleToDrawerItems = new Dictionary<string, IEnumerable<DrawerItem>>
+        {
+            ["Inspector"] = DrawerItems_Inspector,
+            ["Reporter"] = DrawerItems_Reporter,
+            ["Manager"] = DrawerItems_Manager,
+            ["Admin"] = DrawerItems_Admin,
+        };
+
+
     async Task ToggleMenuDrawer()
     {
         if (DrawerExpanded)
         {
-            await MenuDrawer.CollapseAsync();
+            await FimsDrawer.CollapseAsync();
         }
         else
         {
-            await MenuDrawer.ExpandAsync();
+            await FimsDrawer.ExpandAsync();
         }
     }
 
@@ -103,6 +132,26 @@
         // };
 
         // await InvokeAsync(Layout.LayoutStateChange);
+    }
+
+    protected override async Task OnParametersSetAsync()
+    {
+        var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
+        var user = state.User;
+        //var authState = await AuthenticationStateTask;
+        //var user = authState.User;
+
+        if (user.Identity.IsAuthenticated)
+        {
+            var userRole = user.GetUserRole();
+            FimsDrawerItems = RoleToDrawerItems[userRole];
+        }
+        else
+        {
+            FimsDrawerItems = null;
+        }
+
+        StateHasChanged();
     }
 }
 

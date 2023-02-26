@@ -39,6 +39,7 @@ namespace Fims.Client.Shared.Pages
 
         public TProductSpec NewTProductSpec { get; set; } = new TProductSpec {ProductType = "신규" };
         public TelerikForm AddNewProductFormRef { get; set; }
+        public bool IsAddingProduct { get; set; } = false;
 
         public string ProductSerial { get; set; }
         public string ProductModel { get; set; }
@@ -59,7 +60,7 @@ namespace Fims.Client.Shared.Pages
 
         protected override async Task OnInitializedAsync()
         {
-            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
             var user = state.User;
             //var authState = await AuthenticationStateTask;
             //var user = authState.User;
@@ -91,6 +92,7 @@ namespace Fims.Client.Shared.Pages
         {
             ValidSubmit = true;
 
+            IsAddingProduct = true;
             await ProductAdded.InvokeAsync(NewTProductSpec); // pass Param to parent, by calling EventCallback
 
             //clear the product added
@@ -98,6 +100,7 @@ namespace Fims.Client.Shared.Pages
 
             ValidSubmit = false;
 
+            IsAddingProduct = false;
             StateHasChanged();
         }
 

@@ -29,8 +29,8 @@ namespace Fims.Web.Server.Controllers
         }
 
 
+        [Authorize]
         [HttpGet("{userId}")]
-        [AllowAnonymous]
         public async Task<ActionResult> GetTSheetSpecsInProgressByUser(string userId)
         {
             // "userId" should be same with "this.CurrentUserService.UserId", and unused now.
@@ -39,8 +39,8 @@ namespace Fims.Web.Server.Controllers
         }
 
 
+        [Authorize]
         [HttpPost(nameof(SaveTSheetSpecsInProgressByUser))]
-        [AllowAnonymous]
         public async Task<ActionResult> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
         {
             // "userId" should be same with "this.CurrentUserService.UserId", and unused now.
@@ -50,8 +50,8 @@ namespace Fims.Web.Server.Controllers
         }
 
 
+        [Authorize]
         [HttpDelete("DeleteTSheetSpecsInProgressBySerial/{productSerial}")]
-        [AllowAnonymous]
         public string DeleteTSheetSpecsInProgressBySerial(string productSerial)
         {
             var deletedProductSerial = this.TSheetSpecsInProgressService.DeleteTSheetSpecsInProgressByProductSerial(productSerial);

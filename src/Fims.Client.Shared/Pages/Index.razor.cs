@@ -87,7 +87,7 @@ namespace Fims.Client.Shared.Pages
         {
             //FIXME    // Accessing LocalStorage at this phase is not allowed. JSRuntime out of WebView.
             //FIXME    // So do it after rendering finished.
-            //FIXME    var state = await this.AuthState.GetAuthenticationStateAsync();
+            //FIXME    var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
             //FIXME    var user = state.User;
             //FIXME    //var authState = await AuthenticationStateTask;
             //FIXME    //var user = authState.User;
@@ -124,7 +124,7 @@ namespace Fims.Client.Shared.Pages
             // So do it here after rendering finished.
             if (firstRender)
             {
-                var state = await this.AuthState.GetAuthenticationStateAsync();
+                var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
                 var user = state.User;
                 //var authState = await AuthenticationStateTask;
                 //var user = authState.User;
@@ -422,7 +422,7 @@ namespace Fims.Client.Shared.Pages
         {
             IsLoadingSession = true;
 
-            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
             var user = state.User;
             //var authState = await AuthenticationStateTask;
             //var user = authState.User;
@@ -432,14 +432,16 @@ namespace Fims.Client.Shared.Pages
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
             if (tSheetSpecsInProgressDto.UserId.StartsWith("HTTPFAIL"))
             {
-                IsLoadingSession = false;
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "가저오기 실패: FIMS서버 연결에 문제가 있습니다.",
+                    CloseAfter = 3000,
                     ThemeColor = "warning",
                     ShowIcon = true,
                     Icon = "caret-double-alt-down"
                 });
+                IsLoadingSession = false;
+                StateHasChanged();
                 return;
             }
 
@@ -448,14 +450,16 @@ namespace Fims.Client.Shared.Pages
 
             if (serialToTSheetSpecPairs.Count == 0)
             {
-                IsLoadingSession = false;
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "저장된 진행목록이 없습니다.",
+                    CloseAfter = 3000,
                     ThemeColor = "warning",
                     ShowIcon = true,
                     Icon = "caret-double-alt-down"
                 });
+                IsLoadingSession = false;
+                StateHasChanged();
                 return;
             }
 
@@ -474,19 +478,20 @@ namespace Fims.Client.Shared.Pages
                     ProductSerials?.Add(productSerial);
                 }
             }
-            IsLoadingSession = false;
 
             //SetProductSerialAsCurrent(tProductSpec.ProductSerial);
 
-            StateHasChanged();
+            // LoadSessionNotificationComponent.Show(new NotificationModel()
+            // {
+            //     Text = "진행목록이 성공적으로 로딩되었습니다.",
+            //     CloseAfter = 2000,
+            //     ThemeColor = "primary",
+            //     ShowIcon = true,
+            //     Icon = "caret-double-alt-down"
+            // });
 
-            LoadSessionNotificationComponent.Show(new NotificationModel()
-            {
-                Text = "진행목록이 성공적으로 로딩되었습니다.",
-                ThemeColor = "primary",
-                ShowIcon = true,
-                Icon = "caret-double-alt-down"
-            });
+            IsLoadingSession = false;
+            StateHasChanged();
         }
 
         public async void OnSaveSessionData()
@@ -495,23 +500,27 @@ namespace Fims.Client.Shared.Pages
  
             if (ProductSerialToTSheetSpecDict.Count == 0)
             {
-                IsSavingSession = false;
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "진행목록이 비어 있습니다.",
+                    CloseAfter = 3000,
                     ThemeColor = "warning",
                     ShowIcon = true,
                     Icon = "caret-double-alt-up"
                 });
+                IsSavingSession = false;
+                StateHasChanged();
                 return;
             }
 
             bool result = await SaveSessionData();
             if (result)
             {
+                IsSavingSession = false;
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "진행목록이 성공적으로 저장되었습니다.",
+                    CloseAfter = 2000,
                     ThemeColor = "success",
                     ShowIcon = true,
                     Icon = "caret-double-alt-up"
@@ -519,54 +528,69 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
+                IsSavingSession = false;
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    CloseAfter = 3000,
                     ThemeColor = "warning",
                     ShowIcon = true,
                     Icon = "caret-double-alt-up"
                 });
             }
-            IsSavingSession = false;
 
+            IsSavingSession = false;
+            StateHasChanged();
+        }
+
+        public async void OnSaveSessionDataByTimer()
+        {
+            //JBH NOTE: This is running on the NON-UI thread.
+            //          Do not do any UI things (such as StateHasChanged) here.
+            //          if needed, use InvokeAsync().
+            //          https://blazor-university.com/components/multi-threaded-rendering/invokeasync/
+
+            if (ProductSerialToTSheetSpecDict.Count == 0)
+            {
+                // StateHasChanged();
+                return;
+            }
+
+            bool result = await SaveSessionData();
+            // if ( !result )
+            // {
+            //     LoadSessionNotificationComponent.Show(new NotificationModel()
+            //     {
+            //         Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+            //         CloseAfter = 3000,
+            //         ThemeColor = "warning",
+            //         ShowIcon = true,
+            //         Icon = "caret-double-alt-up"
+            //     });
+            // }
 
             //StateHasChanged();
         }
 
-        public async void OnSaveSessionDataByTimer()
+        public async Task<bool> SaveSessionData()
         {
             IsSavingSession = true;
 
             if (ProductSerialToTSheetSpecDict.Count == 0)
             {
                 IsSavingSession = false;
-                return;
-            }
 
-            bool result = await SaveSessionData();
-            if ( !result )
-            {
-                LoadSessionNotificationComponent.Show(new NotificationModel()
-                {
-                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
-                    ThemeColor = "warning",
-                    ShowIcon = true,
-                    Icon = "caret-double-alt-up"
-                });
-            }
-
-            IsSavingSession = false;
-            //StateHasChanged();
-        }
-
-        public async Task<bool> SaveSessionData()
-        {
-            if (ProductSerialToTSheetSpecDict.Count == 0)
-            {
+                //JBH: 
+                //     When SaveSessionData() called from OnSaveSessionDataByTimer() which is invoked by the timer thread,
+                //     SaveSessionData() is running on the NON-UI thread!
+                //     Make sure call by InvokeAsync.
+                //     If not, the error: "The current thread is not associated with the Dispatcher. Use InvokeAsync()"
+                //     https://blazor-university.com/components/multi-threaded-rendering/invokeasync/
+                await InvokeAsync(StateHasChanged);
                 return false;
             }
 
-            var state = await this.AuthState.GetAuthenticationStateAsync();
+            var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
             var user = state.User;
             //var authState = await AuthenticationStateTask;
             //var user = authState.User;
@@ -597,16 +621,31 @@ namespace Fims.Client.Shared.Pages
 
             if (countInProgress == 0)
             {
+                IsSavingSession = false;
+                await InvokeAsync(StateHasChanged);
                 return false;
             }
 
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
             if ( fileName == null )
             {
+                LoadSessionNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    CloseAfter = 3000,
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+
+                IsSavingSession = false;
+                await InvokeAsync(StateHasChanged);
                 return false;
             }
             else
             {
+                IsSavingSession = false;
+                await InvokeAsync(StateHasChanged);
                 return true;
             }
         }

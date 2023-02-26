@@ -35,6 +35,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecs
                 if (source?.IsCancellationRequested == false)
                 {
                     equipmentModels = result;
+                    equipmentModels.Sort();
                 }
             }
             catch (Exception e)

@@ -35,8 +35,8 @@ namespace Fims.Web.Server.Controllers
         }
 
         // GET: api/TSheetSpecs/TSheetModels
+        [Authorize]
         [HttpGet("TSheetModels")]
-        [AllowAnonymous]
         public async Task<List<string>> TSheetModels()
         {
             var data = await this.TSheetSpecsService.GetEquipmentModelsAsync();
@@ -44,8 +44,8 @@ namespace Fims.Web.Server.Controllers
         }
 
         // GET: api/TSheetSpecs/TSheetSpecsDict
+        [Authorize]
         [HttpGet("TSheetSpecsDict")]
-        [AllowAnonymous]
         public async Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync()
         {
             var data = await this.TSheetSpecsService.GetTSheetSpecsDictAsync();
@@ -53,8 +53,8 @@ namespace Fims.Web.Server.Controllers
         }
 
         // GET: api/TSheetSpecs/TSheetSpecByModel/{equipmentModel}
+        [Authorize]
         [HttpGet("TSheetSpecByModel/{equipmentModel}")]
-        [AllowAnonymous]
         public async Task<TSheetSpec> TSheetSpecByModel(string equipmentModel)
         {
             var data = await this.TSheetSpecsService.GetTSheetSpecByEquipmentModelAsync(equipmentModel);
@@ -62,8 +62,8 @@ namespace Fims.Web.Server.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost(nameof(UploadSpecFile))]
-        [AllowAnonymous]
         public async Task<string> UploadSpecFile(IEnumerable<IFormFile> files)
         {
             var specFormFile = files.First();
@@ -71,8 +71,8 @@ namespace Fims.Web.Server.Controllers
             return result;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost(nameof(Remove))]
-        [AllowAnonymous]
         public async Task<bool> Remove(string[] files)
         {
             var result = await this.TSheetSpecsService.RemoveAsync(files);

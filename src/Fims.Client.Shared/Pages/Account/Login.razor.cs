@@ -13,9 +13,11 @@ namespace Fims.Client.Shared.Pages.Account
         public bool ShowErrors { get; set; }
 
         public IEnumerable<string> Errors { get; set; }
+        public bool InProgress { get; set; } = false;
 
         private async Task SubmitAsync()
         {
+            InProgress = true;
             var result = await this.AuthClientService.Login(this.model);
 
             if (result.Succeeded)
@@ -30,6 +32,8 @@ namespace Fims.Client.Shared.Pages.Account
                 this.Errors = result.Errors;
                 this.ShowErrors = true;
             }
+
+            InProgress = false;
         }
     }
 }
