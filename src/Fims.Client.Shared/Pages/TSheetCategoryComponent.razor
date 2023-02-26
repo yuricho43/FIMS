@@ -1,5 +1,7 @@
 ﻿@using Telerik.Blazor.Components.Common.Icon
 
+@inject LocalStorageInterop LocalStorage
+@inject IJSRuntime JsInterop
 
 <TelerikGrid Data=@MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory]
              EditMode="@GridEditMode.Incell"
@@ -9,6 +11,7 @@
              RowHeight="50"
              ScrollMode="@GridScrollMode.Virtual"
              PageSize="20"
+             OnStateInit="@((GridStateEventArgs<TItemSpec> args) => OnStateInit(args))"
              @bind-Page="@CurrentPage">
 
 @*    <GridToolBar>

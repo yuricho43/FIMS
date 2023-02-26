@@ -21,6 +21,7 @@
 
 
 @*<TelerikTabStrip @bind-ActiveTabIndex="@ActiveCategoryTabIndex" Class="fims-tab">*@
+@*<TelerikTabStrip ActiveTabIndex="@MyTSheetSpec.ActiveCategoryTabIndex" ActiveTabIndexChanged="@((int i) => ActiveTabIndexChangedHandler(i))" PersistTabContent="true">*@
 <TelerikTabStrip ActiveTabIndex="@MyTSheetSpec.ActiveCategoryTabIndex" ActiveTabIndexChanged="@((int i) => ActiveTabIndexChangedHandler(i))">
     @foreach (var TCategory in MyTSheetSpec.TCategories)
     {

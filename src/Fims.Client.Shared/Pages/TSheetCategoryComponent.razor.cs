@@ -42,6 +42,7 @@ namespace Fims.Client.Shared.Pages
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
         int CurrentPage = 1;
+        string stateStorageKey = "FimsGridStateKey";
 
 
         public string TextBoxFillMode { get; set; } = ThemeConstants.TextBox.FillMode.Solid;
@@ -1018,5 +1019,77 @@ namespace Fims.Client.Shared.Pages
             return Task.FromResult(Data);
         }
         #endregion
+
+        #region GridState
+
+        private async Task OnStateInit(GridStateEventArgs<TItemSpec> args)
+        {
+            try
+            {
+                var state = await LocalStorage.GetItem<GridState<TItemSpec>>(stateStorageKey);
+                if (state != null)
+                {
+                    args.GridState = state;
+                }
+            }
+            catch (InvalidOperationException)
+            {
+                // the JS Interop for the local storage cannot be used during pre-rendering
+            }
+        }
+
+        async Task SaveState()
+        {
+            var gridState = TItemSpecGrid.GetState();
+            await LocalStorage.SetItem(stateStorageKey, gridState);
+        }
+
+        async Task LoadState()
+        {
+            GridState<TItemSpec> storedState = await LocalStorage.GetItem<GridState<TItemSpec>>(stateStorageKey);
+            if (storedState != null)
+            {
+                await TItemSpecGrid.SetStateAsync(storedState);
+            }
+        }
+
+        async void ResetState()
+        {
+            await TItemSpecGrid.SetStateAsync(null);
+            await LocalStorage.RemoveItem(stateStorageKey);
+        }
+
+        // void ReloadPage()
+        // {
+        //     JsInterop.InvokeVoidAsync("window.location.reload");
+        // }
+
+        async void SetExplicitState()
+        {
+            GridState<TItemSpec> desiredState = GetDefaultDemoState();
+            await TItemSpecGrid.SetStateAsync(desiredState);
+            await SaveState();
+        }
+
+        GridState<TItemSpec> GetDefaultDemoState()
+        {
+            GridState<TItemSpec> defaultDemoState = new GridState<TItemSpec>()
+            {
+                // GroupDescriptors = new List<GroupDescriptor>()
+                // {
+                //     new GroupDescriptor()
+                //     {
+                //         Member = nameof(TItemSpec.QuantityPerUnit),
+                //         MemberType = typeof(string)
+                //     }
+                // },
+                // CollapsedGroups = new List<int>() { 1, 2 },
+                Page = 3
+            };
+            return defaultDemoState;
+        }
+        #endregion
+
+
     }
 }
