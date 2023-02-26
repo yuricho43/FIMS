@@ -89,8 +89,8 @@ namespace Fims.Admin
             //builder.Services.AddBlazoredLocalStorage();
             builder.Services.AddScoped<LocalStorageInterop>();
 
-            builder.Services.AddScoped<ApiAuthenticationStateProvider>();
-            builder.Services.AddScoped<AuthenticationStateProvider, ApiAuthenticationStateProvider>();
+            builder.Services.AddScoped<FimsClientAuthenticationStateProvider>();
+            builder.Services.AddScoped<AuthenticationStateProvider, FimsClientAuthenticationStateProvider>();
 
             builder.Services.AddScoped(sp => sp.GetRequiredService<IHttpClientFactory>().CreateClient(ClientName));
             builder.Services.AddTransient<IAuthClientService, AuthClientService>();

@@ -13,13 +13,13 @@ using Microsoft.AspNetCore.Components.Authorization;
 
 namespace Fims.Client.Shared.Infrastructure
 {
-    public class ApiAuthenticationStateProvider : AuthenticationStateProvider
+    public class FimsClientAuthenticationStateProvider : AuthenticationStateProvider
     {
         private readonly HttpClient httpClient;
         //private readonly ILocalStorageService localStorage;
         private readonly LocalStorageInterop localStorage;
 
-        public ApiAuthenticationStateProvider(
+        public FimsClientAuthenticationStateProvider(
             HttpClient httpClient,
             LocalStorageInterop localStorage) //JBH: changed from ILocalStorageService
         {
