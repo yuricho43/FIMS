@@ -28,6 +28,7 @@ namespace Fims.Web.Server.Controllers
             this.currentUserService = currentUserService;
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost(nameof(Register))]
         public async Task<ActionResult> Register(RegisterRequestModel model)
             => await this.identityService
@@ -35,6 +36,7 @@ namespace Fims.Web.Server.Controllers
                 .ToActionResult();
 
         [HttpPost(nameof(Login))]
+        [AllowAnonymous]
         public async Task<ActionResult<LoginResponseModel>> Login(LoginRequestModel model)
             => await this.identityService
                 .LoginAsync(model)
@@ -54,14 +56,14 @@ namespace Fims.Web.Server.Controllers
                 .ChangePasswordAsync(model, this.currentUserService.UserId)
                 .ToActionResult();
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut(nameof(ChangeRole))]
         public async Task<ActionResult> ChangeRole(UserAuthInfoModel model)
             => await this.identityService
                 .ChangeRoleAsync(model)
                 .ToActionResult();
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPut(nameof(ResetPassword))]
         public async Task<ActionResult> ResetPassword(UserAuthInfoModel model)
             => await this.identityService
@@ -69,8 +71,8 @@ namespace Fims.Web.Server.Controllers
                 .ToActionResult();
 
         // GET: api/Identity/GetAllUsers
+        [Authorize]
         [HttpGet("GetAllUsers")]
-        [AllowAnonymous]
         public async Task<List<UserAuthInfoModel>> GetAllUsers()
         {
             var data = await this.identityService.AllUsers();
@@ -78,8 +80,8 @@ namespace Fims.Web.Server.Controllers
         }
 
         // GET: api/Identity/GetRoles
+        [Authorize]
         [HttpGet("GetRoles")]
-        [AllowAnonymous]
         public List<FimsRole> GetRoles()
         {
             var data = this.identityService.Roles();
@@ -87,6 +89,7 @@ namespace Fims.Web.Server.Controllers
         }
 
         //[HttpDelete(Id)]
+        [Authorize(Roles = "Admin")]
         [HttpDelete("DeleteUser/{username}")]
         public async Task<ActionResult> Delete(string username)
             => await this.identityService.DeleteAsync(username).ToActionResult();

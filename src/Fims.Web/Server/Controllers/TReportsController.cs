@@ -38,21 +38,8 @@ namespace Fims.Web.Server.Controllers
             this.currentUserService = currentUserService;
         }
 
-        /*
-        [HttpGet("FindTSheetWithTItems/{id}")]
-        [AllowAnonymous] //JBH
-        public async Task<ActionResult<TSheet>> FindTSheetWithTItems(int id)
-            => await this.tSheetsService.FindTSheetWithTItemsByIdAsync(id);
-
-        // [HttpGet]
-        // [AllowAnonymous]
-        // public async Task<TSheetsComplexSearchResponseModel> Search(
-        //     [FromQuery] TSheetsComplexSearchRequestModel searchRequest)
-        //     => await this.tSheetsService.ComplexSearchAsync(searchRequest);
-        */
-
+        [Authorize]
         [HttpGet(nameof(AllTReportSpecs))]
-        [AllowAnonymous]
         public List<string> AllTReportSpecs()
         {
             var data = this.tReportsService.AllTReportSpecs();
@@ -60,6 +47,7 @@ namespace Fims.Web.Server.Controllers
         }
 
 
+        [Authorize]
         [HttpPost(nameof(GenerateTReport))]
         public async Task<ActionResult> GenerateTReport(TReportDto tReportRequest)
         {
@@ -69,28 +57,13 @@ namespace Fims.Web.Server.Controllers
         }
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost(nameof(UploadSpecFile))]
-        [AllowAnonymous]
         public async Task<string> UploadSpecFile(IEnumerable<IFormFile> files)
         {
             var specFormFile = files.First();
             var result = await this.tReportsService.UploadSpecFileAsync(specFormFile);
             return result;
         }
-
-        /*
-        [HttpPut(nameof(UpdateTSheet))]
-        //[HttpPut(Id)]
-        public async Task<ActionResult> UpdateTSheet(int id, TSheet tSheet)
-            => await this.tSheetsService
-                .UpdateAsync(id, tSheet, this.currentUserService.UserId)
-                .ToActionResult();
-
-        [HttpDelete("DeleteTSheet/{id}")]
-        public async Task<ActionResult> DeleteTSheet(int id)
-            => await this.tSheetsService
-                .DeleteAsync(id)
-                .ToActionResult();
-        */
     }
 }
