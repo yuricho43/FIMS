@@ -1,0 +1,100 @@
+﻿@page "/PagingVirtual"
+
+@using Telerik.DataSource
+@using Telerik.DataSource.Extensions
+@inject IJSRuntime js
+
+<p>
+    <label for="rowID">Row ID (1 - @AllData.Count.ToString()):</label>
+    <TelerikNumericTextBox Id="rowID" @bind-Value="@IDToSelect" Min="1" Max="@AllData.Count" Width="100px" />
+    <TelerikButton OnClick="@SelectRow">Select and Scroll to Row</TelerikButton>
+</p>
+
+<TelerikGrid @ref="@SelectableGrid"
+             OnRead="@GridOnRead"
+             ScrollMode="@GridScrollMode.Virtual"
+             RowHeight="60"
+             Height="420px"
+             Sortable="true"
+             FilterMode="GridFilterMode.FilterRow"
+             SelectionMode="GridSelectionMode.Single"
+             @bind-SelectedItems="@SelectedItems">
+    <GridColumns>
+        <GridCheckboxColumn SelectAll="true" Width="42px" />
+        <GridColumn Field=@nameof(Product.Name) Title="Product Name" />
+        <GridColumn Field=@nameof(Product.Price) Title="Price" />
+        <GridColumn Field=@nameof(Product.Quantity) Title="Units In Stock" />
+    </GridColumns>
+</TelerikGrid>
+
+<script suppress-error="BL9992">
+    function scrollToSelectedItem() {
+        var latestItem = document.querySelector('.k-grid tr.k-selected');
+        latestItem.scrollIntoView();
+    }
+</script>
+
+@code {
+    List<Product> AllData { get; set; }
+
+    TelerikGrid<Product> SelectableGrid { get; set; }
+    DataSourceRequest GridDataRequest { get; set; }
+
+    IEnumerable<Product> SelectedItems { get; set; } = new List<Product>();
+    int IDToSelect { get; set; } = 50;
+    bool ShouldScrollToRow { get; set; } = false;
+
+    async Task SelectRow()
+    {
+        var gridState = SelectableGrid.GetState();
+        gridState.Skip = IDToSelect - 1;
+        await SelectableGrid.SetStateAsync(gridState);
+
+        ShouldScrollToRow = true;
+        SelectedItems = new List<Product>() { AllData.Where(item => item.ID == IDToSelect).FirstOrDefault() };
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (ShouldScrollToRow)
+        {
+            ShouldScrollToRow = false;
+            await js.InvokeVoidAsync("scrollToSelectedItem");
+        }
+        await base.OnAfterRenderAsync(firstRender);
+    }
+
+    async Task GridOnRead(GridReadEventArgs args)
+    {
+        GridDataRequest = args.Request;
+        var result = AllData.ToDataSourceResult(args.Request);
+        args.Data = (result.Data as IEnumerable<Product>).ToList();
+        args.Total = result.Total;
+    }
+
+    protected override void OnInitialized()
+    {
+        AllData = new List<Product>();
+        var rnd = new Random();
+
+        for (int i = 1; i <= 120; i++)
+        {
+
+            AllData.Add(new Product()
+                {
+                    ID = i,
+                    Name = "Product " + i.ToString(),
+                    Price = (decimal)rnd.Next(1, 100),
+                    Quantity = (short)rnd.Next(1, 100)
+                });
+        }
+    }
+
+    public class Product
+    {
+        public int ID { get; set; }
+        public string Name { get; set; }
+        public decimal Price { get; set; }
+        public short Quantity { get; set; }
+    }
+}
