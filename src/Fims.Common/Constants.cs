@@ -3,9 +3,10 @@
     public class Constants
     {
         public const string AdministratorRole = "Admin";
-        public const string InspectorRole = "Inspector";
-        public const string ReporterRole = "Reporter";
-        public const string ManagerRole = "Manager";
+        public const string InspectorRole     = "Inspector";
+        public const string CloserRole        = "Closer";
+        public const string ReporterRole      = "Reporter";
+        public const string ManagerRole       = "Manager";
 
         public const string FimsDefaultPassword = "fims2023";
 
