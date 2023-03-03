@@ -22,6 +22,9 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
+using Fims.Client.Shared.Infrastructure.Extensions;
+using Fims.Data.Models.TSheetSpecsInProgress;
+using Fims.Data.Utils;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -38,10 +41,13 @@ namespace Fims.Client.Shared.Pages
 
         TelerikNotification TSheetComponentNotificationComponent { get; set; }
 
-
         private int TotalOnParamCalledCounter = 0;
         private int ValidOnParamCalledCounter = 0;
         private int InvalidOnParamCalledCounter = 0;
+
+        public bool IsLoadingInClose { get; set; } = false;
+        public bool IsSavingInClose { get; set; } = false;
+
 
         protected override void OnInitialized()
         {
@@ -313,6 +319,111 @@ namespace Fims.Client.Shared.Pages
                 ShowIcon = true,
                 Icon = "caret-double-alt-up"
             });
+        }
+
+
+        public async Task SaveTSheetToClosingRepo()
+        {
+            //  List<TItemSpec> deletedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsDeleted == true).ToList();
+            //  List<TItemSpec> newItems     = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsNew == true).ToList();
+            //  List<TItemSpec> updatedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
+            //  
+            //  // clean up current data and selection
+            //  MyObservableTItemSpecs.Clear();
+            //  SelectedItems = Enumerable.Empty<TItemSpec>();
+            //  
+            //  // update the grid with the data from the service
+            //  List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
+            //  MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
+
+            int notCompletedCount = GetTItemSpecsNotCompletedCount();
+            int invalidCount = GetTItemSpecsInvalidCount();
+
+#if !DEBUG
+            if (notCompletedCount > 0)
+            {
+                await ActivateAlert("검사서 입력완료", $"저장 불가!\n\n아직 입력되지 않은 항목들이 있습니다.\n미입력 항목: {notCompletedCount} 개");
+                return;
+            }
+
+            if (invalidCount > 0)
+            {
+                bool notConfirmed = await Dialogs.ConfirmAsync($"입력 데이터에 오류가 있습니다.\n\n데이터오류 항목: {invalidCount} 개\n\n그래도 입력완료 할까요?", "검사서 입력완료");
+                if (!notConfirmed)
+                {
+                    return;
+                }
+            }
+#endif
+
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"입력완료된 검사서는 더 이상 수정할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n입력완료 할까요?", "검사서 입력완료");
+            if (!saveConfirmed)
+            {
+                return;
+            }
+
+            MyTSheetSpec.IsInspectionCompleted = true;
+            MyTSheetSpec.InspectionEndDateTime = DateTime.Now;
+
+            bool saveResult = await SaveTSheetSpecInClose();
+
+            if (saveResult)
+            {
+                await TSheetInspectionCompleted.InvokeAsync(MyTSheetSpec.ProductSerial);
+
+                TSheetComponentNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "검사서가 성공적으로 입력완료 되었습니다.",
+                    ThemeColor = "success",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
+        }
+
+        public async Task<bool> SaveTSheetSpecInClose()
+        {
+            IsSavingInClose = true;
+
+            var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
+            var user = state.User;
+            //var authState = await AuthenticationStateTask;
+            //var user = authState.User;
+
+            var CurrentInspectorName = user.GetHangulName();
+            var CurrentInspectorUserId = user.GetUserId();
+
+            TSheetSpecsInProgressDto tSheetSpecsInCloseReqeust = new TSheetSpecsInProgressDto
+            {
+                UserId = CurrentInspectorUserId,
+                SerialToTSheetSpecPairs = new Dictionary<string, string>()
+            };
+
+            var jsonString = JsonUtils.PrettySerialize(MyTSheetSpec);
+            tSheetSpecsInCloseReqeust.SerialToTSheetSpecPairs.Add(MyTSheetSpec.ProductSerial, jsonString);
+
+            var fileName = await TSheetSpecsInCloseClientService.SaveTSheetSpecsInCloseByUser(tSheetSpecsInCloseReqeust);
+            if (fileName == null)
+            {
+                TSheetComponentNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    CloseAfter = 3000,
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+
+                IsSavingInClose = false;
+                await InvokeAsync(StateHasChanged);
+                return false;
+            }
+            else
+            {
+                IsSavingInClose = false;
+                await InvokeAsync(StateHasChanged);
+                return true;
+            }
         }
 
         void ActiveTabIndexChangedHandler(int newIndex)

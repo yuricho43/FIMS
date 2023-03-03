@@ -25,6 +25,7 @@ using Fims.Client.Shared.Shared.Layouts;
 
 using Fims.Admin.Infrastructure.HttpDev;
 using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
+using Fims.Client.Shared.ClientServices.TSheetSpecsInClose;
 
 namespace Fims.Admin
 {
@@ -98,6 +99,7 @@ namespace Fims.Admin
             builder.Services.AddTransient<ITSheetsClientService, TSheetsClientService>();
             builder.Services.AddTransient<ITSheetSpecsClientService, TSheetSpecsClientService>();
             builder.Services.AddTransient<ITSheetSpecsInProgressClientService, TSheetSpecsInProgressClientService>();
+            builder.Services.AddTransient<ITSheetSpecsInCloseClientService, TSheetSpecsInCloseClientService>();
             builder.Services.AddTransient<ITReportsClientService, TReportsClientService>();
 
 #if JBH_USE_ORIGINAL

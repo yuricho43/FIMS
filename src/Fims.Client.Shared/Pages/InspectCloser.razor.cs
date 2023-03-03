@@ -150,7 +150,7 @@ namespace Fims.Client.Shared.Pages
             var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
             ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
 
-            TSheetSpecsInProgressClientService.DeleteTSheetSpecsInProgressByUserIdProductSerial(productSerial);
+            TSheetSpecsInCloseClientService.DeleteTSheetSpecsInCloseByUserIdProductSerial(productSerial);
 
             ProductSerials.Remove(productSerial);
             ProductSerialsSelected.Remove(productSerial);
@@ -429,8 +429,8 @@ namespace Fims.Client.Shared.Pages
             CurrentInspectorName = user.GetHangulName();
             CurrentInspectorUserId = user.GetUserId();
 
-            TSheetSpecsInProgressDto tSheetSpecsInProgressDto = await TSheetSpecsInProgressClientService.GetTSheetSpecsInProgressByUser(CurrentInspectorUserId);
-            if (tSheetSpecsInProgressDto.UserId.StartsWith("HTTPFAIL"))
+            TSheetSpecsInProgressDto tSheetSpecsInCloseDto = await TSheetSpecsInCloseClientService.GetTSheetSpecsInCloseByUser(CurrentInspectorUserId);
+            if (tSheetSpecsInCloseDto.UserId.StartsWith("HTTPFAIL"))
             {
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
@@ -445,8 +445,8 @@ namespace Fims.Client.Shared.Pages
                 return;
             }
 
-            var userIdRx = tSheetSpecsInProgressDto.UserId;
-            var serialToTSheetSpecPairs = tSheetSpecsInProgressDto.SerialToTSheetSpecPairs;
+            var userIdRx = tSheetSpecsInCloseDto.UserId;
+            var serialToTSheetSpecPairs = tSheetSpecsInCloseDto.SerialToTSheetSpecPairs;
 
             if (serialToTSheetSpecPairs.Count == 0)
             {
@@ -598,7 +598,7 @@ namespace Fims.Client.Shared.Pages
             CurrentInspectorName = user.GetHangulName();
             CurrentInspectorUserId = user.GetUserId();
 
-            TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressDto
+            TSheetSpecsInProgressDto tSheetSpecsInCloseReqeust = new TSheetSpecsInProgressDto
             {
                 UserId = CurrentInspectorUserId,
                 SerialToTSheetSpecPairs = new Dictionary<string, string>()
@@ -615,7 +615,7 @@ namespace Fims.Client.Shared.Pages
                     // save "In-Progress" inspections only. do not save "Completed" inspections
                     countInProgress++;
                     var jsonString = JsonUtils.PrettySerialize(tSheetSpec);
-                    tSheetSpecsInProgressReqeust.SerialToTSheetSpecPairs.Add(serial, jsonString);
+                    tSheetSpecsInCloseReqeust.SerialToTSheetSpecPairs.Add(serial, jsonString);
                 }
             }
 
@@ -626,7 +626,7 @@ namespace Fims.Client.Shared.Pages
                 return false;
             }
 
-            var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
+            var fileName = await TSheetSpecsInCloseClientService.SaveTSheetSpecsInCloseByUser(tSheetSpecsInCloseReqeust);
             if ( fileName == null )
             {
                 LoadSessionNotificationComponent.Show(new NotificationModel()

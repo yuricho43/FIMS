@@ -13,6 +13,7 @@ using Fims.Data.Models.TSheets;
 using Fims.Services.TSheets;
 using Fims.Services.TSheetSpecs;
 using Fims.Services.TSheetSpecsInProgress;
+using Fims.Services.TSheetSpecsInClose;
 using Fims.Services.TReports;
 using Microsoft.AspNetCore.Identity;
 using Telerik.SvgIcons;
@@ -43,13 +44,19 @@ namespace Fims.Web.Server
             var fimsTSheetSpecsInProgressRepoPath = Configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepository");
             if (!Directory.Exists(fimsTSheetSpecsInProgressRepoPath)) { Directory.CreateDirectory(fimsTSheetSpecsInProgressRepoPath); }
 
+            var fimsTSheetSpecsInCloseRepoPath = Configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInCloseRepository");
+            if (!Directory.Exists(fimsTSheetSpecsInCloseRepoPath)) { Directory.CreateDirectory(fimsTSheetSpecsInCloseRepoPath); }
+
             //JBH: Instantiate and AddSingleton TSheetSpecsService here,
             //     so that BuildTSheetSpecsFromFiles() @ TSheetSpecsService will run immediately upon the server startup.
             ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService(Configuration);
             services.AddSingleton(tSheetSpecsService);
 
-            ITSheetSpecsInProgressService tSheetSpecsInProgressService = new TSheetSpecsInProgressService(Configuration);
+            ITSheetSpecsInProgressService   tSheetSpecsInProgressService    = new TSheetSpecsInProgressService(Configuration);
             services.AddSingleton(tSheetSpecsInProgressService);
+
+            ITSheetSpecsInCloseService      tSheetSpecsInCloseService       = new TSheetSpecsInCloseService(Configuration);
+            services.AddSingleton(tSheetSpecsInCloseService);
 
             // NOTE: ITSheetsService and ITReportsService inherits "IService",
             //       So those will be registered in AddApplicationServices().

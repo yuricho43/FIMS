@@ -17,6 +17,7 @@ using Fims.Client.Shared.ClientServices.TReports;
 
 using Fims.Client.Shared.Localization;
 using Fims.Client.Shared.ClientServices.TSheetSpecsInProgress;
+using Fims.Client.Shared.ClientServices.TSheetSpecsInClose;
 using Fims.Web.Client.Layouts;
 using Fims.Client.Shared.Shared.Layouts;
 
@@ -49,6 +50,7 @@ namespace Fims.Web.Client
             builder.Services.AddTransient<ITSheetsClientService, TSheetsClientService>();
             builder.Services.AddTransient<ITSheetSpecsClientService, TSheetSpecsClientService>();
             builder.Services.AddTransient<ITSheetSpecsInProgressClientService, TSheetSpecsInProgressClientService>();
+            builder.Services.AddTransient<ITSheetSpecsInCloseClientService, TSheetSpecsInCloseClientService>();
             builder.Services.AddTransient<ITReportsClientService, TReportsClientService>();
 
             builder.Services.AddTransient<AuthenticationHeaderHandler>();

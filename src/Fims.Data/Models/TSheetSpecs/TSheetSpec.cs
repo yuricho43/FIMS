@@ -17,10 +17,17 @@ namespace Fims.Data.Models.TSheetSpecs
         public string ProductType { get; set; } // "신규", "수리"
         public string SpecFile { get; set; }    // "FimsTSheetSpecs_20221226.xlsx"
         public string Comment { get; set; }
+
         public string InspectorName { get; set; }
         public DateTime InspectionStartDateTime { get; set; }
         public DateTime InspectionEndDateTime { get; set; }
         public bool IsInspectionCompleted { get; set; }
+
+        public string CloserName { get; set; }
+        public DateTime ClosingStartDateTime { get; set; }
+        public DateTime ClosingEndDateTime { get; set; }
+        public bool IsClosingCompleted { get; set; }
+
         public string UserId { get; set; }
 
         public List<string> TCategories { get; set; }
