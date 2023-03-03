@@ -1,4 +1,6 @@
 ﻿@namespace Fims.Admin.Layouts
+
+@using Fims.Common
 @using Fims.Client.Shared.Shared.NavMenu
 @using Telerik.Blazor.Components.Common.Icon
 
@@ -19,7 +21,7 @@
             </div>
             <img style="width: 30px;" src="_content/Fims.Client.Shared/images/fimsadmin.svg">
             <div class="title">
-                <h1>@Localizer["Fims_Title"]</h1>
+                <h1>@($"{Constants.FimsTitle} (FIMS {Constants.FimsVersion})")</h1>
             </div>
             @{
                 if (!WindowWidthSmall)

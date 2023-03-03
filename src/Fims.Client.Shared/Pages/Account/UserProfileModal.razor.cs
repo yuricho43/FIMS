@@ -83,6 +83,22 @@ namespace Fims.Client.Shared.Pages.Account
             }
         }
 
+        protected override async Task OnParametersSetAsync()
+        {
+            var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
+            var user = state.User;
+            //var authState = await AuthenticationStateTask;
+            //var user = authState.User;
+
+            if (user.Identity.IsAuthenticated)
+            {
+                var userRole = user.GetUserRole(); //debug
+            }
+ 
+            await this.LoadDataAsync();
+            //StateHasChanged();
+        }
+
         private async Task SubmitAsync()
         {
             var result = await this.AuthClientService.ChangeProfile(this.CurrentUserProfileModel);
