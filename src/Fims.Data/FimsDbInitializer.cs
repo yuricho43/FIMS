@@ -124,7 +124,7 @@ namespace Fims.Data
                     existingRole = await this.roleManager.FindByNameAsync(CloserRole);
                     if (existingRole == null)
                     {
-                        // create the InspectorRole, and create an Inspector
+                        // create the CloserRole, and create a Closer
                         var closerRole = new FimsRole(CloserRole);
                         await this.roleManager.CreateAsync(closerRole);
                         var closerUser = new FimsUser
@@ -136,7 +136,7 @@ namespace Fims.Data
                             SecurityStamp = "RandomSecurityStamp"
                         };
                         await this.userManager.CreateAsync(closerUser, FimsDefaultPassword);
-                        await this.userManager.AddToRoleAsync(closerUser, InspectorRole);
+                        await this.userManager.AddToRoleAsync(closerUser, CloserRole);
                     }
 
                     existingRole = await this.roleManager.FindByNameAsync(ReporterRole);
