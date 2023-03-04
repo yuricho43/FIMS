@@ -320,20 +320,6 @@ namespace Fims.Client.Shared.Pages
             }
         }
 
-        public async Task SaveAllChanges()
-        {
-            List<TItemSpec> deletedItems = MyObservableTItemSpecs.Where(itm => itm.IsDeleted == true).ToList();
-            List<TItemSpec> newItems = MyObservableTItemSpecs.Where(itm => itm.IsNew == true).ToList();
-            List<TItemSpec> updatedItems = MyObservableTItemSpecs.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
-
-            // clean up current data and selection
-            MyObservableTItemSpecs.Clear();
-            SelectedItems = Enumerable.Empty<TItemSpec>();
-
-            // update the grid with the data from the service
-            List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
-        }
 
         public void RevertAllChanges()
         {
@@ -422,48 +408,6 @@ namespace Fims.Client.Shared.Pages
                 return collection[index];
             }
             return null;
-        }
-
-        private List<TItemSpec> Data { get; set; }
-        public Task<List<TItemSpec>> BatchUpdate(
-            List<TItemSpec> deletedItems, List<TItemSpec> insertedItems, List<TItemSpec> updatedItems)
-        {
-            //just sample CRUD operations
-            //this is a singleton service to cater for all users at the same time
-            //in a real app it may be transient instead
-            //also, this code does not cater for concurrency conflicts and errors
-            //while a real service should take them into account
-            //e.g., insert instead of attempt an update on a missing item that another user deleted
-            //in this example this also returns the newly updated data for the grid
-            foreach (TItemSpec item in deletedItems)
-            {
-                Data.Remove(item);
-            }
-
-            foreach (TItemSpec item in insertedItems)
-            {
-                item.TestNo = Data.Max(item => item.TestNo) + 1;
-                Data.Insert(0, item);
-            }
-
-            foreach (TItemSpec item in updatedItems)
-            {
-                var index = Data.FindIndex(i => i.TestNo == item.TestNo);
-                if (index != -1)
-                {
-                    Data[index] = item;
-                }
-            }
-
-            //clean up the view model information to be sure we do not "predefine" user actions
-            foreach (TItemSpec item in Data)
-            {
-                item.IsChanged = false;
-                item.IsDeleted = false;
-                item.IsNew = false;
-            }
-
-            return Task.FromResult(Data);
         }
     }
 }

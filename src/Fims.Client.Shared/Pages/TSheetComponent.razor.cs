@@ -280,18 +280,6 @@ namespace Fims.Client.Shared.Pages
 
         public async Task SaveTSheetToDb()
         {
-            //  List<TItemSpec> deletedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsDeleted == true).ToList();
-            //  List<TItemSpec> newItems     = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsNew == true).ToList();
-            //  List<TItemSpec> updatedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
-            //  
-            //  // clean up current data and selection
-            //  MyObservableTItemSpecs.Clear();
-            //  SelectedItems = Enumerable.Empty<TItemSpec>();
-            //  
-            //  // update the grid with the data from the service
-            //  List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            //  MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
-
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
             int invalidCount = GetTItemSpecsInvalidCount();
 
@@ -340,18 +328,6 @@ namespace Fims.Client.Shared.Pages
 
         public async Task SaveTSheetToClosingRepo()
         {
-            //  List<TItemSpec> deletedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsDeleted == true).ToList();
-            //  List<TItemSpec> newItems     = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsNew == true).ToList();
-            //  List<TItemSpec> updatedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
-            //  
-            //  // clean up current data and selection
-            //  MyObservableTItemSpecs.Clear();
-            //  SelectedItems = Enumerable.Empty<TItemSpec>();
-            //  
-            //  // update the grid with the data from the service
-            //  List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            //  MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
-
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
             int invalidCount = GetTItemSpecsInvalidCount();
 

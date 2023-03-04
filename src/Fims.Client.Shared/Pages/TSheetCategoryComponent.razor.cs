@@ -960,66 +960,6 @@ namespace Fims.Client.Shared.Pages
         #endregion
 
 
-        #region Batch Saving
-        public async Task SaveAllChanges()
-        {
-            List<TItemSpec> deletedItems = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Where(item => item.IsDeleted == true).ToList();
-            List<TItemSpec> newItems = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Where(item => item.IsNew == true).ToList();
-            List<TItemSpec> updatedItems = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Where(item => item.IsChanged == true && item.IsDeleted == false).ToList();
-
-            // clean up current data and selection
-            MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Clear();
-            MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].Clear();
-
-            // update the grid with the data from the service
-            List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory] = new ObservableCollection<TItemSpec>(newData);
-        }
-
-        private List<TItemSpec> Data { get; set; }
-        public Task<List<TItemSpec>> BatchUpdate(
-            List<TItemSpec> deletedItems, List<TItemSpec> insertedItems, List<TItemSpec> updatedItems)
-        {
-            //just sample CRUD operations
-            //this is a singleton service to cater for all users at the same time
-            //in a real app it may be transient instead
-            //also, this code does not cater for concurrency conflicts and errors
-            //while a real service should take them into account
-            //e.g., insert instead of attempt an update on a missing item that another user deleted
-            //in this example this also returns the newly updated data for the grid
-            foreach (TItemSpec item in deletedItems)
-            {
-                Data.Remove(item);
-            }
-
-            foreach (TItemSpec item in insertedItems)
-            {
-                item.TestNo = Data.Max(item => item.TestNo) + 1;
-                Data.Insert(0, item);
-            }
-
-            foreach (TItemSpec item in updatedItems)
-            {
-                var index = Data.FindIndex(i => i.TestNo == item.TestNo);
-                if (index != -1)
-                {
-                    Data[index] = item;
-                }
-            }
-
-            //clean up the view model information to be sure we do not "predefine" user actions
-            foreach (TItemSpec item in Data)
-            {
-                item.IsChanged = false;
-                item.IsDeleted = false;
-                item.IsNew = false;
-                item.DirtyFields = new List<string>();
-            }
-
-            return Task.FromResult(Data);
-        }
-        #endregion
-
         #region GridState
 
         private async Task OnStateInit(GridStateEventArgs<TItemSpec> args)
