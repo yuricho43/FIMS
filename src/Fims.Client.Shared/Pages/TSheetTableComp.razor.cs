@@ -23,10 +23,8 @@ namespace Fims.Client.Shared.Pages
         public int MaxChannels { get; set; }
 
         private List<TItemSpec> PristineItems { get; set; } = new List<TItemSpec>();
-        public IEnumerable<TItemSpec> SelectedItems { get; set; } = Enumerable.Empty<TItemSpec>();
 
         public bool GridIsDirty => MyObservableTItemSpecs.ToList().Exists(itm => itm.IsDirty);
-        public bool SelectionIsDirty => SelectedItems.ToList().Exists(itm => itm.IsDirty);
 
         public int ActiveCategoryTabIndex { get; set; } = 1;
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
@@ -363,14 +361,6 @@ namespace Fims.Client.Shared.Pages
             }
         }
 
-        public void RevertSelected()
-        {
-            foreach (TItemSpec item in SelectedItems)
-            {
-                RevertItem(item);
-            }
-        }
-
         public void DeleteItem(TItemSpec itmToDelete)
         {
             TItemSpec localItem = GetItemFromCollection(MyObservableTItemSpecs, itmToDelete);
@@ -388,14 +378,6 @@ namespace Fims.Client.Shared.Pages
                 {
                     localItem.IsDeleted = true;
                 }
-            }
-        }
-
-        public void DeleteSelected()
-        {
-            foreach (TItemSpec item in SelectedItems)
-            {
-                DeleteItem(item);
             }
         }
 

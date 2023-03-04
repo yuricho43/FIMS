@@ -37,7 +37,6 @@ namespace Fims.Client.Shared.Pages
         //public IEnumerable<TItemSpec> TItemSpecsSelected { get; set; } = Enumerable.Empty<TItemSpec>();
 
         public bool GridIsDirty => MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].ToList().Exists(item => item.IsDirty);
-        public bool SelectionIsDirty => MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].ToList().Exists(item => item.IsDirty);
 
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
