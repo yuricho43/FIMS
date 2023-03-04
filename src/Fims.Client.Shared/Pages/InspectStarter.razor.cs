@@ -241,6 +241,7 @@ namespace Fims.Client.Shared.Pages
                     MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
                     MakeTItemSpecsCompletedCountInCategoryDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
+                    CleanUpTSheetSpec(ref tSheetSpec);
                 }
             }
 
@@ -248,6 +249,7 @@ namespace Fims.Client.Shared.Pages
         }
 
 
+        #region TSheetSpec Manipulation
         private void ExpandTSheetSpec(ref TSheetSpec tSheetSpecRef) //call by ref
         {
             var tItemSpecs = tSheetSpecRef.TItemSpecs;
@@ -402,6 +404,14 @@ namespace Fims.Client.Shared.Pages
         //{
         //    args.Class = "center-cell";
         //}
+
+        private void CleanUpTSheetSpec(ref TSheetSpec tSheetSpecRef) //call by ref
+        {
+            tSheetSpecRef.TItemSpecsInCategoryDict.Clear();
+            tSheetSpecRef.TItemSpecs.Clear();
+        }
+        #endregion
+
 
         public async void OnLoadSessionData()
         {
