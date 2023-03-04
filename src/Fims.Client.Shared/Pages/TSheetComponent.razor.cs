@@ -254,9 +254,9 @@ namespace Fims.Client.Shared.Pages
         {
             int notCompletedCount = 0;
 
-            foreach (var cat in MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict)
+            foreach (var category in TCategories)
             {
-                notCompletedCount += MyTSheetSpec.TItemsCountInCategoryDict[cat.Key] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[cat.Key];
+                notCompletedCount += MyTSheetSpec.TItemsCountInCategoryDict[category] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[category];
             }
 
             return notCompletedCount;
@@ -266,9 +266,9 @@ namespace Fims.Client.Shared.Pages
         {
             int invalidCount = 0;
 
-            foreach (var cat in MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict)
+            foreach (var category in TCategories)
             {
-                invalidCount += MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict[cat.Key];
+                invalidCount += MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict[category];
             }
 
             return invalidCount;
@@ -292,13 +292,13 @@ namespace Fims.Client.Shared.Pages
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
             int invalidCount = GetTItemSpecsInvalidCount();
 
-#if !DEBUG
             if (notCompletedCount > 0)
             {
                 await ActivateAlert("Database 저장", $"저장 불가!\n\n아직 입력되지 않은 항목들이 있습니다.\n미입력 항목: {notCompletedCount} 개");
                 return;
             }
 
+#if !DEBUG
             if (invalidCount > 0)
             {
                 bool notConfirmed = await Dialogs.ConfirmAsync($"입력 데이터에 오류가 있습니다.\n\n데이터오류 항목: {invalidCount} 개\n\n그래도 DB에 저장할까요?", "Database 저장");

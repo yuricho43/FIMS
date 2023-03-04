@@ -145,31 +145,6 @@ namespace Fims.Client.Shared.Pages
             //StateHasChanged();
         }
 
-        // public void OnTSheetInspectionCompleted(string productSerial)
-        // {
-        //     var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
-        //     ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
-        // 
-        //     TSheetSpecsInCloseClientService.DeleteTSheetSpecsInCloseByUserIdProductSerial(productSerial);
-        // 
-        //     ProductSerials.Remove(productSerial);
-        //     ProductSerialsSelected.Remove(productSerial);
-        //     ProductSerialToTSheetSpecDict.Remove(productSerial);
-        // 
-        //     var firstEntry = ProductSerialToTSheetSpecDict.FirstOrDefault();
-        //     if (firstEntry.Key != null)
-        //     {
-        //         SetProductSerialAsCurrent(firstEntry.Key);
-        //     }
-        //     else
-        //     {
-        //         // Products empty, so no display of TSheetComponent
-        //         CurrentTSheetSpec = null;
-        //     }
-        // 
-        //     StateHasChanged();
-        // }
-
         public void OnTSheetClosingCompleted(string productSerial)
         {
             var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
@@ -195,52 +170,6 @@ namespace Fims.Client.Shared.Pages
             StateHasChanged();
         }
 
-        //private async Task<bool> AddTProduct(TProductSpec tProductSpec)
-        //{
-        //    //AddNewProductDialogVisible = false;
-
-        //    if (tProductSpec.ProductModel == "MMMMMMMM")
-        //    {
-        //        // invalid ProductModel
-        //        return false;
-        //    }
-
-        //    if (ProductSerialToTSheetSpecDict.ContainsKey(tProductSpec.ProductSerial))
-        //    {
-        //        //already added
-        //        await ActivateAlert("추가 실패", "이미 등록되었습니다.");
-        //        return false;
-        //    }
-
-        //    //GridData = ProductService.GetProducts().ToList();
-        //    TSheetSpec tSheetSpec = await GetTSheetSpecByTModelAsync(tProductSpec.ProductModel);
-        //    if (tSheetSpec != null)
-        //    {
-        //        tSheetSpec.ProductSerial = tProductSpec.ProductSerial;
-        //        tSheetSpec.ProductModel = tProductSpec.ProductModel;
-        //        tSheetSpec.Customer = tProductSpec.Customer;
-        //        tSheetSpec.EndUser = tProductSpec.EndUser;
-        //        tSheetSpec.ProductType = tProductSpec.ProductType;
-        //        tProductSpec.TSheetSpec = tSheetSpec;
-
-        //        ProductSerials ??= new List<string>();
-        //        ProductSerials.Add(tProductSpec.ProductSerial);
-
-        //        ProductSerialToTSheetSpecDict.Add(tProductSpec.ProductSerial, tSheetSpec);
-        //        ProductSerialsSelected.Add(tProductSpec.ProductSerial, false);
-
-        //        SetProductSerialAsCurrent(tProductSpec.ProductSerial);
-        //        //StateHasChanged();
-        //        return true;
-        //    }
-        //    else
-        //    {
-        //        //await ActivateAlert("WARNING", $"{tProductSpec.ProductModel}에 대한 스펙파일을 찾을 수 없습니다. 서버를 점검하세요.");
-        //        await ActivateAlert("추가 실패", "서버연결상태를 점검하세요.");
-        //        return false;
-        //    }
-        //}
-
         private void SetProductSerialAsCurrent(string productSerial)
         {
             CurrentTSheetSpec = ProductSerialToTSheetSpecDict[productSerial] as TSheetSpec;
@@ -250,192 +179,6 @@ namespace Fims.Client.Shared.Pages
 
             StateHasChanged();
         }
-
-        private async Task<TSheetSpec> GetTSheetSpecByTModelAsync(string tModel)
-        {
-            TSheetSpec tSheetSpec = await TSheetSpecsClientService.GetTSheetSpecByEquipmentModelAsync(tModel);
-
-            if (tSheetSpec != null)
-            {
-                if (tSheetSpec.ProductModel != Constants.TSheetSpecNotDefined)
-                {
-                    ExpandTSheetSpec(ref tSheetSpec); //call by ref
-                    MakeRangeToolTip(ref tSheetSpec); //call by ref
-                    CreateDirtyFields(ref tSheetSpec); //call by ref
-                    SetChXEnabled(ref tSheetSpec); //call by ref
-                    MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
-                    MakeTItemSpecsCompletedCountInCategoryDict(ref tSheetSpec);
-                    MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
-                    CleanUpTSheetSpec(ref tSheetSpec);
-                }
-            }
-
-            return tSheetSpec;
-        }
-
-        #region TSheetSpec Manipulation
-        private void ExpandTSheetSpec(ref TSheetSpec tSheetSpecRef) //call by ref
-        {
-            var tItemSpecs = tSheetSpecRef.TItemSpecs;
-
-            //Extract unique Category
-            tSheetSpecRef.TCategories = (List<string>)tItemSpecs.GroupBy(s => s.Category).Select(s => s.First()).Select(g => g.Category).ToList();
-
-            //Group TItemSpecs by Category, Put into a Dictionary.
-            tSheetSpecRef.TItemSpecsInCategoryDict = tItemSpecs.GroupBy(s => s.Category).ToDictionary(g => g.Key, g => g.ToList());
-
-            tSheetSpecRef.InspectionStartDateTime = DateTime.Now;
-            tSheetSpecRef.InspectorName = CurrentInspectorName;
-
-            tSheetSpecRef.IsInInspecting = false;
-            tSheetSpecRef.IsInClosing = true;
-        }
-
-        private void MakeCategoryObservableTItemSpecsDict(ref TSheetSpec tSheetSpecRef)
-        {
-            string model = tSheetSpecRef.ProductModel;
-            //if (tSheetSpecRef.TCategories.IsNullOrEmpty())
-            //    tSheetSpecRef.TCategories = new List<string>();
-            //else
-            //    tSheetSpecRef.TCategories.Clear();
-
-            if (tSheetSpecRef.ObservableTItemSpecsInCategoryDict.IsNullOrEmpty())
-                tSheetSpecRef.ObservableTItemSpecsInCategoryDict = new Dictionary<string, ObservableCollection<TItemSpec>>();
-            else
-                tSheetSpecRef.ObservableTItemSpecsInCategoryDict.Clear();
-
-            if (tSheetSpecRef.TItemsCountInCategoryDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemsCountInCategoryDict = new Dictionary<string, int>();
-            else
-                tSheetSpecRef.TItemsCountInCategoryDict.Clear();
-
-            foreach (var categoryTItemspec in tSheetSpecRef.TItemSpecsInCategoryDict)
-            {
-                //tSheetSpecRef.TCategories.Add(categoryTItemspec.Key);
-                ObservableCollection<TItemSpec> observableTItemSpecs = new ObservableCollection<TItemSpec>(categoryTItemspec.Value);
-                tSheetSpecRef.ObservableTItemSpecsInCategoryDict.Add(categoryTItemspec.Key, observableTItemSpecs);
-                tSheetSpecRef.TItemsCountInCategoryDict.Add(categoryTItemspec.Key, observableTItemSpecs.Count);
-            }
-        }
-
-        private void MakeTItemSpecsCompletedCountInCategoryDict(ref TSheetSpec tSheetSpecRef)
-        {
-            if (tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict = new Dictionary<string, int>();
-            else
-                tSheetSpecRef.TItemSpecsCompletedCountInCategoryDict.Clear();
-        }
-
-        private void MakeTItemSpecsInCategoryInvalidCountDict(ref TSheetSpec tSheetSpecRef)
-        {
-            if (tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict = new Dictionary<string, int>();
-            else
-                tSheetSpecRef.TItemSpecsInvalidCountInCategoryDict.Clear();
-        }
-
-        private void MakeRangeToolTip(ref TSheetSpec tSheetSpecRef) //call by ref
-        {
-            foreach (var tItemSpec in tSheetSpecRef.TItemSpecs)
-            {
-                if (tItemSpec.ExpressionMode.Contains("Combo"))
-                {
-                    var comboList = tItemSpec.Unit.Split(',').ToList();
-                    tItemSpec.UnitList = comboList.Select(t => t.Trim()).ToList();
-
-                    if (tItemSpec.Channels == 1)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Unit}";
-                    }
-                    else if (tItemSpec.Channels == 2)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1|CH2: {tItemSpec.Unit}";
-                    }
-                    else if (tItemSpec.Channels == 3)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1|CH2|CH3: {tItemSpec.Unit}";
-                    }
-                    else if (tItemSpec.Channels == 4)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1|CH2|CH3|CH4: {tItemSpec.Unit}";
-                    }
-                    else //something wrong
-                    {
-                        tItemSpec.RangeToolTip = $"ERROR: Too Many Channels!";
-                    }
-                }
-                else
-                {
-                    if (tItemSpec.Channels == 1)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL}";
-                    }
-                    else if (tItemSpec.Channels == 2)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL},    CH2: {tItemSpec.Ch2LCL}~{tItemSpec.Ch2UCL}";
-                    }
-                    else if (tItemSpec.Channels == 3)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL},    CH2: {tItemSpec.Ch2LCL}~{tItemSpec.Ch2UCL},    CH3: {tItemSpec.Ch3LCL}~{tItemSpec.Ch3UCL}";
-                    }
-                    else if (tItemSpec.Channels == 4)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL},    CH2: {tItemSpec.Ch2LCL}~{tItemSpec.Ch2UCL},    CH3: {tItemSpec.Ch3LCL}~{tItemSpec.Ch3UCL},    CH4: {tItemSpec.Ch4LCL}~{tItemSpec.Ch4UCL}";
-                    }
-                    else //something wrong
-                    {
-                        tItemSpec.RangeToolTip = $"ERROR: Too Many Channels!";
-                    }
-                }
-            }
-        }
-
-        private void CreateDirtyFields(ref TSheetSpec tSheetSpecRef) //call by ref
-        {
-            foreach (var tItemSpec in tSheetSpecRef.TItemSpecs)
-            {
-                tItemSpec.DirtyFields = new List<string>();
-            }
-        }
-
-        private void SetChXEnabled(ref TSheetSpec tSheetSpecRef) //call by ref
-        {
-            foreach (var tItemSpec in tSheetSpecRef.TItemSpecs)
-            {
-                if (tItemSpec.Channels >= 4)
-                    tItemSpec.IsCh4DataEnabled = true;
-                else
-                    tItemSpec.IsCh4DataEnabled = false;
-
-                if (tItemSpec.Channels >= 3)
-                    tItemSpec.IsCh3DataEnabled = true;
-                else
-                    tItemSpec.IsCh3DataEnabled = false;
-
-                if (tItemSpec.Channels >= 2)
-                    tItemSpec.IsCh2DataEnabled = true;
-                else
-                    tItemSpec.IsCh2DataEnabled = false;
-
-                if (tItemSpec.Channels >= 1)
-                    tItemSpec.IsCh1DataEnabled = true;
-                else
-                    tItemSpec.IsCh1DataEnabled = false;
-            }
-        }
-
-        //private void OnCellRender(GridCellRenderEventArgs args)
-        //{
-        //    args.Class = "center-cell";
-        //}
-
-        private void CleanUpTSheetSpec(ref TSheetSpec tSheetSpecRef) //call by ref
-        {
-            tSheetSpecRef.TItemSpecsInCategoryDict.Clear();
-            tSheetSpecRef.TItemSpecs.Clear();
-        }
-        #endregion
-
 
         public async void OnLoadSessionData()
         {
@@ -632,9 +375,9 @@ namespace Fims.Client.Shared.Pages
             {
                 var serial = productSerialToTSheetSpec.Key;
                 var tSheetSpec = productSerialToTSheetSpec.Value;
-                if ( !tSheetSpec.IsInspectionCompleted )
+                if ( !tSheetSpec.IsClosingCompleted )
                 {
-                    // save "In-Progress" inspections only. do not save "Completed" inspections
+                    // save "In-Closing" inspections only. do not save "Completed" inspections
                     countInProgress++;
                     var jsonString = JsonUtils.PrettySerialize(tSheetSpec);
                     tSheetSpecsInCloseReqeust.SerialToTSheetSpecPairs.Add(serial, jsonString);
