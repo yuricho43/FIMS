@@ -28,19 +28,6 @@
             <CardBody>
                 <CardSeparator></CardSeparator>
 
-                @*<TelerikGrid Data=@TSheetWithDetails.TItems
-                        EditMode="@GridEditMode.Incell"
-                        SelectionMode="GridSelectionMode.Multiple"
-                        @ref="@TItemGrid"
-                        OnUpdate="@UpdateHandler" OnEdit="@EditHandler" OnDelete="@DeleteHandler" OnCreate="@CreateHandler"
-                        OnRowRender="@OnRowRenderHandler"
-                        Height="480px"
-                        Pageable="true"
-                        Resizable="true"
-                        Page="@Page"
-                        Class="batch-grid">
-                *@
-
                 <TelerikGrid Data=@TSheetWithTItems.TItems
                             @ref="@TItemGrid"
                             Pageable="true"

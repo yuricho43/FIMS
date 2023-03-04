@@ -287,23 +287,6 @@ namespace Fims.Client.Shared.Pages
             item.IsChanged = true;
             ChangeLocalItem(item);
         }
-
-        public void CreateHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-            item.TestNo = MyObservableTItemSpecs.Max(model => model.TestNo) + 1;
-            item.IsNew = true;
-            MyObservableTItemSpecs.Insert(0, item);
-        }
-
-        public void DeleteHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-
-            DeleteItem(item);
-
-            //show notification for undelete
-        }
         #endregion
 
 
@@ -314,18 +297,6 @@ namespace Fims.Client.Shared.Pages
             {
                 MyObservableTItemSpecs[index] = item;
             }
-        }
-
-        public void RevertAllChanges()
-        {
-            for (int i = MyObservableTItemSpecs.Count - 1; i >= 0; i--)
-            {
-                if (MyObservableTItemSpecs[i].IsDirty)
-                {
-                    RevertItem(MyObservableTItemSpecs[i]);
-                }
-            }
-            StateHasChanged();
         }
 
         public void RestoreItem(TItemSpec item)

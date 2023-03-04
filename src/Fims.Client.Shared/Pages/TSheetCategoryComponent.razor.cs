@@ -565,23 +565,6 @@ namespace Fims.Client.Shared.Pages
             CalculateTItemSpecsInputCompletedCountInCategory();
             CalculateTItemSpecsInputInvalidCountInCategory();
         }
-
-        public void CreateHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-            item.TestNo = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Max(model => model.TestNo) + 1;
-            item.IsNew = true;
-            MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Insert(0, item);
-        }
-
-        public void DeleteHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-
-            DeleteItem(item);
-
-            //show notification for undelete
-        }
         #endregion
 
 
