@@ -267,7 +267,6 @@ namespace Fims.Client.Shared.Pages
                     MakeTItemSpecsCompletedCountInCategoryDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryPristineDict(ref tSheetSpec);
-                    MakeTItemSpecsInCategorySelectedDict(ref tSheetSpec);
                 }
             }
 
@@ -341,14 +340,6 @@ namespace Fims.Client.Shared.Pages
                 tSheetSpecRef.TItemSpecsPristineInCategoryDict = new Dictionary<string, List<TItemSpec>>();
             else
                 tSheetSpecRef.TItemSpecsPristineInCategoryDict.Clear();
-        }
-
-        private void MakeTItemSpecsInCategorySelectedDict(ref TSheetSpec tSheetSpecRef)
-        {
-            if (tSheetSpecRef.TItemSpecsSelectedInCategoryDict.IsNullOrEmpty())
-                tSheetSpecRef.TItemSpecsSelectedInCategoryDict = new Dictionary<string, List<TItemSpec>>();
-            else
-                tSheetSpecRef.TItemSpecsSelectedInCategoryDict.Clear();
         }
 
         private void MakeRangeToolTip(ref TSheetSpec tSheetSpecRef) //call by ref

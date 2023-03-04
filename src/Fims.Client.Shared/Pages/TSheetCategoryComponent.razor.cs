@@ -33,11 +33,6 @@ namespace Fims.Client.Shared.Pages
 
         public int MaxChannels { get; set; }
 
-        //private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
-        //public IEnumerable<TItemSpec> TItemSpecsSelected { get; set; } = Enumerable.Empty<TItemSpec>();
-
-        public bool GridIsDirty => MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].ToList().Exists(item => item.IsDirty);
-
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
         int CurrentPage = 1;
@@ -787,41 +782,6 @@ namespace Fims.Client.Shared.Pages
         #endregion
 
 
-        #region Grid Toolbar commands
-        public void DeleteSelected()
-        {
-            foreach (TItemSpec item in MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory])
-            {
-                DeleteItem(item);
-            }
-
-            MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory] = new List<TItemSpec>();
-        }
-
-        public void RevertSelected()
-        {
-            foreach (TItemSpec item in MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory])
-            {
-                RevertItem(item);
-            }
-
-            MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory] = new List<TItemSpec>();
-        }
-
-        public void RevertAllChanges()
-        {
-            for (int i = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Count - 1; i >= 0; i--)
-            {
-                if (MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][i].IsDirty)
-                {
-                    RevertItem(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][i]);
-                }
-            }
-            StateHasChanged();
-        }
-        #endregion
-
-
         #region Button events in the Changes colum   
         public void RestoreItem(TItemSpec item)
         {
@@ -922,23 +882,7 @@ namespace Fims.Client.Shared.Pages
 
             if (index != -1)
             {
-                var existingItem = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index];
-
-                if (MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].Contains(existingItem))
-                {
-                    var tempSelectedItems = MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].ToList();
-
-                    tempSelectedItems.Remove(existingItem);
-                    tempSelectedItems.Add(itemspec);
-
-                    MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index] = itemspec;
-
-                    MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory] = new List<TItemSpec>(tempSelectedItems);
-                }
-                else
-                {
-                    MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index] = itemspec;
-                }
+                MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index] = itemspec;
             }
         }
 

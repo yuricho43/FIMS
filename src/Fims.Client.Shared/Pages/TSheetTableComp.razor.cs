@@ -24,8 +24,6 @@ namespace Fims.Client.Shared.Pages
 
         private List<TItemSpec> PristineItems { get; set; } = new List<TItemSpec>();
 
-        public bool GridIsDirty => MyObservableTItemSpecs.ToList().Exists(itm => itm.IsDirty);
-
         public int ActiveCategoryTabIndex { get; set; } = 1;
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 

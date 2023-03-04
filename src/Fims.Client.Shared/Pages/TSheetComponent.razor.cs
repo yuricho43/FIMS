@@ -69,7 +69,6 @@ namespace Fims.Client.Shared.Pages
                 InitTItemSpecsCompletedCountInCategoryDict();
                 InitTItemSpecsInCategoryInvalidCountDict();
                 InitTItemSpecsInCategoryPristineDict();
-                InitTItemSpecsInCategorySelectedDict();
             }
 
             await base.OnInitializedAsync();
@@ -94,7 +93,6 @@ namespace Fims.Client.Shared.Pages
                     InitTItemSpecsCompletedCountInCategoryDict();
                     InitTItemSpecsInCategoryInvalidCountDict();
                     InitTItemSpecsInCategoryPristineDict();
-                    InitTItemSpecsInCategorySelectedDict();
                 }
             }
             else
@@ -160,14 +158,6 @@ namespace Fims.Client.Shared.Pages
             foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
             {
                 MyTSheetSpec.TItemSpecsPristineInCategoryDict.Add(catItems.Key, new List<TItemSpec>());
-            }
-        }
-
-        private void InitTItemSpecsInCategorySelectedDict()
-        {
-            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
-            {
-                MyTSheetSpec.TItemSpecsSelectedInCategoryDict.Add(catItems.Key, new List<TItemSpec>());
             }
         }
 
