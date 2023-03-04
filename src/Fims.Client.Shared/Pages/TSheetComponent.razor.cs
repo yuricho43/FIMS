@@ -25,6 +25,7 @@ using Fims.Data.Models.TSheetSpecs;
 using Fims.Client.Shared.Infrastructure.Extensions;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Fims.Data.Utils;
+using Telerik.SvgIcons;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -39,6 +40,8 @@ namespace Fims.Client.Shared.Pages
 
         [Parameter]
         public EventCallback<string> TSheetClosingCompleted { get; set; }
+
+        public List<string> TCategories { get; set; } = new List<string>();
 
         private IMapper Mapper { get; set; }
 
@@ -63,6 +66,8 @@ namespace Fims.Client.Shared.Pages
 
             MyTSheetSpecPrev = MyTSheetSpec;
 
+            determineTCategories();
+
             if (MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict.Count() == 0)
             {
                 autoFillTItemSpecs();
@@ -86,12 +91,16 @@ namespace Fims.Client.Shared.Pages
                 ValidOnParamCalledCounter++;
                 MyTSheetSpecPrev = MyTSheetSpec;
 
+                determineTCategories();
+
                 if (MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict.Count() == 0)
                 {
                     autoFillTItemSpecs();
                     InitTItemSpecsCompletedCountInCategoryDict();
                     InitTItemSpecsInCategoryInvalidCountDict();
                 }
+
+                // StateHasChanged();
             }
             else
             {
@@ -103,6 +112,23 @@ namespace Fims.Client.Shared.Pages
             await base.OnParametersSetAsync();
         }
 
+        private void determineTCategories()
+        {
+            TCategories.Clear();
+            if (MyTSheetSpec.IsInInspecting)
+            {
+                foreach (var category in MyTSheetSpec.TCategories)
+                {
+                    TCategories.Add(category);
+                }
+                TCategories.RemoveAt(TCategories.Count - 1); // remove "마무리 작업" category
+            }
+            else
+            {
+                //MyTSheetSpec.IsInClosing
+                TCategories.Add(MyTSheetSpec.TCategories.LastOrDefault()); // only "마무리 작업" category
+            }
+        }
 
         private void autoFillTItemSpecs()
         {

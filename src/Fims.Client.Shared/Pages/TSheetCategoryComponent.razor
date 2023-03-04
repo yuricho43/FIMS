@@ -29,7 +29,7 @@
             </Template>
         </GridColumn>
 
-        <GridColumn Field="@nameof(TItemSpec.Title)" Width="150px" Title="항목" Editable="false" HeaderClass="center-me">
+        <GridColumn Field="@nameof(TItemSpec.Title)" Width="@(MyTSheetSpec.IsInInspecting==true ? "150px" : "200px")" Title="항목" Editable="false" HeaderClass="center-me">
             <HeaderTemplate><strong>시험항목</strong></HeaderTemplate>
             <Template>
                 <span>@((context as TItemSpec).Title)</span>
