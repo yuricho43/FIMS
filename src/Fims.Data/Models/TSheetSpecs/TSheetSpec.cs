@@ -52,7 +52,7 @@ namespace Fims.Data.Models.TSheetSpecs
 
         public Dictionary<string, int> TItemSpecsCompletedCountInCategoryDict { get; set; }
         public Dictionary<string, int> TItemSpecsInvalidCountInCategoryDict { get; set; }
-        public Dictionary<string, List<TItemSpec>> TItemSpecsPristineInCategoryDict { get; set; }
+        // public Dictionary<string, List<TItemSpec>> TItemSpecsPristineInCategoryDict { get; set; }
         // public Dictionary<string, List<TItemSpec>> TItemSpecsSelectedInCategoryDict { get; set; }
 
         public bool IsInInspecting { get; set; }

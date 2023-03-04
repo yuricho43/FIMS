@@ -68,7 +68,6 @@ namespace Fims.Client.Shared.Pages
                 autoFillTItemSpecs();
                 InitTItemSpecsCompletedCountInCategoryDict();
                 InitTItemSpecsInCategoryInvalidCountDict();
-                InitTItemSpecsInCategoryPristineDict();
             }
 
             await base.OnInitializedAsync();
@@ -92,7 +91,6 @@ namespace Fims.Client.Shared.Pages
                     autoFillTItemSpecs();
                     InitTItemSpecsCompletedCountInCategoryDict();
                     InitTItemSpecsInCategoryInvalidCountDict();
-                    InitTItemSpecsInCategoryPristineDict();
                 }
             }
             else
@@ -150,14 +148,6 @@ namespace Fims.Client.Shared.Pages
                                     (t.IsCh4DataValid == false && t.IsCh4DataEnabled == true && t.IsCh4DataEntered == true)
                 ).Count();
                 MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict.Add(catItems.Key, invalidCount);
-            }
-        }
-
-        private void InitTItemSpecsInCategoryPristineDict()
-        {
-            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
-            {
-                MyTSheetSpec.TItemSpecsPristineInCategoryDict.Add(catItems.Key, new List<TItemSpec>());
             }
         }
 

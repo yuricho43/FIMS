@@ -542,19 +542,6 @@ namespace Fims.Client.Shared.Pages
                 itemspec.IsCh4DataValid = ValidateUserInputCh4(userinput, itemspec);
             }
 
-
-            if (!itemspec.IsDirty)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory], itemspec);
-                if (pristineItem == null)
-                {
-                    //add only the first time a field is edited, later it is no longer pristine
-                    var items = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory];
-                    var itemInCollection = GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], itemspec);
-                    MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory].Add(GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], itemspec));
-                }
-            }
-
             itemspec.IsChanged = true;
             itemspec.DirtyFields.Add(args.Field);
 
@@ -765,60 +752,6 @@ namespace Fims.Client.Shared.Pages
         #endregion
 
 
-        #region Button events in the Changes colum   
-        public void RestoreItem(TItemSpec item)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], item);
-            if (localItem != null)
-            {
-                localItem.IsDeleted = false;
-            }
-        }
-
-        public void RevertItem(TItemSpec item)
-        {
-            if (item.IsNew)
-            {
-                MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Remove(item);
-            }
-            if (item.IsDeleted)
-            {
-                item.IsDeleted = false;
-                ChangeLocalItem(item);
-            }
-            if (item.IsChanged)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory], item);
-                if (pristineItem != null)
-                {
-                    ChangeLocalItem(pristineItem);
-                    MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory].Remove(pristineItem);
-                    pristineItem.DirtyFields = new List<string>();
-                }
-            }
-        }
-
-        public void DeleteItem(TItemSpec itmToDelete)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], itmToDelete);
-            if (localItem != null)
-            {
-                if (localItem.IsDeleted)
-                {
-                    return;
-                }
-                else if (localItem.IsNew)
-                {
-                    MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Remove(localItem);
-                }
-                else
-                {
-                    localItem.IsDeleted = true;
-                }
-            }
-        }
-        #endregion
-
         #region Helpers
         private bool CheckAllChannelDataEntered(TItemSpec itemspec)
         {
@@ -867,21 +800,6 @@ namespace Fims.Client.Shared.Pages
             {
                 MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index] = itemspec;
             }
-        }
-
-        private TItemSpec GetItemFromCollection(IList<TItemSpec> collection, TItemSpec itmToFind)
-        {
-            if (collection == null)
-            {
-                return null;
-            }
-
-            var index = collection.ToList().FindIndex(i => i.TestNo == itmToFind.TestNo);
-            if (index != -1)
-            {
-                return collection[index];
-            }
-            return null;
         }
         #endregion
 

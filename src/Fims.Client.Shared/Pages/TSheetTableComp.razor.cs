@@ -274,16 +274,6 @@ namespace Fims.Client.Shared.Pages
         {
             TItemSpec item = (TItemSpec)args.Item;
 
-            if (!item.IsDirty)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, item);
-                if (pristineItem == null)
-                {
-                    //add only the first time a field is edited, later it is no longer pristine
-                    PristineItems.Add(GetItemFromCollection(MyObservableTItemSpecs, item));
-                }
-            }
-
             item.IsChanged = true;
             ChangeLocalItem(item);
         }
@@ -297,67 +287,6 @@ namespace Fims.Client.Shared.Pages
             {
                 MyObservableTItemSpecs[index] = item;
             }
-        }
-
-        public void RestoreItem(TItemSpec item)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyObservableTItemSpecs, item);
-            if (localItem != null)
-            {
-                localItem.IsDeleted = false;
-            }
-        }
-
-        public void RevertItem(TItemSpec item)
-        {
-            if (item.IsNew)
-            {
-                MyObservableTItemSpecs.Remove(item);
-            }
-            if (item.IsDeleted)
-            {
-                item.IsDeleted = false;
-                ChangeLocalItem(item);
-            }
-            if (item.IsChanged)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, item);
-                if (pristineItem != null)
-                {
-                    ChangeLocalItem(pristineItem);
-                    PristineItems.Remove(pristineItem);
-                }
-            }
-        }
-
-        public void DeleteItem(TItemSpec itmToDelete)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyObservableTItemSpecs, itmToDelete);
-            if (localItem != null)
-            {
-                if (localItem.IsDeleted)
-                {
-                    return;
-                }
-                else if (localItem.IsNew)
-                {
-                    MyObservableTItemSpecs.Remove(localItem);
-                }
-                else
-                {
-                    localItem.IsDeleted = true;
-                }
-            }
-        }
-
-        private TItemSpec GetItemFromCollection(IList<TItemSpec> collection, TItemSpec itmToFind)
-        {
-            var index = collection.ToList().FindIndex(i => i.TestNo == itmToFind.TestNo);
-            if (index != -1)
-            {
-                return collection[index];
-            }
-            return null;
         }
     }
 }
