@@ -52,7 +52,7 @@ namespace Fims.Web.Server.Infrastructure.Extensions
                  //JBH    .UseSqlServer(configuration.GetDefaultConnectionString(),
                  //JBH                  x => x.MigrationsAssembly("Fims.Data")))
                     .UseSqlServer(configuration.GetDefaultConnectionString())
-                    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
+                    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Warning)  // To log SQL Operations, use  LogLevel.Information.
                     .EnableSensitiveDataLogging()
                 )
                 //.AddTransient<IInitialData, CategoriesData>()
