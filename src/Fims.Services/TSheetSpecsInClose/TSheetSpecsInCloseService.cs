@@ -41,8 +41,7 @@ namespace Fims.Services.TSheetSpecsInClose
                 var productSerial = serialToTSheetSpecPair.Key;
                 var tSheetSpecJsonString = serialToTSheetSpecPair.Value;
 
-                // string fileName = $"{Constants.FimsTSheetSpecsInCloseFileNameBase}_{userId}_{productSerial}.json";
-                string fileName = $"{Constants.FimsTSheetSpecsInCloseFileNameBase}_{productSerial}.json"; // not user-specific
+                string fileName = $"{Constants.FimsTSheetSpecsInCloseFileNameBase}_{productSerial}.json"; // "FimsTSheetSpecsInClose_4564563.json"
                 string filePath = Path.Combine(FimsTSheetSpecsClosingRepoPath, fileName);
                 if (File.Exists(filePath))
                 {
@@ -57,8 +56,7 @@ namespace Fims.Services.TSheetSpecsInClose
 
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInCloseAsync(string userId)
         {
-            // string searchPattern = Constants.FimsTSheetSpecsInCloseFileNameBase + "_" + userId + "_" + "*" + ".json";
-            string searchPattern = Constants.FimsTSheetSpecsInCloseFileNameBase + "_" + "*" + ".json"; // not user-specific
+            string searchPattern = Constants.FimsTSheetSpecsInCloseFileNameBase + "_" + "*" + ".json"; // "FimsTSheetSpecsInClose_4564563.json"
             string[] filePaths = Directory.GetFiles(FimsTSheetSpecsClosingRepoPath, searchPattern);
 
             TSheetSpecsInProgressDto tSheetSpecsClosingDto = new TSheetSpecsInProgressDto
@@ -69,7 +67,7 @@ namespace Fims.Services.TSheetSpecsInClose
 
             foreach (var filePath in filePaths)
             {
-                //filePath: "D:/FIMS-REPO/FimsTSheetSpecsInCloseRepository/FimsTSheetSpecsClosing_f74dc493-b079-4ea6-9dee-6e7186388e5d_23452354.json"
+                //filePath: "D:/FIMS-REPO/FimsTSheetSpecsInCloseRepository/FimsTSheetSpecsInClose_4564563.json"
                 var productSerial = Path.GetFileNameWithoutExtension(filePath).Split('_').Last();
                 string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
                 tSheetSpecsClosingDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
@@ -80,7 +78,7 @@ namespace Fims.Services.TSheetSpecsInClose
 
         public string DeleteTSheetSpecsInCloseByProductSerial(string productSerial)
         {
-            string searchPattern = Constants.FimsTSheetSpecsInCloseFileNameBase + "_" + "*" + "_" + productSerial + ".json";
+            string searchPattern = Constants.FimsTSheetSpecsInCloseFileNameBase + "_" + productSerial + ".json"; // "FimsTSheetSpecsInClose_4564563.json"
 
             string[] filePaths = Directory.GetFiles(FimsTSheetSpecsClosingRepoPath, searchPattern);
             filePaths.ToList().ForEach(filePath => File.Delete(filePath));

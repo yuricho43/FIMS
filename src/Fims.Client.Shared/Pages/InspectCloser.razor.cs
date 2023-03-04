@@ -42,7 +42,7 @@ namespace Fims.Client.Shared.Pages
         private Dictionary<string, TSheetSpec> ProductSerialToTSheetSpecDict { get; set; } = new Dictionary<string, TSheetSpec>();
         private Dictionary<string, bool>       ProductSerialsSelected { get; set; } = new Dictionary<string, bool>();
 
-        private List<string> ProductModels { get; set; } = new List<string>();
+        //private List<string> ProductModels { get; set; } = new List<string>();
 
         private TSheetSpec CurrentTSheetSpec { get; set; }
         private string     CurrentInspectorName { get; set; }
@@ -135,7 +135,7 @@ namespace Fims.Client.Shared.Pages
                 CurrentInspectorUserId = user.GetUserId();
                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-                ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
+                //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
             }
         }
 
@@ -145,10 +145,35 @@ namespace Fims.Client.Shared.Pages
             //StateHasChanged();
         }
 
-        public void OnTSheetInspectionCompleted(string productSerial)
+        // public void OnTSheetInspectionCompleted(string productSerial)
+        // {
+        //     var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
+        //     ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
+        // 
+        //     TSheetSpecsInCloseClientService.DeleteTSheetSpecsInCloseByUserIdProductSerial(productSerial);
+        // 
+        //     ProductSerials.Remove(productSerial);
+        //     ProductSerialsSelected.Remove(productSerial);
+        //     ProductSerialToTSheetSpecDict.Remove(productSerial);
+        // 
+        //     var firstEntry = ProductSerialToTSheetSpecDict.FirstOrDefault();
+        //     if (firstEntry.Key != null)
+        //     {
+        //         SetProductSerialAsCurrent(firstEntry.Key);
+        //     }
+        //     else
+        //     {
+        //         // Products empty, so no display of TSheetComponent
+        //         CurrentTSheetSpec = null;
+        //     }
+        // 
+        //     StateHasChanged();
+        // }
+
+        public void OnTSheetClosingCompleted(string productSerial)
         {
             var tSheetSpec = ProductSerialToTSheetSpecDict[productSerial];
-            ProductSerialToTSheetSpecDict[productSerial].IsInspectionCompleted = true;
+            ProductSerialToTSheetSpecDict[productSerial].IsClosingCompleted = true;
 
             TSheetSpecsInCloseClientService.DeleteTSheetSpecsInCloseByUserIdProductSerial(productSerial);
 
@@ -170,51 +195,51 @@ namespace Fims.Client.Shared.Pages
             StateHasChanged();
         }
 
-        private async Task<bool> AddTProduct(TProductSpec tProductSpec)
-        {
-            //AddNewProductDialogVisible = false;
+        //private async Task<bool> AddTProduct(TProductSpec tProductSpec)
+        //{
+        //    //AddNewProductDialogVisible = false;
 
-            if (tProductSpec.ProductModel == "MMMMMMMM")
-            {
-                // invalid ProductModel
-                return false;
-            }
+        //    if (tProductSpec.ProductModel == "MMMMMMMM")
+        //    {
+        //        // invalid ProductModel
+        //        return false;
+        //    }
 
-            if (ProductSerialToTSheetSpecDict.ContainsKey(tProductSpec.ProductSerial))
-            {
-                //already added
-                await ActivateAlert("추가 실패", "이미 등록되었습니다.");
-                return false;
-            }
+        //    if (ProductSerialToTSheetSpecDict.ContainsKey(tProductSpec.ProductSerial))
+        //    {
+        //        //already added
+        //        await ActivateAlert("추가 실패", "이미 등록되었습니다.");
+        //        return false;
+        //    }
 
-            //GridData = ProductService.GetProducts().ToList();
-            TSheetSpec tSheetSpec = await GetTSheetSpecByTModelAsync(tProductSpec.ProductModel);
-            if (tSheetSpec != null)
-            {
-                tSheetSpec.ProductSerial = tProductSpec.ProductSerial;
-                tSheetSpec.ProductModel = tProductSpec.ProductModel;
-                tSheetSpec.Customer = tProductSpec.Customer;
-                tSheetSpec.EndUser = tProductSpec.EndUser;
-                tSheetSpec.ProductType = tProductSpec.ProductType;
-                tProductSpec.TSheetSpec = tSheetSpec;
+        //    //GridData = ProductService.GetProducts().ToList();
+        //    TSheetSpec tSheetSpec = await GetTSheetSpecByTModelAsync(tProductSpec.ProductModel);
+        //    if (tSheetSpec != null)
+        //    {
+        //        tSheetSpec.ProductSerial = tProductSpec.ProductSerial;
+        //        tSheetSpec.ProductModel = tProductSpec.ProductModel;
+        //        tSheetSpec.Customer = tProductSpec.Customer;
+        //        tSheetSpec.EndUser = tProductSpec.EndUser;
+        //        tSheetSpec.ProductType = tProductSpec.ProductType;
+        //        tProductSpec.TSheetSpec = tSheetSpec;
 
-                ProductSerials ??= new List<string>();
-                ProductSerials.Add(tProductSpec.ProductSerial);
+        //        ProductSerials ??= new List<string>();
+        //        ProductSerials.Add(tProductSpec.ProductSerial);
 
-                ProductSerialToTSheetSpecDict.Add(tProductSpec.ProductSerial, tSheetSpec);
-                ProductSerialsSelected.Add(tProductSpec.ProductSerial, false);
+        //        ProductSerialToTSheetSpecDict.Add(tProductSpec.ProductSerial, tSheetSpec);
+        //        ProductSerialsSelected.Add(tProductSpec.ProductSerial, false);
 
-                SetProductSerialAsCurrent(tProductSpec.ProductSerial);
-                //StateHasChanged();
-                return true;
-            }
-            else
-            {
-                //await ActivateAlert("WARNING", $"{tProductSpec.ProductModel}에 대한 스펙파일을 찾을 수 없습니다. 서버를 점검하세요.");
-                await ActivateAlert("추가 실패", "서버연결상태를 점검하세요.");
-                return false;
-            }
-        }
+        //        SetProductSerialAsCurrent(tProductSpec.ProductSerial);
+        //        //StateHasChanged();
+        //        return true;
+        //    }
+        //    else
+        //    {
+        //        //await ActivateAlert("WARNING", $"{tProductSpec.ProductModel}에 대한 스펙파일을 찾을 수 없습니다. 서버를 점검하세요.");
+        //        await ActivateAlert("추가 실패", "서버연결상태를 점검하세요.");
+        //        return false;
+        //    }
+        //}
 
         private void SetProductSerialAsCurrent(string productSerial)
         {
@@ -262,6 +287,9 @@ namespace Fims.Client.Shared.Pages
 
             tSheetSpecRef.InspectionStartDateTime = DateTime.Now;
             tSheetSpecRef.InspectorName = CurrentInspectorName;
+
+            tSheetSpecRef.IsInInspecting = false;
+            tSheetSpecRef.IsInClosing = true;
         }
 
         private void MakeCategoryObservableTItemSpecsDict(ref TSheetSpec tSheetSpecRef)
@@ -473,6 +501,9 @@ namespace Fims.Client.Shared.Pages
 
                 if (!ProductSerialToTSheetSpecDict.ContainsKey(productSerial))
                 {
+                    tSheetSpec.IsInInspecting = false;
+                    tSheetSpec.IsInClosing = true;
+
                     ProductSerialToTSheetSpecDict?.Add(productSerial, tSheetSpec);
                     ProductSerialsSelected?.Add(productSerial, false);
                     ProductSerials?.Add(productSerial);

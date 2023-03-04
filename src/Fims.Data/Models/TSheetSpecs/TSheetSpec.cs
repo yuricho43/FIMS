@@ -10,6 +10,9 @@ namespace Fims.Data.Models.TSheetSpecs
 {
     public class TSheetSpec
     {
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // TSheet
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string ProductModel { get; set; }
         public string ProductSerial { get; set; }
         public string Customer { get; set; }
@@ -28,6 +31,17 @@ namespace Fims.Data.Models.TSheetSpecs
         public DateTime ClosingEndDateTime { get; set; }
         public bool IsClosingCompleted { get; set; }
 
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // TItemSpecs
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        public List<TItemSpec> TItemSpecs { get; set; }
+        public List<TItemSpec> TItemSpecsFinal { get; set; }
+
+
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        // Helpers
+        /////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public string UserId { get; set; }
 
         public List<string> TCategories { get; set; }
@@ -41,8 +55,7 @@ namespace Fims.Data.Models.TSheetSpecs
         public Dictionary<string, List<TItemSpec>> TItemSpecsPristineInCategoryDict { get; set; }
         public Dictionary<string, List<TItemSpec>> TItemSpecsSelectedInCategoryDict { get; set; }
 
-
-        public List<TItemSpec> TItemSpecs { get; set; }
-        public List<TItemSpec> TItemSpecsFinal { get; set; }
+        public bool IsInInspecting { get; set; }
+        public bool IsInClosing { get; set; }
     }
 }

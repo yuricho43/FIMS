@@ -93,7 +93,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInClose
 
         public async Task<string> DeleteTSheetSpecsInCloseByUserIdProductSerial(string productSerial)
         {
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(200));
             HttpResponseMessage response = null;
             string Message = null;
             string deletedProductSerial = string.Empty;

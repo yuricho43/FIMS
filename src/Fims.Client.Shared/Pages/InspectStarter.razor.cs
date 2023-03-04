@@ -262,6 +262,9 @@ namespace Fims.Client.Shared.Pages
 
             tSheetSpecRef.InspectionStartDateTime = DateTime.Now;
             tSheetSpecRef.InspectorName = CurrentInspectorName;
+
+            tSheetSpecRef.IsInInspecting = true;
+            tSheetSpecRef.IsInClosing = false;
         }
 
         private void MakeCategoryObservableTItemSpecsDict(ref TSheetSpec tSheetSpecRef)
@@ -473,6 +476,9 @@ namespace Fims.Client.Shared.Pages
 
                 if (!ProductSerialToTSheetSpecDict.ContainsKey(productSerial))
                 {
+                    tSheetSpec.IsInInspecting = true;
+                    tSheetSpec.IsInClosing = false;
+
                     ProductSerialToTSheetSpecDict?.Add(productSerial, tSheetSpec);
                     ProductSerialsSelected?.Add(productSerial, false);
                     ProductSerials?.Add(productSerial);

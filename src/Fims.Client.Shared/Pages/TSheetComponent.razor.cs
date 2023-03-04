@@ -36,7 +36,10 @@ namespace Fims.Client.Shared.Pages
 
         [Parameter]
         public EventCallback<string> TSheetInspectionCompleted { get; set; }
-      
+
+        [Parameter]
+        public EventCallback<string> TSheetClosingCompleted { get; set; }
+
         private IMapper Mapper { get; set; }
 
         TelerikNotification TSheetComponentNotificationComponent { get; set; }
@@ -262,6 +265,19 @@ namespace Fims.Client.Shared.Pages
             return invalidCount;
         }
 
+        public async Task SaveUponCompletion()
+        {
+            if (MyTSheetSpec.IsInInspecting)
+            {
+                await SaveTSheetToClosingRepo();
+            }
+            else
+            {
+                // MyTSheetSpec.IsInClosing
+                await SaveTSheetToDb();
+            }
+        }
+
         public async Task SaveTSheetToDb()
         {
             //  List<TItemSpec> deletedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsDeleted == true).ToList();
@@ -296,7 +312,7 @@ namespace Fims.Client.Shared.Pages
             }
 #endif
 
-            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림\n\n저장된 검사서는 더 이상 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 저장된 후에는 더 이상 검사서를 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
             if (!saveConfirmed)
             {
                 return;
@@ -305,12 +321,12 @@ namespace Fims.Client.Shared.Pages
             CollectTItemSpecsFinal();
 
             TSheet tSheet = MakeFromTSheetSpecToTSheet(MyTSheetSpec);
-            tSheet.IsInspectionCompleted = true;
-            tSheet.InspectionEndDateTime = DateTime.Now;
+            tSheet.IsClosingCompleted = true;
+            tSheet.ClosingEndDateTime = DateTime.Now;
 
             var idTSheet = await TSheetsClientService.CreateTSheet(tSheet);
 
-            await TSheetInspectionCompleted.InvokeAsync(tSheet.ProductSerial);
+            await TSheetClosingCompleted.InvokeAsync(tSheet.ProductSerial);
 
             TSheetComponentNotificationComponent.Show(new NotificationModel()
             {
@@ -356,7 +372,7 @@ namespace Fims.Client.Shared.Pages
             }
 #endif
 
-            bool saveConfirmed = await Dialogs.ConfirmAsync($"입력완료된 검사서는 더 이상 수정할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n입력완료 할까요?", "검사서 입력완료");
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 입력완료 후에는 더 이상 검사서를 수정할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n입력완료 할까요?", "검사서 입력완료");
             if (!saveConfirmed)
             {
                 return;
