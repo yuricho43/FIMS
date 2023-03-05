@@ -14,8 +14,8 @@
                             <div class="toolbar-block">모델:&nbsp;<strong>@TSheetWithTItems.ProductModel</strong></div>
                             <div class="toolbar-block">고객:&nbsp;<strong>@TSheetWithTItems.Customer</strong></div>
                             <div class="toolbar-block">EndUser:&nbsp;<strong>@TSheetWithTItems.EndUser</strong></div>
-                            <div class="toolbar-block">검사자:&nbsp;<strong>@TSheetWithTItems.InspectorName</strong></div>
-                            <div class="toolbar-block">완료시간:&nbsp;<strong>@TSheetWithTItems.InspectionEndDateTime.ToString("yyyy-MM-dd-HH:mm")</strong></div>
+                            <div class="toolbar-block">검사자:&nbsp;<strong>@TSheetWithTItems.InspectorName/@TSheetWithTItems.CloserName</strong></div>
+                            <div class="toolbar-block">완료시간:&nbsp;<strong>@TSheetWithTItems.ClosingEndDateTime.ToString("MM-dd-HH:mm")</strong></div>
                             <div class="toolbar-block">검사번호:&nbsp;<strong>@TSheetWithTItems.Id</strong></div>
                         </TelerikStackLayout>
                         <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px">
