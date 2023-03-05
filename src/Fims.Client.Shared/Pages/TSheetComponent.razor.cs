@@ -216,7 +216,9 @@ namespace Fims.Client.Shared.Pages
                 InspectorName = tSheetSpec.InspectorName,
                 InspectionStartDateTime = tSheetSpec.InspectionStartDateTime,
                 InspectionEndDateTime = tSheetSpec.InspectionEndDateTime,
-                IsInspectionCompleted = tSheetSpec.IsInspectionCompleted,
+                CloserName = tSheetSpec.CloserName,
+                ClosingStartDateTime = tSheetSpec.ClosingStartDateTime,
+                ClosingEndDateTime = tSheetSpec.ClosingEndDateTime,
 
                 TItems = tItemsFinal,
             };
@@ -317,9 +319,8 @@ namespace Fims.Client.Shared.Pages
 
             CollectTItemSpecsFinal();
 
+            MyTSheetSpec.ClosingEndDateTime = DateTime.Now;
             TSheet tSheet = MakeFromTSheetSpecToTSheet(MyTSheetSpec);
-            tSheet.IsClosingCompleted = true;
-            tSheet.ClosingEndDateTime = DateTime.Now;
 
             var idTSheet = await TSheetsClientService.CreateTSheet(tSheet);
 
