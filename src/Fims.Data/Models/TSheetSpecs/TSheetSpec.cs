@@ -24,12 +24,10 @@ namespace Fims.Data.Models.TSheetSpecs
         public string InspectorName { get; set; }
         public DateTime InspectionStartDateTime { get; set; }
         public DateTime InspectionEndDateTime { get; set; }
-        public bool IsInspectionCompleted { get; set; }
 
         public string CloserName { get; set; }
         public DateTime ClosingStartDateTime { get; set; }
         public DateTime ClosingEndDateTime { get; set; }
-        public bool IsClosingCompleted { get; set; }
 
 
         /////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,5 +55,7 @@ namespace Fims.Data.Models.TSheetSpecs
 
         public bool IsInInspecting { get; set; }
         public bool IsInClosing { get; set; }
+        public bool IsInspectionCompleted { get; set; }
+        public bool IsClosingCompleted { get; set; }
     }
 }
