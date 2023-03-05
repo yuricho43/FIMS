@@ -9,7 +9,12 @@
         <div class="toolbar-block">고객:&nbsp;<strong>@MyTSheetSpec.Customer</strong></div>
         <div class="toolbar-block">EndUser:&nbsp;<strong>@MyTSheetSpec.EndUser</strong></div>
         <div class="toolbar-block">검사자:&nbsp;<strong>@MyTSheetSpec.InspectorName</strong></div>
+    @if (MyTSheetSpec.IsInClosing)
+    {
+        <div class="toolbar-block">마무리:&nbsp;<strong>@MyTSheetSpec.CloserName</strong></div>
+    }
     </TelerikStackLayout>
+ 
     <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px">
             <TelerikButton Icon="@FontIcon.Save" OnClick="@SaveUponCompletion" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button"><strong>입력완료/저장</strong></TelerikButton>
     </TelerikStackLayout>

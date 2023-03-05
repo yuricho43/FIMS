@@ -45,8 +45,8 @@ namespace Fims.Client.Shared.Pages
         //private List<string> ProductModels { get; set; } = new List<string>();
 
         private TSheetSpec CurrentTSheetSpec { get; set; }
-        private string     CurrentInspectorName { get; set; }
-        private string     CurrentInspectorUserId { get; set; }
+        private string     CurrentCloserName { get; set; }
+        private string     CurrentCloserUserId { get; set; }
 
         public bool AddNewProductDialogVisible { get; set; } = false;
 
@@ -91,7 +91,7 @@ namespace Fims.Client.Shared.Pages
             //FIXME    var user = state.User;
             //FIXME    //var authState = await AuthenticationStateTask;
             //FIXME    //var user = authState.User;
-            //FIXME    CurrentInspectorName = user.GetHangulName();
+            //FIXME    CurrentCloserName = user.GetHangulName();
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
@@ -131,8 +131,8 @@ namespace Fims.Client.Shared.Pages
 
                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 //JBH FIXME: null upon right after logged in. why?
-                CurrentInspectorName = user.GetHangulName();
-                CurrentInspectorUserId = user.GetUserId();
+                CurrentCloserName = user.GetHangulName();
+                CurrentCloserUserId = user.GetUserId();
                 //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
                 //ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
@@ -172,10 +172,20 @@ namespace Fims.Client.Shared.Pages
 
         private void SetProductSerialAsCurrent(string productSerial)
         {
-            CurrentTSheetSpec = ProductSerialToTSheetSpecDict[productSerial] as TSheetSpec;
+            var tSheetSpecSelected = ProductSerialToTSheetSpecDict[productSerial] as TSheetSpec;
+
+            tSheetSpecSelected.IsInInspecting = false;
+            tSheetSpecSelected.IsInClosing = true;
+            if (tSheetSpecSelected.CloserName.IsNullOrEmpty())
+            {
+                tSheetSpecSelected.CloserName = CurrentCloserName;
+                tSheetSpecSelected.ClosingStartDateTime = DateTime.Now;
+            }
 
             ProductSerialsSelected.Keys.ToList().ForEach(serial =>{ProductSerialsSelected[serial] = false;});
             ProductSerialsSelected[productSerial] = true;
+
+            CurrentTSheetSpec = tSheetSpecSelected;
 
             StateHasChanged();
         }
@@ -188,10 +198,10 @@ namespace Fims.Client.Shared.Pages
             var user = state.User;
             //var authState = await AuthenticationStateTask;
             //var user = authState.User;
-            CurrentInspectorName = user.GetHangulName();
-            CurrentInspectorUserId = user.GetUserId();
+            CurrentCloserName = user.GetHangulName();
+            CurrentCloserUserId = user.GetUserId();
 
-            TSheetSpecsInProgressDto tSheetSpecsInCloseDto = await TSheetSpecsInCloseClientService.GetTSheetSpecsInCloseByUser(CurrentInspectorUserId);
+            TSheetSpecsInProgressDto tSheetSpecsInCloseDto = await TSheetSpecsInCloseClientService.GetTSheetSpecsInCloseByUser(CurrentCloserUserId);
             if (tSheetSpecsInCloseDto.UserId.StartsWith("HTTPFAIL"))
             {
                 LoadSessionNotificationComponent.Show(new NotificationModel()
@@ -235,8 +245,8 @@ namespace Fims.Client.Shared.Pages
 
                 if (!ProductSerialToTSheetSpecDict.ContainsKey(productSerial))
                 {
-                    tSheetSpec.IsInInspecting = false;
-                    tSheetSpec.IsInClosing = true;
+                    //tSheetSpec.IsInInspecting = false;
+                    //tSheetSpec.IsInClosing = true;
 
                     ProductSerialToTSheetSpecDict?.Add(productSerial, tSheetSpec);
                     ProductSerialsSelected?.Add(productSerial, false);
@@ -360,12 +370,12 @@ namespace Fims.Client.Shared.Pages
             //var authState = await AuthenticationStateTask;
             //var user = authState.User;
 
-            CurrentInspectorName = user.GetHangulName();
-            CurrentInspectorUserId = user.GetUserId();
+            CurrentCloserName = user.GetHangulName();
+            CurrentCloserUserId = user.GetUserId();
 
             TSheetSpecsInProgressDto tSheetSpecsInCloseReqeust = new TSheetSpecsInProgressDto
             {
-                UserId = CurrentInspectorUserId,
+                UserId = CurrentCloserUserId,
                 SerialToTSheetSpecPairs = new Dictionary<string, string>()
             };
 
