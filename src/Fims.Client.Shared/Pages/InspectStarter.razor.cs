@@ -235,9 +235,9 @@ namespace Fims.Client.Shared.Pages
                 if (tSheetSpec.ProductModel != Constants.TSheetSpecNotDefined)
                 {
                     ExpandTSheetSpec(ref tSheetSpec); //call by ref
+                    SetChXEnabled(ref tSheetSpec); //call by ref
                     MakeRangeToolTip(ref tSheetSpec); //call by ref
                     CreateDirtyFields(ref tSheetSpec); //call by ref
-                    SetChXEnabled(ref tSheetSpec); //call by ref
                     MakeCategoryObservableTItemSpecsDict(ref tSheetSpec);
                     MakeTItemSpecsCompletedCountInCategoryDict(ref tSheetSpec);
                     MakeTItemSpecsInCategoryInvalidCountDict(ref tSheetSpec);
@@ -314,53 +314,66 @@ namespace Fims.Client.Shared.Pages
         {
             foreach (var tItemSpec in tSheetSpecRef.TItemSpecs)
             {
+                List<bool> chEnables = new List<bool>
+                {
+                    tItemSpec.IsCh1DataEnabled,
+                    tItemSpec.IsCh2DataEnabled,
+                    tItemSpec.IsCh3DataEnabled,
+                    tItemSpec.IsCh4DataEnabled,
+                };
+
                 if (tItemSpec.ExpressionMode.Contains("Combo"))
                 {
                     var comboList = tItemSpec.Unit.Split(',').ToList();
                     tItemSpec.UnitList = comboList.Select(t => t.Trim()).ToList();
 
-                    if (tItemSpec.Channels == 1)
+                    int tooltipChs = 0;
+                    for (var ch = 0; ch < chEnables.Count; ch++)
                     {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Unit}";
+                        if (chEnables[ch] == true)
+                        {
+                            if (tooltipChs == 0)
+                            {
+                                tItemSpec.RangeToolTip = $"CH{ch+1}";
+                            }
+                            else
+                            {
+                                tItemSpec.RangeToolTip += "|" + $"CH{ch+1}";
+                            }
+                            tooltipChs++;
+                        }
                     }
-                    else if (tItemSpec.Channels == 2)
+
+                    if (tooltipChs > 0)
                     {
-                        tItemSpec.RangeToolTip = $"CH1|CH2: {tItemSpec.Unit}";
-                    }
-                    else if (tItemSpec.Channels == 3)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1|CH2|CH3: {tItemSpec.Unit}";
-                    }
-                    else if (tItemSpec.Channels == 4)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1|CH2|CH3|CH4: {tItemSpec.Unit}";
-                    }
-                    else //something wrong
-                    {
-                        tItemSpec.RangeToolTip = $"ERROR: Too Many Channels!";
+                        tItemSpec.RangeToolTip += $": {tItemSpec.Unit}";
                     }
                 }
                 else
                 {
-                    if (tItemSpec.Channels == 1)
+                    List<string> chTooltips = new List<string>
                     {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL}";
-                    }
-                    else if (tItemSpec.Channels == 2)
+                        $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL}",
+                        $"CH2: {tItemSpec.Ch2LCL}~{tItemSpec.Ch2UCL}",
+                        $"CH3: {tItemSpec.Ch3LCL}~{tItemSpec.Ch3UCL}",
+                        $"CH4: {tItemSpec.Ch4LCL}~{tItemSpec.Ch4UCL}",
+                    };
+
+                    int tooltipChs = 0;
+                    for (var ch = 0; ch < chEnables.Count; ch++)
                     {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL},    CH2: {tItemSpec.Ch2LCL}~{tItemSpec.Ch2UCL}";
-                    }
-                    else if (tItemSpec.Channels == 3)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL},    CH2: {tItemSpec.Ch2LCL}~{tItemSpec.Ch2UCL},    CH3: {tItemSpec.Ch3LCL}~{tItemSpec.Ch3UCL}";
-                    }
-                    else if (tItemSpec.Channels == 4)
-                    {
-                        tItemSpec.RangeToolTip = $"CH1: {tItemSpec.Ch1LCL}~{tItemSpec.Ch1UCL},    CH2: {tItemSpec.Ch2LCL}~{tItemSpec.Ch2UCL},    CH3: {tItemSpec.Ch3LCL}~{tItemSpec.Ch3UCL},    CH4: {tItemSpec.Ch4LCL}~{tItemSpec.Ch4UCL}";
-                    }
-                    else //something wrong
-                    {
-                        tItemSpec.RangeToolTip = $"ERROR: Too Many Channels!";
+                        if (chEnables[ch] == true)
+                        {
+                            if (tooltipChs == 0)
+                            {
+                                tItemSpec.RangeToolTip = chTooltips[ch];
+                            }
+                            else
+                            {
+                                tItemSpec.RangeToolTip += ", " + chTooltips[ch];
+                            }
+                            tooltipChs++;
+                        }
                     }
                 }
             }
@@ -378,25 +391,38 @@ namespace Fims.Client.Shared.Pages
         {
             foreach (var tItemSpec in tSheetSpecRef.TItemSpecs)
             {
-                if (tItemSpec.Channels >= 4)
-                    tItemSpec.IsCh4DataEnabled = true;
-                else
-                    tItemSpec.IsCh4DataEnabled = false;
+                List<bool> chEnables = new List<bool>
+                {
+                    (tItemSpec.Ch1UCL == "NA") ? false : true,
+                    (tItemSpec.Ch2UCL == "NA") ? false : true,
+                    (tItemSpec.Ch3UCL == "NA") ? false : true,
+                    (tItemSpec.Ch4UCL == "NA") ? false : true,
+                };
 
-                if (tItemSpec.Channels >= 3)
-                    tItemSpec.IsCh3DataEnabled = true;
-                else
-                    tItemSpec.IsCh3DataEnabled = false;
+                int enabledes = 0;
+                int last;
+                for (last = 0; last < chEnables.Count; last++)
+                {
+                    if (chEnables[last] == true)
+                    {
+                        enabledes++;
+                    }
 
-                if (tItemSpec.Channels >= 2)
-                    tItemSpec.IsCh2DataEnabled = true;
-                else
-                    tItemSpec.IsCh2DataEnabled = false;
+                    if (enabledes == tItemSpec.Channels)
+                    {
+                        break;
+                    }
+                }
 
-                if (tItemSpec.Channels >= 1)
-                    tItemSpec.IsCh1DataEnabled = true;
-                else
-                    tItemSpec.IsCh1DataEnabled = false;
+                for (var i = last+1; i < chEnables.Count; i++)
+                {
+                    chEnables[i] = false;
+                }
+
+                tItemSpec.IsCh1DataEnabled = chEnables[0];
+                tItemSpec.IsCh2DataEnabled = chEnables[1];
+                tItemSpec.IsCh3DataEnabled = chEnables[2];
+                tItemSpec.IsCh4DataEnabled = chEnables[3];
             }
         }
 
