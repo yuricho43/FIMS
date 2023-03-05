@@ -52,8 +52,8 @@ namespace Fims.Web.Server.Infrastructure.Extensions
                  //JBH    .UseSqlServer(configuration.GetDefaultConnectionString(),
                  //JBH                  x => x.MigrationsAssembly("Fims.Data")))
                     .UseSqlServer(configuration.GetDefaultConnectionString())
-                    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Information)
-                    .EnableSensitiveDataLogging()
+                    .LogTo(Console.WriteLine, new[] { DbLoggerCategory.Database.Command.Name }, LogLevel.Warning)  // To log SQL Operations, use  LogLevel.Information.
+                    //JBH   .EnableSensitiveDataLogging() // Log entries and exception messages may include sensitive application data; this mode should only be enabled during development
                 )
                 //.AddTransient<IInitialData, CategoriesData>()
                 //.AddTransient<IInitialData, ProductsData>()

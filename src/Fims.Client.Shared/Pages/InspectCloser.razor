@@ -1,0 +1,92 @@
+﻿@page "/InspectCloser"
+
+@attribute [Authorize]
+
+
+<TelerikStackLayout Class="bars-section" Orientation="StackLayoutOrientation.Vertical" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Width="100%">
+
+    <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
+
+        <TelerikButton OnClick="OnLoadSessionData" Icon="@FontIcon.CaretDoubleAltDown" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="prod-register-button">
+            <strong>마무리목록 불러오기</strong>
+            <TelerikLoader Class="loader-indicator" ThemeColor="warning" Visible="@IsLoadingSession"></TelerikLoader>
+        </TelerikButton>
+
+        <TelerikButton OnClick="OnSaveSessionData" Icon="@FontIcon.CaretDoubleAltUp" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
+            <strong>마무리진행목록 저장</strong>
+            <TelerikLoader Class="loader-indicator" ThemeColor="error" Visible="@IsSavingSession"></TelerikLoader>
+        </TelerikButton>
+    </TelerikStackLayout>
+
+
+    <TelerikStackLayout Class="serials-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
+        @if (ProductSerials != null)
+        {
+            <TelerikButtonGroup SelectionMode="  ButtonGroupSelectionMode.Single">
+                @foreach (string productSerial in ProductSerials)
+                {
+                    <ButtonGroupToggleButton @bind-Selected="@ProductSerialsSelected[productSerial]" OnClick="@(() => OnProductSerialButtonGroupClick(productSerial))" Enabled="@(ProductSerialToTSheetSpecDict[productSerial].IsClosingCompleted ? false: true)" ThemeColor="@(ProductSerialToTSheetSpecDict[productSerial].IsClosingCompleted ? ThemeConstants.Button.ThemeColor.Error: ThemeConstants.Button.ThemeColor.Base)" Class="serial-button">
+                        <strong>@productSerial</strong>
+                        &nbsp;
+                    </ButtonGroupToggleButton>
+                }
+            </TelerikButtonGroup>
+        }
+    </TelerikStackLayout>
+
+</TelerikStackLayout>
+
+
+
+@if (CurrentTSheetSpec != null)
+{
+    <TSheetComponent MyTSheetSpec="@CurrentTSheetSpec" TSheetClosingCompleted="OnTSheetClosingCompleted"></TSheetComponent>
+}
+
+
+<TelerikNotification @ref="@LoadSessionNotificationComponent"
+                     Class="IndexNotification"
+                     VerticalPosition="NotificationVerticalPosition.Top"
+                     HorizontalPosition="NotificationHorizontalPosition.Center">
+</TelerikNotification>
+
+
+
+<style>
+    .dialog-background {
+        background-color: silver;
+    }
+
+</style>
+
+<style>
+    .IndexNotification .k-notification-container .k-notification-wrap {
+        height: 50px;
+        font-size: 1.5em;
+        text-align: center;
+        align-items: center;
+    }
+</style>
+
+<style>
+    .bars-section {
+    }
+
+    .tools-bar {
+    }
+
+    .serials-bar {
+    }
+
+    .serial-button {
+        height: 30px;
+        margin-left: 5px;
+        margin-right: 5px;
+        background-color: silver;
+    }
+
+    .prod-register-button {
+        width: 300px;
+        height: 30px;
+    }
+</style>

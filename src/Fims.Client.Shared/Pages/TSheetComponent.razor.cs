@@ -22,6 +22,10 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
 using Fims.Data.Models.TSheetSpecs;
+using Fims.Client.Shared.Infrastructure.Extensions;
+using Fims.Data.Models.TSheetSpecsInProgress;
+using Fims.Data.Utils;
+using Telerik.SvgIcons;
 
 namespace Fims.Client.Shared.Pages
 {
@@ -33,15 +37,23 @@ namespace Fims.Client.Shared.Pages
 
         [Parameter]
         public EventCallback<string> TSheetInspectionCompleted { get; set; }
-      
+
+        [Parameter]
+        public EventCallback<string> TSheetClosingCompleted { get; set; }
+
+        public List<string> TCategories { get; set; } = new List<string>();
+
         private IMapper Mapper { get; set; }
 
         TelerikNotification TSheetComponentNotificationComponent { get; set; }
 
-
         private int TotalOnParamCalledCounter = 0;
         private int ValidOnParamCalledCounter = 0;
         private int InvalidOnParamCalledCounter = 0;
+
+        public bool IsLoadingInClose { get; set; } = false;
+        public bool IsSavingInClose { get; set; } = false;
+
 
         protected override void OnInitialized()
         {
@@ -54,13 +66,13 @@ namespace Fims.Client.Shared.Pages
 
             MyTSheetSpecPrev = MyTSheetSpec;
 
+            determineTCategories();
+
             if (MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict.Count() == 0)
             {
                 autoFillTItemSpecs();
                 InitTItemSpecsCompletedCountInCategoryDict();
                 InitTItemSpecsInCategoryInvalidCountDict();
-                InitTItemSpecsInCategoryPristineDict();
-                InitTItemSpecsInCategorySelectedDict();
             }
 
             await base.OnInitializedAsync();
@@ -79,14 +91,16 @@ namespace Fims.Client.Shared.Pages
                 ValidOnParamCalledCounter++;
                 MyTSheetSpecPrev = MyTSheetSpec;
 
+                determineTCategories();
+
                 if (MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict.Count() == 0)
                 {
                     autoFillTItemSpecs();
                     InitTItemSpecsCompletedCountInCategoryDict();
                     InitTItemSpecsInCategoryInvalidCountDict();
-                    InitTItemSpecsInCategoryPristineDict();
-                    InitTItemSpecsInCategorySelectedDict();
                 }
+
+                // StateHasChanged();
             }
             else
             {
@@ -98,24 +112,44 @@ namespace Fims.Client.Shared.Pages
             await base.OnParametersSetAsync();
         }
 
+        private void determineTCategories()
+        {
+            TCategories.Clear();
+            if (MyTSheetSpec.IsInInspecting)
+            {
+                foreach (var category in MyTSheetSpec.TCategories)
+                {
+                    TCategories.Add(category);
+                }
+                TCategories.RemoveAt(TCategories.Count - 1); // remove "마무리 작업" category
+            }
+            else
+            {
+                //MyTSheetSpec.IsInClosing
+                TCategories.Add(MyTSheetSpec.TCategories.LastOrDefault()); // only "마무리 작업" category
+            }
+        }
 
         private void autoFillTItemSpecs()
         {
-            var tItem1001 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1001); //ProductSerial
+            var envCategory = MyTSheetSpec.TCategories[0];
+            var tItemSpecsInEnvCategory = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[envCategory];
+
+            var tItem1001 = tItemSpecsInEnvCategory.FirstOrDefault(x => x.TestNo == 1001); //ProductSerial
             tItem1001.Ch1Data = MyTSheetSpec.ProductSerial;
             tItem1001.IsCh1DataEnabled = true;
             tItem1001.IsCh1DataEntered = true;
             tItem1001.IsCh1DataValid = true;
             tItem1001.Completed = true;
 
-            var tItem1002 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1002); //Date
+            var tItem1002 = tItemSpecsInEnvCategory.FirstOrDefault(x => x.TestNo == 1002); //ProductSerial
             tItem1002.Ch1Data = MyTSheetSpec.InspectionStartDateTime.ToString("yyyy-MM-dd-HH:mm");
             tItem1002.IsCh1DataEnabled = true;
             tItem1002.IsCh1DataEntered = true;
             tItem1002.IsCh1DataValid = true;
             tItem1002.Completed = true;
 
-            var tItem1003 = MyTSheetSpec.TItemSpecs.FirstOrDefault(x => x.TestNo == 1003); //Inspector
+            var tItem1003 = tItemSpecsInEnvCategory.FirstOrDefault(x => x.TestNo == 1003); //ProductSerial
             tItem1003.Ch1Data = MyTSheetSpec.InspectorName;
             tItem1003.IsCh1DataEnabled = true;
             tItem1003.IsCh1DataEntered = true;
@@ -146,22 +180,6 @@ namespace Fims.Client.Shared.Pages
             }
         }
 
-        private void InitTItemSpecsInCategoryPristineDict()
-        {
-            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
-            {
-                MyTSheetSpec.TItemSpecsPristineInCategoryDict.Add(catItems.Key, new List<TItemSpec>());
-            }
-        }
-
-        private void InitTItemSpecsInCategorySelectedDict()
-        {
-            foreach (var catItems in MyTSheetSpec.ObservableTItemSpecsInCategoryDict)
-            {
-                MyTSheetSpec.TItemSpecsSelectedInCategoryDict.Add(catItems.Key, new List<TItemSpec>());
-            }
-        }
-
         public void CollectTItemSpecsFinal()
         {
             if (MyTSheetSpec.TItemSpecsFinal.IsNullOrEmpty())
@@ -169,7 +187,7 @@ namespace Fims.Client.Shared.Pages
             else
                 MyTSheetSpec.TItemSpecsFinal.Clear();
 
-            foreach (var cat in MyTSheetSpec.TCategories)
+            foreach (var cat in MyTSheetSpec.TCategories) 
             {
                 var kkk = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[cat].ToList();
                 foreach (var k in kkk)
@@ -198,7 +216,9 @@ namespace Fims.Client.Shared.Pages
                 InspectorName = tSheetSpec.InspectorName,
                 InspectionStartDateTime = tSheetSpec.InspectionStartDateTime,
                 InspectionEndDateTime = tSheetSpec.InspectionEndDateTime,
-                IsInspectionCompleted = tSheetSpec.IsInspectionCompleted,
+                CloserName = tSheetSpec.CloserName,
+                ClosingStartDateTime = tSheetSpec.ClosingStartDateTime,
+                ClosingEndDateTime = tSheetSpec.ClosingEndDateTime,
 
                 TItems = tItemsFinal,
             };
@@ -236,9 +256,9 @@ namespace Fims.Client.Shared.Pages
         {
             int notCompletedCount = 0;
 
-            foreach (var cat in MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict)
+            foreach (var category in TCategories)
             {
-                notCompletedCount += MyTSheetSpec.TItemsCountInCategoryDict[cat.Key] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[cat.Key];
+                notCompletedCount += MyTSheetSpec.TItemsCountInCategoryDict[category] - MyTSheetSpec.TItemSpecsCompletedCountInCategoryDict[category];
             }
 
             return notCompletedCount;
@@ -248,31 +268,33 @@ namespace Fims.Client.Shared.Pages
         {
             int invalidCount = 0;
 
-            foreach (var cat in MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict)
+            foreach (var category in TCategories)
             {
-                invalidCount += MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict[cat.Key];
+                invalidCount += MyTSheetSpec.TItemSpecsInvalidCountInCategoryDict[category];
             }
 
             return invalidCount;
         }
 
+        public async Task SaveUponCompletion()
+        {
+            if (MyTSheetSpec.IsInInspecting)
+            {
+                await SaveTSheetToClosingRepo();
+            }
+            else
+            {
+                // MyTSheetSpec.IsInClosing
+                await SaveTSheetToDb();
+            }
+        }
+
         public async Task SaveTSheetToDb()
         {
-            //  List<TItemSpec> deletedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsDeleted == true).ToList();
-            //  List<TItemSpec> newItems     = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsNew == true).ToList();
-            //  List<TItemSpec> updatedItems = MyTSheetSpec.TItemSpecsFinal.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
-            //  
-            //  // clean up current data and selection
-            //  MyObservableTItemSpecs.Clear();
-            //  SelectedItems = Enumerable.Empty<TItemSpec>();
-            //  
-            //  // update the grid with the data from the service
-            //  List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            //  MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
-
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
             int invalidCount = GetTItemSpecsInvalidCount();
 
+#if !DEBUG
             if (notCompletedCount > 0)
             {
                 await ActivateAlert("Database 저장", $"저장 불가!\n\n아직 입력되지 않은 항목들이 있습니다.\n미입력 항목: {notCompletedCount} 개");
@@ -287,8 +309,9 @@ namespace Fims.Client.Shared.Pages
                     return;
                 }
             }
+#endif
 
-            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림\n\n저장된 검사서는 더 이상 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 저장된 후에는 더 이상 검사서를 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
             if (!saveConfirmed)
             {
                 return;
@@ -296,13 +319,12 @@ namespace Fims.Client.Shared.Pages
 
             CollectTItemSpecsFinal();
 
+            MyTSheetSpec.ClosingEndDateTime = DateTime.Now;
             TSheet tSheet = MakeFromTSheetSpecToTSheet(MyTSheetSpec);
-            tSheet.IsInspectionCompleted = true;
-            tSheet.InspectionEndDateTime = DateTime.Now;
 
             var idTSheet = await TSheetsClientService.CreateTSheet(tSheet);
 
-            await TSheetInspectionCompleted.InvokeAsync(tSheet.ProductSerial);
+            await TSheetClosingCompleted.InvokeAsync(tSheet.ProductSerial);
 
             TSheetComponentNotificationComponent.Show(new NotificationModel()
             {
@@ -311,6 +333,99 @@ namespace Fims.Client.Shared.Pages
                 ShowIcon = true,
                 Icon = "caret-double-alt-up"
             });
+        }
+
+
+        public async Task SaveTSheetToClosingRepo()
+        {
+            int notCompletedCount = GetTItemSpecsNotCompletedCount();
+            int invalidCount = GetTItemSpecsInvalidCount();
+
+#if !DEBUG
+            if (notCompletedCount > 0)
+            {
+                await ActivateAlert("검사서 입력완료", $"저장 불가!\n\n아직 입력되지 않은 항목들이 있습니다.\n미입력 항목: {notCompletedCount} 개");
+                return;
+            }
+
+            if (invalidCount > 0)
+            {
+                bool notConfirmed = await Dialogs.ConfirmAsync($"입력 데이터에 오류가 있습니다.\n\n데이터오류 항목: {invalidCount} 개\n\n그래도 입력완료 할까요?", "검사서 입력완료");
+                if (!notConfirmed)
+                {
+                    return;
+                }
+            }
+#endif
+
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 입력완료 후에는 더 이상 검사서를 수정할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n입력완료 할까요?", "검사서 입력완료");
+            if (!saveConfirmed)
+            {
+                return;
+            }
+
+            MyTSheetSpec.IsInspectionCompleted = true;
+            MyTSheetSpec.InspectionEndDateTime = DateTime.Now;
+
+            bool saveResult = await SaveTSheetSpecInClose();
+
+            if (saveResult)
+            {
+                await TSheetInspectionCompleted.InvokeAsync(MyTSheetSpec.ProductSerial);
+
+                TSheetComponentNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "검사서가 성공적으로 입력완료 되었습니다.",
+                    ThemeColor = "success",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+            }
+        }
+
+        public async Task<bool> SaveTSheetSpecInClose()
+        {
+            IsSavingInClose = true;
+
+            var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
+            var user = state.User;
+            //var authState = await AuthenticationStateTask;
+            //var user = authState.User;
+
+            var CurrentInspectorName = user.GetHangulName();
+            var CurrentInspectorUserId = user.GetUserId();
+
+            TSheetSpecsInProgressDto tSheetSpecsInCloseReqeust = new TSheetSpecsInProgressDto
+            {
+                UserId = CurrentInspectorUserId,
+                SerialToTSheetSpecPairs = new Dictionary<string, string>()
+            };
+
+            var jsonString = JsonUtils.PrettySerialize(MyTSheetSpec);
+            tSheetSpecsInCloseReqeust.SerialToTSheetSpecPairs.Add(MyTSheetSpec.ProductSerial, jsonString);
+
+            var fileName = await TSheetSpecsInCloseClientService.SaveTSheetSpecsInCloseByUser(tSheetSpecsInCloseReqeust);
+            if (fileName == null)
+            {
+                TSheetComponentNotificationComponent.Show(new NotificationModel()
+                {
+                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    CloseAfter = 3000,
+                    ThemeColor = "warning",
+                    ShowIcon = true,
+                    Icon = "caret-double-alt-up"
+                });
+
+                IsSavingInClose = false;
+                await InvokeAsync(StateHasChanged);
+                return false;
+            }
+            else
+            {
+                IsSavingInClose = false;
+                await InvokeAsync(StateHasChanged);
+                return true;
+            }
         }
 
         void ActiveTabIndexChangedHandler(int newIndex)

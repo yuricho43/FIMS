@@ -1,9 +1,9 @@
 ﻿<CascadingAuthenticationState>
 
-@*<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new [] { typeof(FullScreenLayout).Assembly }">*@
+@*<Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="new [] { typeof(MainLayout).Assembly }">*@
 <Router AppAssembly="@typeof(App).Assembly" AdditionalAssemblies="@_SharedPagesAssemblies">
     <Found Context="routeData">
-        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(FullScreenLayout)">
+        <AuthorizeRouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)">
             <NotAuthorized>
                 <Login />
             </NotAuthorized>
@@ -11,7 +11,7 @@
     </Found>
     <NotFound>
         <CascadingAuthenticationState>
-            <LayoutView Layout="@typeof(FullScreenLayout)">
+            <LayoutView Layout="@typeof(MainLayout)">
                 <NotFound404 />
             </LayoutView>
         </CascadingAuthenticationState>

@@ -1,4 +1,6 @@
 ﻿@namespace Fims.Web.Client.Layouts
+
+@using Fims.Common
 @using Fims.Client.Shared.Shared.NavMenu
 @using Telerik.Blazor.Components.Common.Icon
 
@@ -19,7 +21,7 @@
             </div>
             <img style="width: 30px;" src="_content/Fims.Client.Shared/images/fimsadmin.svg">
             <div class="title">
-                <h1>@Localizer["Fims_Title"]</h1>
+                <h1>@($"{Constants.FimsTitle} (FIMS {Constants.FimsVersion})")</h1>
             </div>
             @{
                 if (!WindowWidthSmall)
@@ -57,25 +59,34 @@
 
     static IEnumerable<DrawerItem> DrawerItems_Inspector = new List<DrawerItem>
     {
-        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/InspectStarter", Group = "home"},
+    };
+
+    static IEnumerable<DrawerItem> DrawerItems_Closer = new List<DrawerItem>
+    {
+        new DrawerItem{ Text = "검사서 마무리", Icon = FontIcon.CheckCircle, Url="/InspectCloser", Group = "home"},
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/InspectStarter", Group = "home"},
     };
 
     static IEnumerable<DrawerItem> DrawerItems_Reporter = new List<DrawerItem>
     {
-        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/InspectStarter", Group = "home"},
         new DrawerItem{ Text = "검사서 관리", Icon = FontIcon.Data, Url="/Management/TSheetManagement", Group = "ext"},
     };
 
     static IEnumerable<DrawerItem> DrawerItems_Manager = new List<DrawerItem>
     {
-        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/InspectStarter", Group = "home"},
+        new DrawerItem{ Text = "검사서 마무리", Icon = FontIcon.CheckCircle, Url="/InspectCloser", Group = "home"},
         new DrawerItem{ Text = "검사서 관리", Icon = FontIcon.Data, Url="/Management/TSheetManagement", Group = "ext"},
         new DrawerItem{ Text = "사용자 관리", Icon = FontIcon.Myspace, Url="/Management/UserManagement", Group = "ext"},
     };
 
     static IEnumerable<DrawerItem> DrawerItems_Admin = new List<DrawerItem>
     {
-        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/", Group = "home"},
+        // new DrawerItem{ Text = "Paging", Icon = FontIcon.Grid, Url="/PagingVirtual", Group = "home"},
+        new DrawerItem{ Text = "검사서 입력", Icon = FontIcon.Grid, Url="/InspectStarter", Group = "home"},
+        new DrawerItem{ Text = "검사서 마무리", Icon = FontIcon.CheckCircle, Url="/InspectCloser", Group = "home"},
         // new DrawerItem{ Text = Localizer["Drawer_Settings"], Icon = FontIcon.Gear, Url="/BarcodeScanner", Group = "app"},
         // new DrawerItem{ Text = Localizer["Drawer_Profile"], Icon = FontIcon.User, Url="/account/UserProfile", Group = "app"},
         new DrawerItem{ Text = "검사서 관리", Icon = FontIcon.Data, Url="/Management/TSheetManagement", Group = "ext"},
@@ -87,6 +98,7 @@
     static Dictionary<string, IEnumerable<DrawerItem>> RoleToDrawerItems = new Dictionary<string, IEnumerable<DrawerItem>>
     {
             ["Inspector"] = DrawerItems_Inspector,
+            ["Closer"]    = DrawerItems_Closer,
             ["Reporter"]  = DrawerItems_Reporter,
             ["Manager"]   = DrawerItems_Manager,
             ["Admin"]     = DrawerItems_Admin,

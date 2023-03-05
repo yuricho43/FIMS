@@ -23,10 +23,6 @@ namespace Fims.Client.Shared.Pages
         public int MaxChannels { get; set; }
 
         private List<TItemSpec> PristineItems { get; set; } = new List<TItemSpec>();
-        public IEnumerable<TItemSpec> SelectedItems { get; set; } = Enumerable.Empty<TItemSpec>();
-
-        public bool GridIsDirty => MyObservableTItemSpecs.ToList().Exists(itm => itm.IsDirty);
-        public bool SelectionIsDirty => SelectedItems.ToList().Exists(itm => itm.IsDirty);
 
         public int ActiveCategoryTabIndex { get; set; } = 1;
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
@@ -280,35 +276,8 @@ namespace Fims.Client.Shared.Pages
         {
             TItemSpec item = (TItemSpec)args.Item;
 
-            if (!item.IsDirty)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, item);
-                if (pristineItem == null)
-                {
-                    //add only the first time a field is edited, later it is no longer pristine
-                    PristineItems.Add(GetItemFromCollection(MyObservableTItemSpecs, item));
-                }
-            }
-
             item.IsChanged = true;
             ChangeLocalItem(item);
-        }
-
-        public void CreateHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-            item.TestNo = MyObservableTItemSpecs.Max(model => model.TestNo) + 1;
-            item.IsNew = true;
-            MyObservableTItemSpecs.Insert(0, item);
-        }
-
-        public void DeleteHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-
-            DeleteItem(item);
-
-            //show notification for undelete
         }
 
         private void ChangeLocalItem(TItemSpec item)
@@ -318,152 +287,6 @@ namespace Fims.Client.Shared.Pages
             {
                 MyObservableTItemSpecs[index] = item;
             }
-        }
-
-        public async Task SaveAllChanges()
-        {
-            List<TItemSpec> deletedItems = MyObservableTItemSpecs.Where(itm => itm.IsDeleted == true).ToList();
-            List<TItemSpec> newItems = MyObservableTItemSpecs.Where(itm => itm.IsNew == true).ToList();
-            List<TItemSpec> updatedItems = MyObservableTItemSpecs.Where(itm => itm.IsChanged == true && itm.IsDeleted == false).ToList();
-
-            // clean up current data and selection
-            MyObservableTItemSpecs.Clear();
-            SelectedItems = Enumerable.Empty<TItemSpec>();
-
-            // update the grid with the data from the service
-            List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            MyObservableTItemSpecs = new ObservableCollection<TItemSpec>(newData);
-        }
-
-        public void RevertAllChanges()
-        {
-            for (int i = MyObservableTItemSpecs.Count - 1; i >= 0; i--)
-            {
-                if (MyObservableTItemSpecs[i].IsDirty)
-                {
-                    RevertItem(MyObservableTItemSpecs[i]);
-                }
-            }
-            StateHasChanged();
-        }
-
-        public void RestoreItem(TItemSpec item)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyObservableTItemSpecs, item);
-            if (localItem != null)
-            {
-                localItem.IsDeleted = false;
-            }
-        }
-
-        public void RevertItem(TItemSpec item)
-        {
-            if (item.IsNew)
-            {
-                MyObservableTItemSpecs.Remove(item);
-            }
-            if (item.IsDeleted)
-            {
-                item.IsDeleted = false;
-                ChangeLocalItem(item);
-            }
-            if (item.IsChanged)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(PristineItems, item);
-                if (pristineItem != null)
-                {
-                    ChangeLocalItem(pristineItem);
-                    PristineItems.Remove(pristineItem);
-                }
-            }
-        }
-
-        public void RevertSelected()
-        {
-            foreach (TItemSpec item in SelectedItems)
-            {
-                RevertItem(item);
-            }
-        }
-
-        public void DeleteItem(TItemSpec itmToDelete)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyObservableTItemSpecs, itmToDelete);
-            if (localItem != null)
-            {
-                if (localItem.IsDeleted)
-                {
-                    return;
-                }
-                else if (localItem.IsNew)
-                {
-                    MyObservableTItemSpecs.Remove(localItem);
-                }
-                else
-                {
-                    localItem.IsDeleted = true;
-                }
-            }
-        }
-
-        public void DeleteSelected()
-        {
-            foreach (TItemSpec item in SelectedItems)
-            {
-                DeleteItem(item);
-            }
-        }
-
-        private TItemSpec GetItemFromCollection(IList<TItemSpec> collection, TItemSpec itmToFind)
-        {
-            var index = collection.ToList().FindIndex(i => i.TestNo == itmToFind.TestNo);
-            if (index != -1)
-            {
-                return collection[index];
-            }
-            return null;
-        }
-
-        private List<TItemSpec> Data { get; set; }
-        public Task<List<TItemSpec>> BatchUpdate(
-            List<TItemSpec> deletedItems, List<TItemSpec> insertedItems, List<TItemSpec> updatedItems)
-        {
-            //just sample CRUD operations
-            //this is a singleton service to cater for all users at the same time
-            //in a real app it may be transient instead
-            //also, this code does not cater for concurrency conflicts and errors
-            //while a real service should take them into account
-            //e.g., insert instead of attempt an update on a missing item that another user deleted
-            //in this example this also returns the newly updated data for the grid
-            foreach (TItemSpec item in deletedItems)
-            {
-                Data.Remove(item);
-            }
-
-            foreach (TItemSpec item in insertedItems)
-            {
-                item.TestNo = Data.Max(item => item.TestNo) + 1;
-                Data.Insert(0, item);
-            }
-
-            foreach (TItemSpec item in updatedItems)
-            {
-                var index = Data.FindIndex(i => i.TestNo == item.TestNo);
-                if (index != -1)
-                {
-                    Data[index] = item;
-                }
-            }
-
-            //clean up the view model information to be sure we do not "predefine" user actions
-            foreach (TItemSpec item in Data)
-            {
-                item.IsChanged = false;
-                item.IsDeleted = false;
-                item.IsNew = false;
-            }
-
-            return Task.FromResult(Data);
         }
     }
 }

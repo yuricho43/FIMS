@@ -30,12 +30,31 @@ namespace Fims.Data
             return base.SaveChanges();
         }
 
-        public override Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             this.ApplyAuditInfoRules();
             this.ApplyDeletableEntityRules();
 
-            return base.SaveChangesAsync(cancellationToken);
+            int writtenEntriesCount = 0;
+            try
+            {
+                writtenEntriesCount = await base.SaveChangesAsync(cancellationToken);
+                if (writtenEntriesCount > 0)
+                {
+                    // is saved
+                }
+                else
+                {
+                    // is not saved
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                //_logger.LogError(e, "couldn't SaveChangesAsync");
+            }
+
+            return writtenEntriesCount;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

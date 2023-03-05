@@ -37,7 +37,7 @@ namespace Fims.Services.TSheets
             //};
 
             await this.TheDbContext.AddAsync(tSheet);
-            await this.TheDbContext.SaveChangesAsync();
+            int writtenEntriesCount = await this.TheDbContext.SaveChangesAsync(); //JBH FIXME: use the return value
 
             return tSheet.Id;
         }
@@ -59,7 +59,7 @@ namespace Fims.Services.TSheets
 
             tSheet = newTSheet;
 
-            await this.TheDbContext.SaveChangesAsync();
+            int writtenEntriesCount = await this.TheDbContext.SaveChangesAsync(); //JBH FIXME: use the return value
 
             return true;
         }
@@ -78,7 +78,7 @@ namespace Fims.Services.TSheets
  
             this.TheDbContext.Remove(tSheet);
 
-            await this.TheDbContext.SaveChangesAsync();
+            int writtenEntriesCount = await this.TheDbContext.SaveChangesAsync(); //JBH FIXME: use the return value
 
             return true;
         }

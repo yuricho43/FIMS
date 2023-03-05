@@ -4,6 +4,7 @@ using Fims.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Fims.Data.Migrations
 {
     [DbContext(typeof(FimsDbContext))]
-    partial class FimsDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230303070249_AddCloser")]
+    partial class AddCloser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -244,6 +247,12 @@ namespace Fims.Data.Migrations
 
                     b.Property<string>("InspectorName")
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsClosingCompleted")
+                        .HasColumnType("bit");
+
+                    b.Property<bool>("IsInspectionCompleted")
+                        .HasColumnType("bit");
 
                     b.Property<DateTime?>("ModifiedOn")
                         .HasColumnType("datetime2");

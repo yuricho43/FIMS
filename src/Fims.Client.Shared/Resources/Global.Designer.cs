@@ -61,15 +61,6 @@ namespace Fims.Client.Shared.Resources {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to FST Inspection Management System (FIMS).
-        /// </summary>
-        public static string Fims_Title {
-            get {
-                return ResourceManager.GetString("Fims_Title", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to All Teams.
         /// </summary>
         public static string ButtonGroup_AllTeams {

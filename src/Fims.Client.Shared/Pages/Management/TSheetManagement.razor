@@ -56,16 +56,16 @@
                                 Title="검사자"
                                 Width="40px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
                                 ShowFilterCellButtons="@true"
-                                DefaultFilterOperator="@FilterOperator.Contains" />
+                                DefaultFilterOperator="@FilterOperator.Contains">
+                        <Template>
+                            @{
+                                var tSheet = context as TSheet;
+                                <span>@tSheet.InspectorName/@tSheet.CloserName</span>
+                            }
+                        </Template>
+                    </GridColumn>
 
-@*                    <GridColumn Field=@nameof(TSheet.InspectionStartDateTime)
-                                Title="시작시간"
-                                DisplayFormat="{0:yyyy-MM-dd-HH:mm}"
-                                Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"
-                                ShowFilterCellButtons="@true"
-                                DefaultFilterOperator="@FilterOperator.IsGreaterThan" />
-*@
-                    <GridColumn Field=@nameof(TSheet.InspectionEndDateTime)
+                    <GridColumn Field=@nameof(TSheet.ClosingEndDateTime)
                                 Title="완료시간"
                                 DisplayFormat="{0:yyyy-MM-dd-HH:mm}"
                                 Width="50px" Editable="false" HeaderClass="center-me" TextAlign="@ColumnTextAlign.Center"

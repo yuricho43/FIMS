@@ -30,10 +30,6 @@ namespace Fims.Client.Shared.Pages.Management
         public ObservableCollection<TItem> MyObservableTItems { get; set; }
 
         private List<TItem> PristineItems { get; set; } = new List<TItem>();
-        public IEnumerable<TItem> SelectedItems { get; set; } = Enumerable.Empty<TItem>();
-
-        // public bool GridIsDirty => MyObservableTItems.ToList().Exists(itm => itm.IsDirty);
-        // public bool SelectionIsDirty => SelectedItems.ToList().Exists(itm => itm.IsDirty);
 
         int PageSize = 10;
         int CurrentPage = 1;

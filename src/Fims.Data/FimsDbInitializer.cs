@@ -42,7 +42,7 @@ namespace Fims.Data
         
             this.dbContext.Database.Migrate();
 
-            this.AddAdministrator();
+            this.CreateRolesAndInitialUsers();
 
             foreach (var initialDataProvider in this.initialDataProviders)
             {
@@ -60,75 +60,102 @@ namespace Fims.Data
             this.dbContext.SaveChanges();
         }
 
-        private void AddAdministrator()
+        private void CreateRolesAndInitialUsers()
             => Task
                 .Run(async () =>
                 {
-                    var existingRole = await this.roleManager.FindByNameAsync(AdministratorRole);
-                    if (existingRole != null)
+                    FimsRole existingRole;
+
+                    existingRole = await this.roleManager.FindByNameAsync(AdministratorRole);
+                    if (existingRole == null)
                     {
-                        return;
+                        // create the AdministratorRole, and create a Administrator
+                        var adminRole = new FimsRole(AdministratorRole);
+                        await this.roleManager.CreateAsync(adminRole);
+                        var adminUser = new FimsUser
+                        {
+                            UserName = "admin",
+                            HangulName = "장성욱",
+                            EnglishName = "JSW",
+                            Email = "admin@fstc.co.kr",
+                            SecurityStamp = "RandomSecurityStamp"
+                        };
+                        await this.userManager.CreateAsync(adminUser, FimsDefaultPassword);
+                        await this.userManager.AddToRoleAsync(adminUser, AdministratorRole);
                     }
 
 
-                    // create the AdministratorRole, and create a Administrator
-                    var adminRole = new FimsRole(AdministratorRole);
-                    await this.roleManager.CreateAsync(adminRole);
-                    var adminUser = new FimsUser
+                    existingRole = await this.roleManager.FindByNameAsync(ManagerRole);
+                    if (existingRole == null)
                     {
-                        UserName = "admin",
-                        HangulName = "장성욱",
-                        EnglishName = "JSW",
-                        Email = "admin@fstc.co.kr",
-                        SecurityStamp = "RandomSecurityStamp"
-                    };
-                    await this.userManager.CreateAsync(adminUser, FimsDefaultPassword);
-                    await this.userManager.AddToRoleAsync(adminUser, AdministratorRole);
+                        // create the ManagerRole, and create a Manager
+                        var managerRole = new FimsRole(ManagerRole);
+                        await this.roleManager.CreateAsync(managerRole);
+                        var managerUser = new FimsUser
+                        {
+                            UserName = "manager1",
+                            HangulName = "홍과장",
+                            EnglishName = "HGJ",
+                            Email = "manager1@fstc.co.kr",
+                            SecurityStamp = "RandomSecurityStamp"
+                        };
+                        await this.userManager.CreateAsync(managerUser, FimsDefaultPassword);
+                        await this.userManager.AddToRoleAsync(managerUser, ManagerRole);
+                    }
 
-
-                    // create the ManagerRole, and create a Manager
-                    var managerRole = new FimsRole(ManagerRole);
-                    await this.roleManager.CreateAsync(managerRole);
-                    var managerUser = new FimsUser
+                    existingRole = await this.roleManager.FindByNameAsync(InspectorRole);
+                    if (existingRole == null)
                     {
-                        UserName = "manager1",
-                        HangulName = "홍과장",
-                        EnglishName = "HGJ",
-                        Email = "manager1@fstc.co.kr",
-                        SecurityStamp = "RandomSecurityStamp"
-                    };
-                    await this.userManager.CreateAsync(managerUser, FimsDefaultPassword);
-                    await this.userManager.AddToRoleAsync(managerUser, ManagerRole);
+                        // create the InspectorRole, and create an Inspector
+                        var inspectorRole = new FimsRole(InspectorRole);
+                        await this.roleManager.CreateAsync(inspectorRole);
+                        var inspectorUser = new FimsUser
+                        {
+                            UserName = "inspector1",
+                            HangulName = "김철수",
+                            EnglishName = "KCS",
+                            Email = "inspector1@fstc.co.kr",
+                            SecurityStamp = "RandomSecurityStamp"
+                        };
+                        await this.userManager.CreateAsync(inspectorUser, FimsDefaultPassword);
+                        await this.userManager.AddToRoleAsync(inspectorUser, InspectorRole);
+                    }
 
-
-                    // create the InspectorRole, and create an Inspector
-                    var inspectorRole = new FimsRole(InspectorRole);
-                    await this.roleManager.CreateAsync(inspectorRole);
-                    var inspectorUser = new FimsUser
+                    existingRole = await this.roleManager.FindByNameAsync(CloserRole);
+                    if (existingRole == null)
                     {
-                        UserName = "inspector1",
-                        HangulName = "김철수",
-                        EnglishName = "KCS",
-                        Email = "inspector1@fstc.co.kr",
-                        SecurityStamp = "RandomSecurityStamp"
-                    };
-                    await this.userManager.CreateAsync(inspectorUser, FimsDefaultPassword);
-                    await this.userManager.AddToRoleAsync(inspectorUser, InspectorRole);
+                        // create the CloserRole, and create a Closer
+                        var closerRole = new FimsRole(CloserRole);
+                        await this.roleManager.CreateAsync(closerRole);
+                        var closerUser = new FimsUser
+                        {
+                            UserName = "closer1",
+                            HangulName = "한마감",
+                            EnglishName = "HMG",
+                            Email = "closer1@fstc.co.kr",
+                            SecurityStamp = "RandomSecurityStamp"
+                        };
+                        await this.userManager.CreateAsync(closerUser, FimsDefaultPassword);
+                        await this.userManager.AddToRoleAsync(closerUser, CloserRole);
+                    }
 
-
-                    // create the ReporterRole, and create an Reporter
-                    var reporterRole = new FimsRole(ReporterRole);
-                    await this.roleManager.CreateAsync(reporterRole);
-                    var reporterUser = new FimsUser
+                    existingRole = await this.roleManager.FindByNameAsync(ReporterRole);
+                    if (existingRole == null)
                     {
-                        UserName = "reporter1",
-                        HangulName = "장보고",
-                        EnglishName = "JBG",
-                        Email = "reporter1@fstc.co.kr",
-                        SecurityStamp = "RandomSecurityStamp"
-                    };
-                    await this.userManager.CreateAsync(reporterUser, FimsDefaultPassword);
-                    await this.userManager.AddToRoleAsync(reporterUser, ReporterRole);
+                        // create the ReporterRole, and create an Reporter
+                        var reporterRole = new FimsRole(ReporterRole);
+                        await this.roleManager.CreateAsync(reporterRole);
+                        var reporterUser = new FimsUser
+                        {
+                            UserName = "reporter1",
+                            HangulName = "장보고",
+                            EnglishName = "JBG",
+                            Email = "reporter1@fstc.co.kr",
+                            SecurityStamp = "RandomSecurityStamp"
+                        };
+                        await this.userManager.CreateAsync(reporterUser, FimsDefaultPassword);
+                        await this.userManager.AddToRoleAsync(reporterUser, ReporterRole);
+                    }
                 })
                 .GetAwaiter()
                 .GetResult();

@@ -33,15 +33,10 @@ namespace Fims.Client.Shared.Pages
 
         public int MaxChannels { get; set; }
 
-        //private List<TItemSpec> TItemSpecsPristine { get; set; } = new List<TItemSpec>();
-        //public IEnumerable<TItemSpec> TItemSpecsSelected { get; set; } = Enumerable.Empty<TItemSpec>();
-
-        public bool GridIsDirty => MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].ToList().Exists(item => item.IsDirty);
-        public bool SelectionIsDirty => MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].ToList().Exists(item => item.IsDirty);
-
         TelerikGrid<TItemSpec> TItemSpecGrid { get; set; }
 
         int CurrentPage = 1;
+        string stateStorageKey = "FimsGridStateKey";
 
 
         public string TextBoxFillMode { get; set; } = ThemeConstants.TextBox.FillMode.Solid;
@@ -547,19 +542,6 @@ namespace Fims.Client.Shared.Pages
                 itemspec.IsCh4DataValid = ValidateUserInputCh4(userinput, itemspec);
             }
 
-
-            if (!itemspec.IsDirty)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory], itemspec);
-                if (pristineItem == null)
-                {
-                    //add only the first time a field is edited, later it is no longer pristine
-                    var items = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory];
-                    var itemInCollection = GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], itemspec);
-                    MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory].Add(GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], itemspec));
-                }
-            }
-
             itemspec.IsChanged = true;
             itemspec.DirtyFields.Add(args.Field);
 
@@ -569,23 +551,6 @@ namespace Fims.Client.Shared.Pages
 
             CalculateTItemSpecsInputCompletedCountInCategory();
             CalculateTItemSpecsInputInvalidCountInCategory();
-        }
-
-        public void CreateHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-            item.TestNo = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Max(model => model.TestNo) + 1;
-            item.IsNew = true;
-            MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Insert(0, item);
-        }
-
-        public void DeleteHandler(GridCommandEventArgs args)
-        {
-            TItemSpec item = (TItemSpec)args.Item;
-
-            DeleteItem(item);
-
-            //show notification for undelete
         }
         #endregion
 
@@ -787,95 +752,6 @@ namespace Fims.Client.Shared.Pages
         #endregion
 
 
-        #region Grid Toolbar commands
-        public void DeleteSelected()
-        {
-            foreach (TItemSpec item in MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory])
-            {
-                DeleteItem(item);
-            }
-
-            MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory] = new List<TItemSpec>();
-        }
-
-        public void RevertSelected()
-        {
-            foreach (TItemSpec item in MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory])
-            {
-                RevertItem(item);
-            }
-
-            MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory] = new List<TItemSpec>();
-        }
-
-        public void RevertAllChanges()
-        {
-            for (int i = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Count - 1; i >= 0; i--)
-            {
-                if (MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][i].IsDirty)
-                {
-                    RevertItem(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][i]);
-                }
-            }
-            StateHasChanged();
-        }
-        #endregion
-
-
-        #region Button events in the Changes colum   
-        public void RestoreItem(TItemSpec item)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], item);
-            if (localItem != null)
-            {
-                localItem.IsDeleted = false;
-            }
-        }
-
-        public void RevertItem(TItemSpec item)
-        {
-            if (item.IsNew)
-            {
-                MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Remove(item);
-            }
-            if (item.IsDeleted)
-            {
-                item.IsDeleted = false;
-                ChangeLocalItem(item);
-            }
-            if (item.IsChanged)
-            {
-                TItemSpec pristineItem = GetItemFromCollection(MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory], item);
-                if (pristineItem != null)
-                {
-                    ChangeLocalItem(pristineItem);
-                    MyTSheetSpec.TItemSpecsPristineInCategoryDict[TCategory].Remove(pristineItem);
-                    pristineItem.DirtyFields = new List<string>();
-                }
-            }
-        }
-
-        public void DeleteItem(TItemSpec itmToDelete)
-        {
-            TItemSpec localItem = GetItemFromCollection(MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory], itmToDelete);
-            if (localItem != null)
-            {
-                if (localItem.IsDeleted)
-                {
-                    return;
-                }
-                else if (localItem.IsNew)
-                {
-                    MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Remove(localItem);
-                }
-                else
-                {
-                    localItem.IsDeleted = true;
-                }
-            }
-        }
-        #endregion
-
         #region Helpers
         private bool CheckAllChannelDataEntered(TItemSpec itemspec)
         {
@@ -922,101 +798,82 @@ namespace Fims.Client.Shared.Pages
 
             if (index != -1)
             {
-                var existingItem = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index];
-
-                if (MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].Contains(existingItem))
-                {
-                    var tempSelectedItems = MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].ToList();
-
-                    tempSelectedItems.Remove(existingItem);
-                    tempSelectedItems.Add(itemspec);
-
-                    MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index] = itemspec;
-
-                    MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory] = new List<TItemSpec>(tempSelectedItems);
-                }
-                else
-                {
-                    MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index] = itemspec;
-                }
+                MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory][index] = itemspec;
             }
-        }
-
-        private TItemSpec GetItemFromCollection(IList<TItemSpec> collection, TItemSpec itmToFind)
-        {
-            if (collection == null)
-            {
-                return null;
-            }
-
-            var index = collection.ToList().FindIndex(i => i.TestNo == itmToFind.TestNo);
-            if (index != -1)
-            {
-                return collection[index];
-            }
-            return null;
         }
         #endregion
 
 
-        #region Batch Saving
-        public async Task SaveAllChanges()
+        #region GridState
+
+        private async Task OnStateInit(GridStateEventArgs<TItemSpec> args)
         {
-            List<TItemSpec> deletedItems = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Where(item => item.IsDeleted == true).ToList();
-            List<TItemSpec> newItems = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Where(item => item.IsNew == true).ToList();
-            List<TItemSpec> updatedItems = MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Where(item => item.IsChanged == true && item.IsDeleted == false).ToList();
-
-            // clean up current data and selection
-            MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory].Clear();
-            MyTSheetSpec.TItemSpecsSelectedInCategoryDict[TCategory].Clear();
-
-            // update the grid with the data from the service
-            List<TItemSpec> newData = await BatchUpdate(deletedItems, newItems, updatedItems);
-            MyTSheetSpec.ObservableTItemSpecsInCategoryDict[TCategory] = new ObservableCollection<TItemSpec>(newData);
-        }
-
-        private List<TItemSpec> Data { get; set; }
-        public Task<List<TItemSpec>> BatchUpdate(
-            List<TItemSpec> deletedItems, List<TItemSpec> insertedItems, List<TItemSpec> updatedItems)
-        {
-            //just sample CRUD operations
-            //this is a singleton service to cater for all users at the same time
-            //in a real app it may be transient instead
-            //also, this code does not cater for concurrency conflicts and errors
-            //while a real service should take them into account
-            //e.g., insert instead of attempt an update on a missing item that another user deleted
-            //in this example this also returns the newly updated data for the grid
-            foreach (TItemSpec item in deletedItems)
+            try
             {
-                Data.Remove(item);
-            }
-
-            foreach (TItemSpec item in insertedItems)
-            {
-                item.TestNo = Data.Max(item => item.TestNo) + 1;
-                Data.Insert(0, item);
-            }
-
-            foreach (TItemSpec item in updatedItems)
-            {
-                var index = Data.FindIndex(i => i.TestNo == item.TestNo);
-                if (index != -1)
+                var state = await LocalStorage.GetItem<GridState<TItemSpec>>(stateStorageKey);
+                if (state != null)
                 {
-                    Data[index] = item;
+                    args.GridState = state;
                 }
             }
-
-            //clean up the view model information to be sure we do not "predefine" user actions
-            foreach (TItemSpec item in Data)
+            catch (InvalidOperationException)
             {
-                item.IsChanged = false;
-                item.IsDeleted = false;
-                item.IsNew = false;
-                item.DirtyFields = new List<string>();
+                // the JS Interop for the local storage cannot be used during pre-rendering
             }
+        }
 
-            return Task.FromResult(Data);
+        async Task SaveState()
+        {
+            var gridState = TItemSpecGrid.GetState();
+            await LocalStorage.SetItem(stateStorageKey, gridState);
+        }
+
+        async Task LoadState()
+        {
+            GridState<TItemSpec> storedState = await LocalStorage.GetItem<GridState<TItemSpec>>(stateStorageKey);
+            if (storedState != null)
+            {
+                await TItemSpecGrid.SetStateAsync(storedState);
+            }
+        }
+
+        async void ResetState()
+        {
+            await TItemSpecGrid.SetStateAsync(null);
+            await LocalStorage.RemoveItem(stateStorageKey);
+        }
+
+        // void ReloadPage()
+        // {
+        //     JsInterop.InvokeVoidAsync("window.location.reload");
+        // }
+
+        async void SetExplicitState()
+        {
+            GridState<TItemSpec> desiredState = GetDefaultDemoState();
+            await TItemSpecGrid.SetStateAsync(desiredState);
+            await SaveState();
+        }
+
+        GridState<TItemSpec> GetDefaultDemoState()
+        {
+            GridState<TItemSpec> defaultDemoState = new GridState<TItemSpec>()
+            {
+                // GroupDescriptors = new List<GroupDescriptor>()
+                // {
+                //     new GroupDescriptor()
+                //     {
+                //         Member = nameof(TItemSpec.QuantityPerUnit),
+                //         MemberType = typeof(string)
+                //     }
+                // },
+                // CollapsedGroups = new List<int>() { 1, 2 },
+                Page = 3
+            };
+            return defaultDemoState;
         }
         #endregion
+
+
     }
 }
