@@ -35,6 +35,7 @@ namespace Fims.Client.Shared.Pages.Management
         {
             UserAuthInfoModels = await this.AuthClientService.AllUsers();
 
+            UserRoleNames.Clear();
             UserRoles = await this.AuthClientService.AllRoles();
             foreach (var userRole in UserRoles) {
                 UserRoleNames.Add(userRole.Name);

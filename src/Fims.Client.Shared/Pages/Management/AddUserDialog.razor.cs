@@ -39,7 +39,7 @@ namespace Fims.Client.Shared.Pages.Management
         public EventCallback<RegisterRequestModel> AddUserFinished { get; set; }
 
         public RegisterRequestModel NewUserRegisterRequestModel { get; set; } = new RegisterRequestModel();
-        private List<string> Roles { get; set; } = new List<string> { "Admin", "Inspector", "Reporter", "Manager"};
+        private List<string> Roles { get; set; } = new List<string> { "Inspector", "Closer", "Reporter", "Manager", "Admin"};
 
         public TelerikForm AddUserFormRef { get; set; }
         public TelerikNotification AddUserNotificationComponent { get; set; }

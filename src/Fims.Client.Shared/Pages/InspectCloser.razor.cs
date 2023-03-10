@@ -101,7 +101,7 @@ namespace Fims.Client.Shared.Pages
                 OnSaveSessionDataByTimer();
                 // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
                 await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
-            }, new System.Threading.AutoResetEvent(false), 1000 * 60, 1000 * 60); // fire every 60 secs
+            }, new System.Threading.AutoResetEvent(false), 1000 * 60 * 10, 1000 * 60 * 10); // fire every 60 * 10 secs (10 min)
 #endif
 
             await base.OnInitializedAsync();
