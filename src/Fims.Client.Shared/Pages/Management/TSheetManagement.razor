@@ -81,7 +81,10 @@
                     <GridCommandColumn Width="100px">
                         <GridCommandButton OnClick="@ShowDetailsHandler" Icon="@FontIcon.ZoomIn" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">상세보기</GridCommandButton>
                         <GridCommandButton OnClick="@GenerateReportHandler" Icon="@FontIcon.FileReport" ThemeColor="@ThemeConstants.Button.ThemeColor.Primary">성적서출력</GridCommandButton>
-                        <GridCommandButton OnClick="@DeleteTSheetHandler" ThemeColor="@ThemeConstants.Button.ThemeColor.Warning">삭제</GridCommandButton>
+                        @if ((CurrentUserRole == "Manager") || (CurrentUserRole == "Admin"))
+                        {
+                            <GridCommandButton OnClick="@DeleteTSheetHandler" ThemeColor="@ThemeConstants.Button.ThemeColor.Warning">삭제</GridCommandButton>
+                        }
                     </GridCommandColumn>
                 </GridColumns>
 

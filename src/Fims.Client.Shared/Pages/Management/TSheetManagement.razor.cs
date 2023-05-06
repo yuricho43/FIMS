@@ -19,6 +19,7 @@ using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.TReports;
 using Fims.Data.Models.Identity;
+using Fims.Client.Shared.Infrastructure.Extensions;
 
 namespace Fims.Client.Shared.Pages.Management
 {
@@ -29,6 +30,7 @@ namespace Fims.Client.Shared.Pages.Management
         public IEnumerable<TSheet> TSheets { get; set; } = Enumerable.Empty<TSheet>();
         public IEnumerable<TSheet> SelectedTSheets { get; set; } = Enumerable.Empty<TSheet>();
         public TSheet CurrentTSheet { get; set; }
+        public string CurrentUserRole { get; set; }
 
         public bool GenerateTReportDialogVisible { get; set; } = false;
         public List<string> TReportSpecs { get; set; } = new List<string>();
@@ -53,6 +55,10 @@ namespace Fims.Client.Shared.Pages.Management
         {
             TSheets = await TSheetsClientService.AllTSheetsAsync();
             TReportSpecs = await TReportsClientService.AllTReportSpecs();
+
+            var state = await this.AuthStateProvider.GetAuthenticationStateAsync();
+            var user = state.User;
+            CurrentUserRole = user.GetUserRole();
         }
 
         private void OnGenerateTReportFinished(string fileGenerated)
