@@ -50,6 +50,7 @@ namespace Fims.Web.Server
             //JBH: Instantiate and AddSingleton TSheetSpecsService here,
             //     so that BuildTSheetSpecsFromFiles() @ TSheetSpecsService will run immediately upon the server startup.
             ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService(Configuration);
+            var result = tSheetSpecsService.BuildTSheetSpecsFromExcelSpecFile();
             services.AddSingleton(tSheetSpecsService);
 
             ITSheetSpecsInProgressService   tSheetSpecsInProgressService    = new TSheetSpecsInProgressService(Configuration);

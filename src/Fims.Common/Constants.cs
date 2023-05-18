@@ -2,7 +2,7 @@
 {
     public class Constants
     {
-        public const string FimsVersion = "1.2.0";
+        public const string FimsVersion = "2.0.0";
         public const string FimsTitle   = "FST Inspection Management System";
 
         public const string AdministratorRole = "Admin";
@@ -24,5 +24,11 @@
         public const string FimsTReportSpecsFileNameBase            = "FimsTReportSpecs";
 
         public const string FimsTReportOutputFileNameBase           = "FimsReport";
+
+        public const bool SAVE_INSPECTOR_SESSION_DATA_AUTO   = false;
+        public const bool SAVE_INSPECTOR_SESSION_DATA_MANUAL = true;
+
+        public const bool SAVE_CLOSER_SESSION_DATA_AUTO      = false;
+        public const bool SAVE_CLOSER_SESSION_DATA_MANUAL    = false;
     }
 }
