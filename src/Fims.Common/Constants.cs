@@ -24,5 +24,11 @@
         public const string FimsTReportSpecsFileNameBase            = "FimsTReportSpecs";
 
         public const string FimsTReportOutputFileNameBase           = "FimsReport";
+
+        public const bool SAVE_INSPECTOR_SESSION_DATA_AUTO   = false;
+        public const bool SAVE_INSPECTOR_SESSION_DATA_MANUAL = true;
+
+        public const bool SAVE_CLOSER_SESSION_DATA_AUTO      = false;
+        public const bool SAVE_CLOSER_SESSION_DATA_MANUAL    = false;
     }
 }

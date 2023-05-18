@@ -58,7 +58,7 @@ namespace Fims.Client.Shared.Pages
 
 #nullable enable  //suppress the Warning CS8632
         //private System.Timers.Timer TSheetSpecsSavingTimer;
-        private System.Threading.Timer? TSheetSpecsSavingTimer2;
+        private System.Threading.Timer? InspectorSessionSaveTimer;
 #nullable disable
 
         public bool IsLoadingSession { get; set; } = false;
@@ -95,14 +95,16 @@ namespace Fims.Client.Shared.Pages
             //FIXME    
             //FIXME    ProductModels = await TSheetSpecsClientService.GetEquipmentModelsAsync();
 
-#if !DEBUG
-            TSheetSpecsSavingTimer2 = new System.Threading.Timer(async (object? stateInfo) =>
+            if (Constants.SAVE_INSPECTOR_SESSION_DATA_AUTO)
             {
-                OnSaveSessionDataByTimer();
-                // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
-                await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
-            }, new System.Threading.AutoResetEvent(false), 1000 * 60 * 10, 1000 * 60 * 10); // fire every 60 * 10 secs (10 min)
-#endif
+                System.Threading.Timer timer = new System.Threading.Timer(async (object? stateInfo) =>
+                                {
+                                    OnSaveSessionDataByTimer();
+                                    // NOTE: must call StateHasChanged() because this is triggered by a timer instead of a user event.
+                                    await InvokeAsync(StateHasChanged);  //NOTE: Direct calling StateHasChanged() without InvokeAsync causes an Exception.
+                                }, new System.Threading.AutoResetEvent(false), 1000 * 60 * 10, 1000 * 60 * 10);
+                InspectorSessionSaveTimer = timer; // fire every 60 * 10 secs (10 min)
+            }
 
             await base.OnInitializedAsync();
         }
