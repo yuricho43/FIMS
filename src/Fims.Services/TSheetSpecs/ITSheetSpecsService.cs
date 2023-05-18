@@ -15,6 +15,7 @@ namespace Fims.Services.TSheetSpecs
     //public interface ITSheetSpecsService : ISingletonService
     public interface ITSheetSpecsService //DO NOT inherits IService|ISingletonService|IScopedService
     {
+        public string BuildTSheetSpecsFromExcelSpecFile();
         public Task<List<string>> GetEquipmentModelsAsync();
         public Task<Dictionary<string, TSheetSpec>> GetTSheetSpecsDictAsync();
         public Task<TSheetSpec> GetTSheetSpecByEquipmentModelAsync(string equipmentModel);

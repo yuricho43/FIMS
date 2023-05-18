@@ -35,19 +35,19 @@ namespace Fims.Services.TSheetSpecs
 
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
-
-            // find SpecSheet files
-            string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
-            string[] fimsTSheetSpecsFilePaths = Directory.GetFiles(FimsTSheetSpecsRepoPath, specsFilePattern);
-
-            if (fimsTSheetSpecsFilePaths.Length > 0)
-            {
-                string result = BuildTSheetSpecsFromExcelSpecFile(fimsTSheetSpecsFilePaths.First());
-            }
         }
 
-        private string BuildTSheetSpecsFromExcelSpecFile(string tSheetSpecsFilePath)
+        public string BuildTSheetSpecsFromExcelSpecFile()
         {
+            string tSheetSpecsFilePath = GetTSheetSpecsExcelFilePath();
+            if (tSheetSpecsFilePath == null)
+            {
+                FimsTSheetSpecsFileValidationMessage = "FAIL: No TSheetSpecs Excel file found.";
+                return "FAIL: No TSheetSpecs Excel file found.";
+            }
+
+            ClearPreviousTSheetSpecs();
+
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); //prevent NotSupportedException: "No data is available for encoding 1252" from the old Excel format.
                                                                                                    //Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB"); //dd/MM/yyyy
 
@@ -144,7 +144,6 @@ namespace Fims.Services.TSheetSpecs
             return "SUCCESS";
         }
 
-
         public Task<List<string>> GetEquipmentModelsAsync()
         {
             return Task.FromResult(EquipmentModels);
@@ -166,6 +165,27 @@ namespace Fims.Services.TSheetSpecs
             {
                 return Task.FromResult(new TSheetSpec { ProductModel = Constants.TSheetSpecNotDefined });
             }
+        }
+
+        private string GetTSheetSpecsExcelFilePath()
+        {
+            string specsFilePattern = Constants.FimsTSheetSpecsFileNameBase + "_" + "*" + ".xlsx";
+            string[] fimsTSheetSpecsFilePaths = Directory.GetFiles(FimsTSheetSpecsRepoPath, specsFilePattern);
+
+            if (fimsTSheetSpecsFilePaths.Length > 0)
+            {
+                return fimsTSheetSpecsFilePaths.First();
+            }
+            else
+            {
+                return null;
+            }
+        }
+
+        private void ClearPreviousTSheetSpecs()
+        {
+            EquipmentModels.Clear();
+            EquipmentModelTSheetSpecDict.Clear();
         }
 
         private string ExtractEquipmentModelFromFileName(string specFileName)
@@ -224,6 +244,10 @@ namespace Fims.Services.TSheetSpecs
                 {
                     File.Delete(prevSpecFilePath + ".BACKUP");
                 }
+
+                //rebuild and refresh TSheetSpecs from the new spec file
+                ClearPreviousTSheetSpecs();
+                buildresult = BuildTSheetSpecsFromExcelSpecFile();
             }
             else
             {
