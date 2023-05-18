@@ -55,7 +55,7 @@
         <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
         <PackageReference Include="Microsoft.Extensions.Localization" Version="7.0.2" />
         <PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
-        <PackageReference Include="Telerik.UI.for.Blazor" Version="4.0.1" />
+        <PackageReference Include="Telerik.UI.for.Blazor" Version="4.2.0" />
     </ItemGroup>
 
     <ItemGroup>
