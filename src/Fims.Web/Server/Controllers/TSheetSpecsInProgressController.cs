@@ -9,6 +9,8 @@ using Fims.Services.TSheetSpecsInProgress;
 
 using Fims.Web.Server.Infrastructure.Services;
 using Fims.Data.Models.TSheetSpecsInProgress;
+using System;
+using Microsoft.Extensions.Logging;
 
 namespace Fims.Web.Server.Controllers
 {
@@ -19,13 +21,16 @@ namespace Fims.Web.Server.Controllers
     {
         private readonly ITSheetSpecsInProgressService TSheetSpecsInProgressService;
         private readonly ICurrentUserService CurrentUserService;
+        private readonly ILogger<TSheetSpecsInProgressController> logger;
 
         public TSheetSpecsInProgressController(
             ITSheetSpecsInProgressService tSheetSpecsSaveService,
-            ICurrentUserService currentUserService)
+            ICurrentUserService currentUserService,
+            ILogger<TSheetSpecsInProgressController> logger)
         {
             this.TSheetSpecsInProgressService = tSheetSpecsSaveService;
             this.CurrentUserService = currentUserService;
+            this.logger = logger;
         }
 
 
@@ -33,6 +38,10 @@ namespace Fims.Web.Server.Controllers
         [HttpGet("{userId}")]
         public async Task<ActionResult> GetTSheetSpecsInProgressByUser(string userId)
         {
+            logger.LogDebug("Inside GetTSheetSpecsInProgressByUser endpoint");
+
+            //JBH FIXME for testing SerilogExceptionHandlingMiddleware     throw new Exception("Failed to retrieve data");
+
             // "userId" should be same with "this.CurrentUserService.UserId", and unused now.
             var tSheetSpecsInProgressDto = await this.TSheetSpecsInProgressService.GetTSheetSpecsInProgressAsync(this.CurrentUserService.UserId ?? "ANONYMOUS");
             return Created(nameof(this.GetTSheetSpecsInProgressByUser), tSheetSpecsInProgressDto);
