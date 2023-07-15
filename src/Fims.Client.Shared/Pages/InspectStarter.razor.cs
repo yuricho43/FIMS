@@ -626,7 +626,8 @@ namespace Fims.Client.Shared.Pages
 
             TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust = new TSheetSpecsInProgressDto
             {
-                UserId = CurrentInspectorUserId,
+                UserId = CurrentInspectorUserId,    // UserId here is the db index for the user.
+                UserName = user.GetUserName(),      // "coolbix", NOTE: using CustomClaimTypes
                 SerialToTSheetSpecPairs = new Dictionary<string, string>()
             };
 
