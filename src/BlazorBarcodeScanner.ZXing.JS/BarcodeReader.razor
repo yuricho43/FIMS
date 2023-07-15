@@ -17,21 +17,28 @@
         <div>
             @if (ShowStart)
             {
-                <button class="zxing-button start" @onclick="StartDecoding">Start</button>
+                <button class="zxing-button start" @onclick="StartDecodingSafe">Start</button>
             }
             @if (ShowReset)
             {
-                <button class="zxing-button stop" @onclick="StopDecoding">Stop</button>
+                <button class="zxing-button stop" @onclick="StopDecodingSafe">Stop</button>
             }
             @if (ShowToggleTorch)
             {
-                <button class="zxing-button torch" @onclick="ToggleTorch">Toggle Torch</button>
+                <button class="zxing-button torch" @onclick="ToggleTorchSafe">Toggle Torch</button>
             }
         </div>
     }
 
     <div class="zxing-video-container">
-        <video @ref="_video" width="@VideoWidth" height="@VideoHeight"></video>
+        @if (FullWidthVideo)
+        {
+            <video @ref="_video"></video>
+        } else
+        {
+            <video @ref="_video" width="@VideoWidth" height="@VideoHeight"></video>
+        }
+
     </div>
     <canvas @ref="_canvas" style="display:none;"/>
 
@@ -49,7 +56,7 @@
                     <select class="zxing-video-select" @onchange="OnVideoInputSourceChanged">
                         @foreach (var videoInputDevice in _videoInputDevices)
                         {
-                            <option value="@videoInputDevice.DeviceId">@videoInputDevice.Label</option>
+                            <option value="@videoInputDevice.DeviceId" selected="@(SelectedVideoInputId == @videoInputDevice.DeviceId)">@videoInputDevice.Label</option>
                         }
                     </select>
                 </label>
