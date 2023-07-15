@@ -2,6 +2,10 @@
 using Microsoft.Extensions.Hosting;
 
 
+using Serilog;
+using Fims.Web.Server.Infrastructure.Extensions;
+
+
 namespace Fims.Web.Server
 {
     public class Program
@@ -12,9 +16,10 @@ namespace Fims.Web.Server
                 .Run();
 
         public static IHostBuilder CreateHostBuilder(string[] args)
-            => Host
-                .CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder => webBuilder
-                    .UseStartup<Startup>());
+        {
+            var builder = Host.CreateDefaultBuilder(args);
+            builder.ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>());
+            return builder;
+        }
     }
 }
