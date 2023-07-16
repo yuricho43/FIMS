@@ -43,12 +43,27 @@ namespace Fims.Services.TSheetSpecsInProgress
 
                 string fileName = $"{Constants.FimsTSheetSpecsInProgressFileNameBase}_{userId}_{productSerial}.json";
                 string filePath = Path.Combine(FimsTSheetSpecsInProgressRepoPath, fileName);
+
                 if (File.Exists(filePath))
                 {
-                    File.Delete(filePath);
+                    try
+                    {
+                        File.Delete(filePath);
+                    }
+                    catch (IOException e)
+                    {
+                        Console.WriteLine($"The file could not be deleted: {e.Message}");
+                    }
                 }
 
-                await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                try
+                {
+                    await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine($"The file could not be written: {e.Message}");
+                }
             }
 
             return userId;

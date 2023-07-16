@@ -43,12 +43,27 @@ namespace Fims.Services.TSheetSpecsInClose
 
                 string fileName = $"{Constants.FimsTSheetSpecsInCloseFileNameBase}_{productSerial}.json"; // "FimsTSheetSpecsInClose_4564563.json"
                 string filePath = Path.Combine(FimsTSheetSpecsClosingRepoPath, fileName);
+
                 if (File.Exists(filePath))
                 {
-                    File.Delete(filePath);
+                    try
+                    {
+                        File.Delete(filePath);
+                    }
+                    catch (IOException e)
+                    {
+                        Console.WriteLine($"The file could not be deleted: {e.Message}");
+                    }
                 }
 
-                await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                try
+                {
+                    await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                }
+                catch (IOException e)
+                {
+                    Console.WriteLine($"The file could not be written: {e.Message}");
+                }
             }
 
             return userId;
