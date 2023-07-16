@@ -10,7 +10,9 @@ namespace Fims.Data.Models.TSheetSpecsInProgress
 {
     public class TSheetSpecsInProgressDto
     {
-        public string UserId { get; set; }
+        public string UserId { get; set; }      // UserId here is the db index for the user.
+
+        public string UserName { get; set; }    // "coolbix", NOTE: using CustomClaimTypes
 
         public Dictionary<string, string> SerialToTSheetSpecPairs { get; set; }
     }

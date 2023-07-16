@@ -6,6 +6,18 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FimsTSheetSpecsInProgressRepository\**" />
+    <Content Remove="FimsTSheetSpecsInProgressRepository\**" />
+    <EmbeddedResource Remove="FimsTSheetSpecsInProgressRepository\**" />
+    <None Remove="FimsTSheetSpecsInProgressRepository\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="Middleware\ValidationExceptionHandlerMiddleware.cs" />
+    <Compile Remove="Startup.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="AutoMapper.Extensions.Microsoft.DependencyInjection" Version="12.0.0" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="7.0.2" />
     <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="7.0.2" />
@@ -14,16 +26,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Newtonsoft.Json" Version="13.0.2" />
+    <PackageReference Include="Serilog.AspNetCore" Version="7.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\Fims.Services\Fims.Services.csproj" />
     <ProjectReference Include="..\Client\Fims.Web.Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FimsTSheetSpecsInProgressRepository\" />
   </ItemGroup>
 
 </Project>

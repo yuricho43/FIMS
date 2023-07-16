@@ -1,17 +1,19 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+
+//using Serilog;
+using AutoMapper;
 
 using Fims.Data;
 using Fims.Data.Models;
 using Fims.Data.Models.TSheets;
 using Fims.Data.Entities;
-using System.Collections.Generic;
 using Fims.Services.TSheets.Specifications;
-
 
 namespace Fims.Services.TSheets
 {
@@ -19,10 +21,12 @@ namespace Fims.Services.TSheets
     public class TSheetsService : BaseService<TSheet>, ITSheetsService
     {
         private const int TSheetsPerPage = 6;
+        private ILogger<TSheetsService> logger;
 
-        public TSheetsService(FimsDbContext dbContext, IMapper mapper)
+        public TSheetsService(FimsDbContext dbContext, IMapper mapper, ILogger<TSheetsService> logger)
             : base(dbContext, mapper)
         {
+            this.logger = logger;
         }
 
         public async Task<int> CreateAsync(TSheet tSheet, string userId)
@@ -38,6 +42,7 @@ namespace Fims.Services.TSheets
 
             await this.TheDbContext.AddAsync(tSheet);
             int writtenEntriesCount = await this.TheDbContext.SaveChangesAsync(); //JBH FIXME: use the return value
+            logger.LogInformation($"TSheet created and saved to DB for: Serial({tSheet.ProductSerial}) Inspector({tSheet.InspectorName}) Closer({tSheet.CloserName}) by: UserId({userId})");
 
             return tSheet.Id;
         }
@@ -60,6 +65,7 @@ namespace Fims.Services.TSheets
             tSheet = newTSheet;
 
             int writtenEntriesCount = await this.TheDbContext.SaveChangesAsync(); //JBH FIXME: use the return value
+            logger.LogInformation($"TSheet updated to DB for: Serial({tSheet.ProductSerial}) Inspector({tSheet.InspectorName}) Closer({tSheet.CloserName}) by: UserId({userId})");
 
             return true;
         }
@@ -79,6 +85,7 @@ namespace Fims.Services.TSheets
             this.TheDbContext.Remove(tSheet);
 
             int writtenEntriesCount = await this.TheDbContext.SaveChangesAsync(); //JBH FIXME: use the return value
+            logger.LogInformation($"TSheet deleteed from DB for: Serial({tSheet.ProductSerial}) Inspector({tSheet.InspectorName}) Closer({tSheet.CloserName})");
 
             return true;
         }

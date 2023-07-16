@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 
+using Microsoft.Extensions.Logging;
+//using Serilog;
+
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Services.TSheetSpecs;
 using Fims.Web.Server.Infrastructure.Services;
@@ -23,15 +26,19 @@ namespace Fims.Web.Server.Controllers
         private readonly ITSheetSpecsService TSheetSpecsService;        
         private readonly ICurrentUserService CurrentUserService;
         private IWebHostEnvironment HostingEnvironment { get; set; }
+        private ILogger<TSheetSpecsController> logger;
 
         public TSheetSpecsController(
             ITSheetSpecsService tSheetSpecsService,
             ICurrentUserService currentUserService,
-            IWebHostEnvironment hostingEnvironment)
+            IWebHostEnvironment hostingEnvironment,
+            ILogger<TSheetSpecsController> logger)
         {
             this.TSheetSpecsService = tSheetSpecsService;
             this.CurrentUserService = currentUserService;
             this.HostingEnvironment = hostingEnvironment;
+            this.logger = logger;
+            //logger.LogDebug("TSheetSpecsController constructed");
         }
 
         // GET: api/TSheetSpecs/TSheetModels

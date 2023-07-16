@@ -7,6 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Pages\BarcodeScanner.razor.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Remove="Pages\BarcodeScanner.razor" />
+  </ItemGroup>
+
+  <ItemGroup>
     <EmbeddedResource Include="appsettings.json" />
   </ItemGroup>
 
@@ -26,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\BlazorBarcodeScanner.ZXing.JS\BlazorBarcodeScanner.ZXing.JS.csproj" />
     <ProjectReference Include="..\Fims.Common\Fims.Common.csproj" />
     <ProjectReference Include="..\Fims.Data\Fims.Data.csproj" />
   </ItemGroup>

@@ -8,13 +8,16 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
+using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Logging;
+
+using Serilog;
 using ExcelMapper;
 
 using Fims.Common;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Fims.Data.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TSheetSpecsInProgress
 {
@@ -27,10 +30,12 @@ namespace Fims.Services.TSheetSpecsInProgress
         public string FimsTSheetSpecsInProgressFileFullPath { get; set; }
 
         private string FimsTSheetSpecsInProgressRepoPath;
+        private ILogger logger;
 
-        public TSheetSpecsInProgressService(IConfiguration configuration)
+        public TSheetSpecsInProgressService(IConfiguration configuration, ILogger logger)
         {
             FimsTSheetSpecsInProgressRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepository");
+            this.logger = logger;
         }
 
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)
@@ -43,12 +48,28 @@ namespace Fims.Services.TSheetSpecsInProgress
 
                 string fileName = $"{Constants.FimsTSheetSpecsInProgressFileNameBase}_{userId}_{productSerial}.json";
                 string filePath = Path.Combine(FimsTSheetSpecsInProgressRepoPath, fileName);
+
                 if (File.Exists(filePath))
                 {
-                    File.Delete(filePath);
+                    try
+                    {
+                        File.Delete(filePath);
+                    }
+                    catch (IOException e)
+                    {
+                        logger.Error($"    Can not delete {filePath}  Error: {e.Message}");
+                    }
                 }
 
-                await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                try
+                {
+                    await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                    logger.Information($"    TSheetProgress-{productSerial} saved by {tSheetSpecsInProgressDto.UserName}");
+                }
+                catch (IOException e)
+                {
+                    logger.Error($"    TSheetProgress-{productSerial} save-failed by {tSheetSpecsInProgressDto.UserName}  Error: {e.Message}");
+                }
             }
 
             return userId;
@@ -70,8 +91,16 @@ namespace Fims.Services.TSheetSpecsInProgress
             {
                 //filePath: "D:/FIMS-REPO/FimsTSheetSpecsInProgressRepository/FimsTSheetSpecsInProgress_f74dc493-b079-4ea6-9dee-6e7186388e5d_23452354.json"
                 var productSerial = Path.GetFileNameWithoutExtension(filePath).Split('_').Last();
-                string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
-                tSheetSpecsInProgressDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
+                try
+                {
+                    string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
+                    tSheetSpecsInProgressDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
+                    logger.Information($"    TSheetProgress-{productSerial} fetched by {userId}");
+                }
+                catch (IOException e)
+                {
+                    logger.Error($"Error reading file {filePath}: {e.Message}");
+                }
             }
 
             return tSheetSpecsInProgressDto;
@@ -82,7 +111,19 @@ namespace Fims.Services.TSheetSpecsInProgress
             string searchPattern = Constants.FimsTSheetSpecsInProgressFileNameBase + "_" + "*" + "_" + productSerial + ".json";
 
             string[] filePaths = Directory.GetFiles(FimsTSheetSpecsInProgressRepoPath, searchPattern);
-            filePaths.ToList().ForEach(filePath => File.Delete(filePath));
+            foreach (var filePath in filePaths)
+            {
+                try
+                {
+                    File.Delete(filePath);
+                    logger.Information($"    TSheetProgress-{productSerial} deleted");
+                }
+                catch (IOException e)
+                {
+                    logger.Error($"    Can not delete {filePath}  Error: {e.Message}");
+                }
+            }
+
             return (filePaths.Length > 0) ? productSerial : null;
         }
     }

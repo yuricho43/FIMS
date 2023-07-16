@@ -1,15 +1,18 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Logging;
+
+//using Serilog;
+using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 
 using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
-using Microsoft.AspNetCore.Http;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 
 namespace Fims.Services.Identity
 {
@@ -21,15 +24,19 @@ namespace Fims.Services.Identity
         private readonly UserManager<FimsUser> userManager;
         private RoleManager<FimsRole> roleManager;
         private readonly IJwtGeneratorService jwtGenerator;
+        private ILogger<IdentityService> logger;
 
         public IdentityService(
             UserManager<FimsUser> userManager,
             RoleManager<FimsRole> roleManager,
-            IJwtGeneratorService jwtGenerator)
+            IJwtGeneratorService jwtGenerator,
+            ILogger<IdentityService> logger)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.jwtGenerator = jwtGenerator;
+            this.logger = logger;
+            //logger.LogDebug("IdentityService constructed");
         }
 
         public async Task<Result> RegisterAsync(RegisterRequestModel model)
@@ -49,11 +56,17 @@ namespace Fims.Services.Identity
                 await this.userManager.AddToRoleAsync(user, model.Role);
             }
 
-            var errors = identityResult.Errors.Select(e => e.Description);
-
-            return identityResult.Succeeded
-                ? Result.Success
-                : Result.Failure(errors);
+            if (identityResult.Succeeded)
+            {
+                logger.LogInformation($"Register User succeeded: {model.UserName}");
+                return Result.Success;
+            }
+            else
+            {
+                var errors = identityResult.Errors.Select(e => e.Description);
+                logger.LogError($"Register User failed: {model.UserName}  Reason: {errors}");
+                return Result.Failure(errors);
+            }
         }
 
         public async Task<Result<LoginResponseModel>> LoginAsync(LoginRequestModel model)
@@ -77,6 +90,8 @@ namespace Fims.Services.Identity
             var userRole = userRoles.FirstOrDefault();
             //debug
 
+            logger.LogInformation($"Login User succeeded: {user}");
+
             var token = await this.jwtGenerator.GenerateJwtAsync(user);
 
             return new LoginResponseModel { Token = token };
@@ -95,11 +110,17 @@ namespace Fims.Services.Identity
 
             var identityResult = await this.userManager.UpdateAsync(user);
 
-            var errors = identityResult.Errors.Select(e => e.Description);
-
-            return identityResult.Succeeded
-                ? Result.Success
-                : Result.Failure(errors);
+            if (identityResult.Succeeded)
+            {
+                logger.LogInformation($"Change Profile succeeded: {model.UserName}");
+                return Result.Success;
+            }
+            else
+            {
+                var errors = identityResult.Errors.Select(e => e.Description);
+                logger.LogError($"Change Profile failed: {model.UserName}  Reason: {errors}");
+                return Result.Failure(errors);
+            }
         }
 
         public async Task<Result> ChangePasswordAsync(PasswordModel model, string userId)
@@ -115,11 +136,17 @@ namespace Fims.Services.Identity
                 model.Password,
                 model.NewPassword);
 
-            var errors = identityResult.Errors.Select(e => e.Description);
-
-            return identityResult.Succeeded
-                ? Result.Success
-                : Result.Failure(errors);
+            if (identityResult.Succeeded)
+            {
+                logger.LogInformation($"Change Password succeeded: {user}");
+                return Result.Success;
+            }
+            else
+            {
+                var errors = identityResult.Errors.Select(e => e.Description);
+                logger.LogError($"Change Password failed: {user}  Reason: {errors}");
+                return Result.Failure(errors);
+            }
         }
 
         public async Task<Result> ChangeRoleAsync(UserAuthInfoModel model)
@@ -134,11 +161,18 @@ namespace Fims.Services.Identity
             var res = await this.userManager.RemoveFromRoleAsync(user, curRoles[0]);
 
             var identityResult = await this.userManager.AddToRoleAsync(user, model.Role);
-            var errors = identityResult.Errors.Select(e => e.Description);
-
-            return identityResult.Succeeded
-               ? Result.Success
-               : Result.Failure(errors);
+ 
+            if (identityResult.Succeeded)
+            {
+                logger.LogInformation($"Change Role succeeded: {model.UserName} from {curRoles[0]} to {model.Role}");
+                return Result.Success;
+            }
+            else
+            {
+                var errors = identityResult.Errors.Select(e => e.Description);
+                logger.LogError($"Change Role failed: {model.UserName}  Reason: {errors}");
+                return Result.Failure(errors);
+            }
         }
 
         public async Task<Result> ResetPasswordAsync(UserAuthInfoModel model)
@@ -152,11 +186,18 @@ namespace Fims.Services.Identity
             var resetPasswordToken = await this.userManager.GeneratePasswordResetTokenAsync(user);
 
             var identityResult = await this.userManager.ResetPasswordAsync(user, resetPasswordToken, model.Password);
-            var errors = identityResult.Errors.Select(e => e.Description);
 
-            return identityResult.Succeeded
-               ? Result.Success
-               : Result.Failure(errors);
+            if (identityResult.Succeeded)
+            {
+                logger.LogInformation($"Reset Password succeeded: {model.UserName}");
+                return Result.Success;
+            }
+            else
+            {
+                var errors = identityResult.Errors.Select(e => e.Description);
+                logger.LogError($"Reset Password failed: {model.UserName}  Reason: {errors}");
+                return Result.Failure(errors);
+            }
         }
 
         public async Task<List<UserAuthInfoModel>> AllUsers()
@@ -204,11 +245,17 @@ namespace Fims.Services.Identity
 
             var identityResult = await this.userManager.DeleteAsync(user);
 
-            var errors = identityResult.Errors.Select(e => e.Description);
-
-            return identityResult.Succeeded
-                ? Result.Success
-                : Result.Failure(errors);
+            if (identityResult.Succeeded)
+            {
+                logger.LogInformation($"Delete User succeeded: {user}");
+                return Result.Success;
+            }
+            else
+            {
+                var errors = identityResult.Errors.Select(e => e.Description);
+                logger.LogError($"Delete User failed: {user}  Reason: {errors}");
+                return Result.Failure(errors);
+            }
 
         }
     }
