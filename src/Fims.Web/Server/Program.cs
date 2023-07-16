@@ -29,6 +29,7 @@ var logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
+logger.Information("FIMS server started");
 
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////
