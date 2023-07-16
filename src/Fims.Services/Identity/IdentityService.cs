@@ -1,15 +1,17 @@
 ﻿using System.Linq;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+
+using Serilog;
+using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 
 using Fims.Data.Entities;
 using Fims.Data.Models;
 using Fims.Data.Models.Identity;
-using Microsoft.AspNetCore.Http;
-using static System.Runtime.InteropServices.JavaScript.JSType;
-using OfficeOpenXml.FormulaParsing.LexicalAnalysis;
 
 namespace Fims.Services.Identity
 {
@@ -21,15 +23,18 @@ namespace Fims.Services.Identity
         private readonly UserManager<FimsUser> userManager;
         private RoleManager<FimsRole> roleManager;
         private readonly IJwtGeneratorService jwtGenerator;
+        private ILogger logger;
 
         public IdentityService(
             UserManager<FimsUser> userManager,
             RoleManager<FimsRole> roleManager,
-            IJwtGeneratorService jwtGenerator)
+            IJwtGeneratorService jwtGenerator,
+            ILogger logger)
         {
             this.userManager = userManager;
             this.roleManager = roleManager;
             this.jwtGenerator = jwtGenerator;
+            this.logger = logger;
         }
 
         public async Task<Result> RegisterAsync(RegisterRequestModel model)

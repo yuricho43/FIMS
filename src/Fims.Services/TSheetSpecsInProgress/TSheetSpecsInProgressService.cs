@@ -8,13 +8,15 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
+using Microsoft.Extensions.Configuration;
+
+using Serilog;
 using ExcelMapper;
 
 using Fims.Common;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Fims.Data.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TSheetSpecsInProgress
 {
@@ -27,10 +29,12 @@ namespace Fims.Services.TSheetSpecsInProgress
         public string FimsTSheetSpecsInProgressFileFullPath { get; set; }
 
         private string FimsTSheetSpecsInProgressRepoPath;
+        private ILogger logger;
 
-        public TSheetSpecsInProgressService(IConfiguration configuration)
+        public TSheetSpecsInProgressService(IConfiguration configuration, ILogger logger)
         {
             FimsTSheetSpecsInProgressRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepository");
+            this.logger = logger;
         }
 
         public async Task<string> SaveTSheetSpecsInProgressByUserAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInProgressDto)

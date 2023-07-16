@@ -6,13 +6,14 @@ using System.Threading.Tasks;
 using System.Net.Http.Headers;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
+using Serilog;
 using ExcelMapper;
 
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Common;
 using Fims.Data.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TSheetSpecs
 {
@@ -28,13 +29,15 @@ namespace Fims.Services.TSheetSpecs
         private readonly List<string> EquipmentModels;
         private readonly Dictionary<string, TSheetSpec> EquipmentModelTSheetSpecDict;
         private string FimsTSheetSpecsRepoPath;
+        private ILogger logger;
 
-        public TSheetSpecsService(IConfiguration configuration)
+        public TSheetSpecsService(IConfiguration configuration, ILogger logger)
         {
             FimsTSheetSpecsRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsRepository");
 
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
+            this.logger = logger;
         }
 
         public string BuildTSheetSpecsFromExcelSpecFile()

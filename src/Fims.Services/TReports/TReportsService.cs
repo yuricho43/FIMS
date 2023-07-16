@@ -11,7 +11,9 @@ using System.ComponentModel;
 using System.Net.Http.Headers;
 
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 
+using Serilog;
 using ExcelMapper;
 using OfficeOpenXml;
 
@@ -22,7 +24,6 @@ using Fims.Data.Models;
 using Fims.Services.TSheets;
 using Fims.Data.Entities;
 using Fims.Data.Models.TSheetSpecsInProgress;
-using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TReports
 {
@@ -40,8 +41,9 @@ namespace Fims.Services.TReports
 
         private string FimsTReportSpecsRepoPath;
         private string FimsTReportOutputRepoPath;
+        private ILogger logger;
 
-        public TReportsService(ITSheetsService tSheetsService, IConfiguration configuration)
+        public TReportsService(ITSheetsService tSheetsService, IConfiguration configuration, ILogger logger)
         {
             TSheetsService = tSheetsService;
 
@@ -49,6 +51,7 @@ namespace Fims.Services.TReports
             FimsTReportOutputRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTReportOutputRepository");
 
             ExcelPackage.LicenseContext = OfficeOpenXml.LicenseContext.NonCommercial;
+            this.logger = logger;
         }
 
 

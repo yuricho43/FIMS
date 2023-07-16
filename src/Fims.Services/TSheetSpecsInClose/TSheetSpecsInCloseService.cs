@@ -8,13 +8,15 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
+using Microsoft.Extensions.Configuration;
+
+using Serilog;
 using ExcelMapper;
 
 using Fims.Common;
 using Fims.Data.Utils;
 using Fims.Data.Models.TSheetSpecsInProgress;
 using Fims.Data.Models;
-using Microsoft.Extensions.Configuration;
 
 namespace Fims.Services.TSheetSpecsInClose
 {
@@ -27,10 +29,12 @@ namespace Fims.Services.TSheetSpecsInClose
         public string FimsTSheetSpecsInCloseFileFullPath { get; set; }
 
         private string FimsTSheetSpecsClosingRepoPath;
+        private ILogger logger;
 
-        public TSheetSpecsInCloseService(IConfiguration configuration)
+        public TSheetSpecsInCloseService(IConfiguration configuration, ILogger logger)
         {
             FimsTSheetSpecsClosingRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInCloseRepository");
+            this.logger = logger;
         }
 
         public async Task<string> SaveTSheetSpecsInCloseAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInCloseDto)

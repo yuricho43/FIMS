@@ -1,15 +1,17 @@
 ﻿using System;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Collections.Generic;
 
-using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+
+using Serilog;
+using AutoMapper;
 
 using Fims.Data;
 using Fims.Data.Models;
 using Fims.Data.Models.TSheets;
 using Fims.Data.Entities;
-using System.Collections.Generic;
 using Fims.Services.TSheets.Specifications;
 
 
@@ -19,10 +21,12 @@ namespace Fims.Services.TSheets
     public class TSheetsService : BaseService<TSheet>, ITSheetsService
     {
         private const int TSheetsPerPage = 6;
+        private ILogger logger;
 
-        public TSheetsService(FimsDbContext dbContext, IMapper mapper)
+        public TSheetsService(FimsDbContext dbContext, IMapper mapper, ILogger logger)
             : base(dbContext, mapper)
         {
+            this.logger = logger;
         }
 
         public async Task<int> CreateAsync(TSheet tSheet, string userId)

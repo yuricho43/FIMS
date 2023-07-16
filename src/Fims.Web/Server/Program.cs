@@ -54,14 +54,14 @@ if (!Directory.Exists(fimsTSheetSpecsInCloseRepoPath)) { Directory.CreateDirecto
 
 //JBH: Instantiate and AddSingleton TSheetSpecsService here,
 //     so that BuildTSheetSpecsFromFiles() @ TSheetSpecsService will run immediately upon the server startup.
-ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService(builder.Configuration);
+ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService(builder.Configuration, logger);
 var result = tSheetSpecsService.BuildTSheetSpecsFromExcelSpecFile();
 builder.Services.AddSingleton(tSheetSpecsService);
 
-ITSheetSpecsInProgressService tSheetSpecsInProgressService = new TSheetSpecsInProgressService(builder.Configuration);
+ITSheetSpecsInProgressService tSheetSpecsInProgressService = new TSheetSpecsInProgressService(builder.Configuration, logger);
 builder.Services.AddSingleton(tSheetSpecsInProgressService);
 
-ITSheetSpecsInCloseService tSheetSpecsInCloseService = new TSheetSpecsInCloseService(builder.Configuration);
+ITSheetSpecsInCloseService tSheetSpecsInCloseService = new TSheetSpecsInCloseService(builder.Configuration, logger);
 builder.Services.AddSingleton(tSheetSpecsInCloseService);
 
 // NOTE: ITSheetsService and ITReportsService inherits "IService",
