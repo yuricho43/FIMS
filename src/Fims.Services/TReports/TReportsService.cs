@@ -12,6 +12,7 @@ using System.Net.Http.Headers;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 
 using Serilog;
 using ExcelMapper;
@@ -41,9 +42,9 @@ namespace Fims.Services.TReports
 
         private string FimsTReportSpecsRepoPath;
         private string FimsTReportOutputRepoPath;
-        private ILogger logger;
+        private ILogger<TReportsService> logger;
 
-        public TReportsService(ITSheetsService tSheetsService, IConfiguration configuration, ILogger logger)
+        public TReportsService(ITSheetsService tSheetsService, IConfiguration configuration, ILogger<TReportsService> logger)
         {
             TSheetsService = tSheetsService;
 
@@ -81,6 +82,8 @@ namespace Fims.Services.TReports
             {
                 File.Delete(reportFilePath);
             }
+
+            logger.LogInformation($"Generate TReport for: TSheet-{tReportRequest.TSheetId} to ReportSpec({tReportRequest.TReportSpec})");
 
             TSheet tsheet = await TSheetsService.FindTSheetWithTItemsByIdAsync(tReportRequest.TSheetId);
 
@@ -196,7 +199,7 @@ namespace Fims.Services.TReports
             }
             catch (Exception ex)
             {
-                var msg = ex.Message;
+                logger.LogError($"Failed to save as MemoryStream  Reason: {ex.Message}");
             }
 
             // tReportRequest.IsSuccess = true;
@@ -210,6 +213,7 @@ namespace Fims.Services.TReports
             // Some browsers send file names with full path.
             // We are only interested in the file name.
             var newSpecFileName = Path.GetFileName(newSpecFileContent.FileName.ToString().Trim('"'));
+            logger.LogInformation($"Upload TReport spec ({newSpecFileName}) starts");
             var newSpecFilePath = Path.Combine(FimsTReportSpecsRepoPath, newSpecFileName);
             if (File.Exists(newSpecFilePath))
             {
@@ -234,6 +238,7 @@ namespace Fims.Services.TReports
 
             if (buildresult == "SUCCESS")
             {
+                logger.LogInformation($"Upload TReport spec succeeded: {newSpecFileName}");
                 if (File.Exists(newSpecFilePath + ".BACKUP"))
                 {
                     File.Delete(newSpecFilePath + ".BACKUP");
@@ -241,6 +246,7 @@ namespace Fims.Services.TReports
             }
             else
             {
+                logger.LogError($"Upload TReport spec failed: {newSpecFileName}");
                 if (File.Exists(newSpecFilePath))
                 {
                     //delete the new

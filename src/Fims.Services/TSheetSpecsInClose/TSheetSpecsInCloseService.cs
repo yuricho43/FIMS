@@ -9,6 +9,7 @@ using System.Text.Json.Serialization;
 using static System.Net.Mime.MediaTypeNames;
 
 using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Logging;
 
 using Serilog;
 using ExcelMapper;
@@ -35,6 +36,7 @@ namespace Fims.Services.TSheetSpecsInClose
         {
             FimsTSheetSpecsClosingRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInCloseRepository");
             this.logger = logger;
+            //logger.Debug("TSheetSpecsInCloseService constructed");
         }
 
         public async Task<string> SaveTSheetSpecsInCloseAsync(string userId, TSheetSpecsInProgressDto tSheetSpecsInCloseDto)
@@ -56,17 +58,18 @@ namespace Fims.Services.TSheetSpecsInClose
                     }
                     catch (IOException e)
                     {
-                        Console.WriteLine($"The file could not be deleted: {e.Message}");
+                        logger.Error($"   Can not delete {filePath}  Error: {e.Message}");
                     }
                 }
 
                 try
                 {
                     await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
+                    logger.Information($"    TSheetClose-{productSerial} saved by {tSheetSpecsInCloseDto.UserName}");
                 }
                 catch (IOException e)
                 {
-                    Console.WriteLine($"The file could not be written: {e.Message}");
+                    logger.Error($"    TSheetClose-{productSerial} save-failed by {tSheetSpecsInCloseDto.UserName}  Error: {e.Message}");
                 }
             }
 
@@ -88,8 +91,16 @@ namespace Fims.Services.TSheetSpecsInClose
             {
                 //filePath: "D:/FIMS-REPO/FimsTSheetSpecsInCloseRepository/FimsTSheetSpecsInClose_4564563.json"
                 var productSerial = Path.GetFileNameWithoutExtension(filePath).Split('_').Last();
-                string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
-                tSheetSpecsClosingDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
+                try
+                {
+                    string tSheetSpecJsonString = await File.ReadAllTextAsync(filePath);
+                    tSheetSpecsClosingDto.SerialToTSheetSpecPairs.Add(productSerial, tSheetSpecJsonString);
+                    logger.Information($"    TSheetClose-{productSerial} fetched by {userId}");
+                }
+                catch (IOException e)
+                {
+                    logger.Error($"Error reading file {filePath}: {e.Message}");
+                }
             }
 
             return tSheetSpecsClosingDto;
@@ -100,7 +111,19 @@ namespace Fims.Services.TSheetSpecsInClose
             string searchPattern = Constants.FimsTSheetSpecsInCloseFileNameBase + "_" + productSerial + ".json"; // "FimsTSheetSpecsInClose_4564563.json"
 
             string[] filePaths = Directory.GetFiles(FimsTSheetSpecsClosingRepoPath, searchPattern);
-            filePaths.ToList().ForEach(filePath => File.Delete(filePath));
+            foreach (var filePath in filePaths)
+            {
+                try
+                {
+                    File.Delete(filePath);
+                    logger.Information($"    TSheetClose-{productSerial} deleted");
+                }
+                catch (IOException e)
+                {
+                    logger.Error($"    Can not delete {filePath}  Error: {e.Message}");
+                }
+            }
+
             return (filePaths.Length > 0) ? productSerial : null;
         }
     }

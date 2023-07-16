@@ -7,6 +7,7 @@ using System.Net.Http.Headers;
 
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
+//using Microsoft.Extensions.Logging;
 
 using Serilog;
 using ExcelMapper;
@@ -14,6 +15,7 @@ using ExcelMapper;
 using Fims.Data.Models.TSheetSpecs;
 using Fims.Common;
 using Fims.Data.Models;
+using Fims.Data.Entities;
 
 namespace Fims.Services.TSheetSpecs
 {
@@ -38,13 +40,16 @@ namespace Fims.Services.TSheetSpecs
             EquipmentModels = new List<string>();
             EquipmentModelTSheetSpecDict = new Dictionary<string, TSheetSpec>();
             this.logger = logger;
+            //logger.Debug("TSheetSpecsService constructed");
         }
 
         public string BuildTSheetSpecsFromExcelSpecFile()
         {
+            logger.Information("build TSheetSpecs starts");
             string tSheetSpecsFilePath = GetTSheetSpecsExcelFilePath();
             if (tSheetSpecsFilePath == null)
             {
+                logger.Fatal("No TSheetSpecs Excel file found!!");
                 FimsTSheetSpecsFileValidationMessage = "FAIL: No TSheetSpecs Excel file found.";
                 return "FAIL: No TSheetSpecs Excel file found.";
             }
@@ -54,6 +59,7 @@ namespace Fims.Services.TSheetSpecs
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); //prevent NotSupportedException: "No data is available for encoding 1252" from the old Excel format.
                                                                                                    //Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB"); //dd/MM/yyyy
 
+            logger.Information($"    read ExcelSpecFile: {tSheetSpecsFilePath}");
             using var excelStream = File.OpenRead(tSheetSpecsFilePath); //make sure "using" so that, after the end of this method, the excel file handle should be released/disposed right away for others.
             var importer = new ExcelImporter(excelStream);
             importer.Configuration.SkipBlankLines = true;
@@ -88,10 +94,12 @@ namespace Fims.Services.TSheetSpecs
                     EquipmentModels.Clear();
                     EquipmentModelTSheetSpecDict.Clear();
                     FimsTSheetSpecsFileValidationMessage = $"FAIL: {ex.Message}";
+                    logger.Error($"    ExcelSpecFile failed to read sheet: {sheet.Name}  Reason: {ex.Message}");
                     return $"FAIL: {ex.Message}";
                 }
             }
 
+            logger.Information("build TSheetSpecs finished");
             FimsTSheetSpecsFileValidationMessage = "SUCCESS";
             return "SUCCESS";
         }
@@ -102,6 +110,7 @@ namespace Fims.Services.TSheetSpecs
             System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance); //prevent NotSupportedException: "No data is available for encoding 1252" from the old Excel format.
                                                                                                    //Thread.CurrentThread.CurrentCulture = new CultureInfo("en-GB"); //dd/MM/yyyy
 
+            logger.Information($"Verify ExcelSpecFile: {tSheetSpecsFilePath} starts");
             using var excelStream = File.OpenRead(tSheetSpecsFilePath); //make sure "using" so that, after the end of this method, the excel file handle should be released/disposed right away for others.
             var importer = new ExcelImporter(excelStream);
             importer.Configuration.SkipBlankLines = true;
@@ -138,11 +147,13 @@ namespace Fims.Services.TSheetSpecs
                 {
                     tmpEquipmentModels.Clear();
                     tmpEquipmentModelTSheetSpecDict.Clear();
+                    logger.Error($"    ExcelSpecFile failed to read sheet: {sheet.Name}  Reason: {ex.Message}");
                     //FimsTSheetSpecsFileValidationMessage = $"FAIL: {ex.Message}";
                     return $"FAIL: {ex.Message}";
                 }
             }
 
+            logger.Information($"Verify ExcelSpecFile: {tSheetSpecsFilePath} finished");
             //FimsTSheetSpecsFileValidationMessage = "SUCCESS";
             return "SUCCESS";
         }
@@ -226,6 +237,8 @@ namespace Fims.Services.TSheetSpecs
             // Some browsers send file names with full path.
             // We are only interested in the file name.
             var newSpecFileName = Path.GetFileName(newSpecFileContent.FileName.ToString().Trim('"'));
+            logger.Information($"Upload TSheet spec ({newSpecFileName}) starts");
+
             var newSpecFilePath = Path.Combine(FimsTSheetSpecsRepoPath, newSpecFileName);
             if (File.Exists(newSpecFilePath))
             {
@@ -243,6 +256,7 @@ namespace Fims.Services.TSheetSpecs
 
             if (buildresult == "SUCCESS")
             {
+                logger.Information($"Upload TSheetSpecs spec succeeded: {newSpecFileName}");
                 if (File.Exists(prevSpecFilePath + ".BACKUP"))
                 {
                     File.Delete(prevSpecFilePath + ".BACKUP");
@@ -254,6 +268,7 @@ namespace Fims.Services.TSheetSpecs
             }
             else
             {
+                logger.Error($"Upload TSheetSpecs spec failed: {newSpecFileName}");
                 if (File.Exists(newSpecFilePath))
                 {
                     //delete the new
@@ -286,6 +301,7 @@ namespace Fims.Services.TSheetSpecs
                     if (File.Exists(physicalPath))
                     {
                         File.Delete(physicalPath);
+                        logger.Warning($"TSheetSpecs file removed: {fullName}");
                     }
 
                     // instead mock async operation

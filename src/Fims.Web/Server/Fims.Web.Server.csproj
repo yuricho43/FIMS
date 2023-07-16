@@ -6,6 +6,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="FimsTSheetSpecsInProgressRepository\**" />
+    <Content Remove="FimsTSheetSpecsInProgressRepository\**" />
+    <EmbeddedResource Remove="FimsTSheetSpecsInProgressRepository\**" />
+    <None Remove="FimsTSheetSpecsInProgressRepository\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Remove="Middleware\ValidationExceptionHandlerMiddleware.cs" />
     <Compile Remove="Startup.cs" />
   </ItemGroup>
@@ -26,10 +33,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Fims.Services\Fims.Services.csproj" />
     <ProjectReference Include="..\Client\Fims.Web.Client.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="FimsTSheetSpecsInProgressRepository\" />
   </ItemGroup>
 
 </Project>

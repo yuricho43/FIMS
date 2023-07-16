@@ -18,6 +18,7 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using System.Reflection;
 using Microsoft.AspNetCore.Identity;
+using Serilog.Extensions.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +30,11 @@ var logger = new LoggerConfiguration()
 
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
+
+builder.Services.AddLogging();
+//builder.Services.AddSingleton(logger); // for DI
+
+
 logger.Information("FIMS server started");
 
 
@@ -63,6 +69,14 @@ builder.Services.AddSingleton(tSheetSpecsInProgressService);
 
 ITSheetSpecsInCloseService tSheetSpecsInCloseService = new TSheetSpecsInCloseService(builder.Configuration, logger);
 builder.Services.AddSingleton(tSheetSpecsInCloseService);
+
+//builder.Services.AddLogging(loggingBuilder =>
+//    {
+//        loggingBuilder.ClearProviders();
+//        loggingBuilder.AddSerilog(logger);
+//    });
+//builder.Services.AddSingleton<ILoggerFactory, SerilogLoggerFactory>();
+
 
 // NOTE: ITSheetsService and ITReportsService inherits "IService",
 //       So those will be registered in AddApplicationServices().
