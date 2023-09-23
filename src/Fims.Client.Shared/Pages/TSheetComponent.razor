@@ -19,7 +19,10 @@
     </TelerikStackLayout>
  
     <TelerikStackLayout Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Right" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="20px">
-            <TelerikButton Icon="@FontIcon.Save" OnClick="@SaveUponCompletion" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button"><strong>입력완료/저장</strong></TelerikButton>
+            <TelerikButton Icon="@FontIcon.Save" OnClick="@SaveUponCompletion" Enabled=@(!IsSavingUponCompletion) ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="save-button">
+                <strong>입력완료/저장</strong>
+                <TelerikLoader Class="loader-indicator" ThemeColor="success" Visible="@IsSavingUponCompletion"></TelerikLoader>
+            </TelerikButton>
     </TelerikStackLayout>
 </TelerikStackLayout>
 </div>
