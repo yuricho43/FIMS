@@ -54,6 +54,8 @@ namespace Fims.Client.Shared.Pages
         public bool IsLoadingInClose { get; set; } = false;
         public bool IsSavingInClose { get; set; } = false;
 
+        public bool IsSavingUponCompletion { get; set; } = false;
+
 
         protected override void OnInitialized()
         {
@@ -278,6 +280,8 @@ namespace Fims.Client.Shared.Pages
 
         public async Task SaveUponCompletion()
         {
+            IsSavingUponCompletion = true;
+
             if (MyTSheetSpec.IsInInspecting)
             {
                 await SaveTSheetToClosingRepo();
@@ -287,6 +291,8 @@ namespace Fims.Client.Shared.Pages
                 // MyTSheetSpec.IsInClosing
                 await SaveTSheetToDb();
             }
+
+            IsSavingUponCompletion = false;
         }
 
         public async Task SaveTSheetToDb()

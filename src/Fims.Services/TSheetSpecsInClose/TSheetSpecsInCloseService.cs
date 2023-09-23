@@ -65,11 +65,11 @@ namespace Fims.Services.TSheetSpecsInClose
                 try
                 {
                     await File.WriteAllTextAsync(filePath, tSheetSpecJsonString);
-                    logger.Information($"    TSheetClose-{productSerial} saved by {tSheetSpecsInCloseDto.UserName}");
+                    logger.Information($"    TSheetClose-{productSerial} saved by {tSheetSpecsInCloseDto.UserName ?? tSheetSpecsInCloseDto.UserId}");
                 }
                 catch (IOException e)
                 {
-                    logger.Error($"    TSheetClose-{productSerial} save-failed by {tSheetSpecsInCloseDto.UserName}  Error: {e.Message}");
+                    logger.Error($"    TSheetClose-{productSerial} save-failed by {tSheetSpecsInCloseDto.UserName ?? tSheetSpecsInCloseDto.UserId}  Error: {e.Message}");
                 }
             }
 

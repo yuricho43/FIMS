@@ -8,12 +8,12 @@
     <TelerikStackLayout Class="tools-bar" Orientation="StackLayoutOrientation.Horizontal" HorizontalAlign="StackLayoutHorizontalAlign.Center" VerticalAlign="StackLayoutVerticalAlign.Center" Spacing="50px" Width="100%" Height="40px">
         <TelerikButton OnClick="@(() => TheAddNewProductModal.Open())" Icon="@FontIcon.PlusCircle" ThemeColor="@(ThemeConstants.Button.ThemeColor.Error)" Class="prod-register-button"><strong>검사설비 추가</strong></TelerikButton>
 
-        <TelerikButton OnClick="OnLoadSessionData" Icon="@FontIcon.CaretDoubleAltDown" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
+        <TelerikButton OnClick="OnLoadSessionData" Enabled=@(!IsLoadingSession) Icon="@FontIcon.CaretDoubleAltDown" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
             <strong>진행목록 불러오기</strong>
             <TelerikLoader Class="loader-indicator" ThemeColor="error" Visible="@IsLoadingSession"></TelerikLoader>
         </TelerikButton>
 
-        <TelerikButton OnClick="OnSaveSessionData" Icon="@FontIcon.CaretDoubleAltUp" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
+        <TelerikButton OnClick="OnSaveSessionData" Enabled=@(!IsSavingSession) Icon="@FontIcon.CaretDoubleAltUp" ThemeColor="@(ThemeConstants.Button.ThemeColor.Warning)" Class="prod-register-button">
             <strong>진행목록 저장</strong>
             <TelerikLoader Class="loader-indicator" ThemeColor="error" Visible="@IsSavingSession"></TelerikLoader>
         </TelerikButton>
