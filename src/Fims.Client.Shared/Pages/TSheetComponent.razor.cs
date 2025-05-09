@@ -317,12 +317,18 @@ namespace Fims.Client.Shared.Pages
             }
 #endif
 
-            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 저장된 후에는 더 이상 검사서를 수정할 수 없습니다.\n\nDB에 저장할까요?", "Database 저장");
-            if (!saveConfirmed)
+            if (invalidCount > 0 || notCompletedCount > 0)
             {
+                await ActivateAlert("검사서 저장 불가", $"저장불가: 미입력항목 또는 데이터오류항목이 있어서 저장할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n");
                 return;
             }
-
+            /*
+            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 입력완료 후에는 더 이상 검사서를 수정할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n입력완료 할까요?", "검사서 입력완료");
+            if (!saveConfirmed)
+            {
+                 return;
+            }
+            */
             CollectTItemSpecsFinal();
 
             MyTSheetSpec.ClosingEndDateTime = DateTime.Now;
@@ -364,12 +370,18 @@ namespace Fims.Client.Shared.Pages
             }
 #endif
 
-            bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 입력완료 후에는 더 이상 검사서를 수정할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n입력완료 할까요?", "검사서 입력완료");
-            if (!saveConfirmed)
+            if (invalidCount > 0 || notCompletedCount > 0)
             {
+                await ActivateAlert("검사서 저장 불가", $"저장불가: 미입력항목 또는 데이터오류항목이 있어서 저장할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n");
                 return;
             }
-
+            /*
+             bool saveConfirmed = await Dialogs.ConfirmAsync($"알림: 입력완료 후에는 더 이상 검사서를 수정할 수 없습니다.\n미입력 항목: {notCompletedCount} 개\n데이터오류 항목: {invalidCount} 개\n\n입력완료 할까요?", "검사서 입력완료");
+             if (!saveConfirmed)
+             {
+                 return;
+             }
+            */
             MyTSheetSpec.IsInspectionCompleted = true;
             MyTSheetSpec.InspectionEndDateTime = DateTime.Now;
 
