@@ -654,8 +654,10 @@ namespace Fims.Client.Shared.Pages
             }
 
             var fileName = await TSheetSpecsInProgressClientService.SaveTSheetSpecsInProgressByUser(tSheetSpecsInProgressReqeust);
+
             if ( fileName == null )
             {
+                Console.WriteLine("--- SaveSessionData : file=null");
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
                     Text = "Data 저장실패: FIMS서버 연결에 문제가 있습니다.",
@@ -671,6 +673,7 @@ namespace Fims.Client.Shared.Pages
             }
             else
             {
+                Console.WriteLine("--- SaveSessionData : file={0}", fileName);
                 IsSavingSession = false;
                 await InvokeAsync(StateHasChanged);
                 return true;
@@ -684,7 +687,7 @@ namespace Fims.Client.Shared.Pages
         {
             if (string.IsNullOrWhiteSpace(title)) title = "Warning!";
             if (string.IsNullOrWhiteSpace(message)) message = "Something went wrong!";
-            ECDsaSecurityKey 
+
             await Dialogs.AlertAsync(message, title);
         }
     }
