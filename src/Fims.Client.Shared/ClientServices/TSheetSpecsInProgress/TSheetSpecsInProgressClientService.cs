@@ -30,7 +30,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<string> SaveTSheetSpecsInProgressByUser(TSheetSpecsInProgressDto tSheetSpecsInProgressReqeust)
         {
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(25));
             string Message = null;
             string fileName = null;
 
@@ -61,7 +61,7 @@ namespace Fims.Client.Shared.ClientServices.TSheetSpecsInProgress
 
         public async Task<TSheetSpecsInProgressDto> GetTSheetSpecsInProgressByUser(string userId)
         {
-            var source = new CancellationTokenSource(TimeSpan.FromSeconds(10));
+            var source = new CancellationTokenSource(TimeSpan.FromSeconds(25));
             string Message = null;
             TSheetSpecsInProgressDto tSheetSpecsInProgressDto = null;
 

@@ -684,7 +684,7 @@ namespace Fims.Client.Shared.Pages
         {
             if (string.IsNullOrWhiteSpace(title)) title = "Warning!";
             if (string.IsNullOrWhiteSpace(message)) message = "Something went wrong!";
-
+            ECDsaSecurityKey 
             await Dialogs.AlertAsync(message, title);
         }
     }
