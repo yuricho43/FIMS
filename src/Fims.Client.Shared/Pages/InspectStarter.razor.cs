@@ -557,7 +557,7 @@ namespace Fims.Client.Shared.Pages
                 IsSavingSession = false;
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
-                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    Text = "진행목록 저장실패: FIMS서버 연결에 문제가 있습니다.",
                     CloseAfter = 3000,
                     ThemeColor = "warning",
                     ShowIcon = true,
@@ -658,7 +658,7 @@ namespace Fims.Client.Shared.Pages
             {
                 LoadSessionNotificationComponent.Show(new NotificationModel()
                 {
-                    Text = "저장실패: FIMS서버 연결에 문제가 있습니다.",
+                    Text = "Data 저장실패: FIMS서버 연결에 문제가 있습니다.",
                     CloseAfter = 3000,
                     ThemeColor = "warning",
                     ShowIcon = true,
