@@ -181,7 +181,11 @@ namespace Fims.Services.TReports
                             }
                         }
 
-                        cell.Value = cellValueString;
+                        bool isNumber = double.TryParse(cellValueString, out double value1);
+                        if (isNumber)
+                            cell.Value = value1;
+                        else
+                            cell.Value = cellValueString;
                     }
                 }
             }
