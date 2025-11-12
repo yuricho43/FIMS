@@ -28,7 +28,7 @@ namespace Fims.Client.Shared.ClientServices.TSheets
             this.http = http;
         }
 
-        public async Task<int> CreateTSheet(TSheet tSheet)
+        public async Task<int> CreateTSheet(TSheet tSheet, int itype)
         {
             var source = new CancellationTokenSource(TimeSpan.FromSeconds(3));
             HttpResponseMessage response = null;
@@ -37,7 +37,9 @@ namespace Fims.Client.Shared.ClientServices.TSheets
 
             try
             {
-                var result = await this.http.PostAsJsonAsync(CreateTSheetPath, tSheet, source.Token);
+                string newPath = CreateTSheetPath + "?itype="+itype.ToString();
+                // var result = await this.http.PostAsJsonAsync(CreateTSheetPath, tSheet, source.Token);
+                var result = await this.http.PostAsJsonAsync(newPath, tSheet, source.Token);
                 if (source?.IsCancellationRequested == false)
                 {
                     response = result;

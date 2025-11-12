@@ -29,7 +29,7 @@ namespace Fims.Services.TSheets
             this.logger = logger;
         }
 
-        public async Task<int> CreateAsync(TSheet tSheet, string userId)
+        public async Task<int> CreateAsync(TSheet tSheet, string userId, int itype)
         {
             //var tSheet = new TSheet
             //{
@@ -39,10 +39,26 @@ namespace Fims.Services.TSheets
             //    Quantity = tSheet.Quantity,
             //    Date = tSheet.Date,
             //};
-
-            await this.TheDbContext.AddAsync(tSheet);
+            if (itype == 1)         // create
+            {
+                await this.TheDbContext.AddAsync(tSheet);
+            }
+            else if (itype == 2)    // update
+            {
+                var allTSheetsList = await this.All().AsNoTracking().ToListAsync();
+                if (allTSheetsList.Any()) {
+                    TSheet ts = allTSheetsList.Where(x => x.ProductSerial == tSheet.ProductSerial).LastOrDefault();
+                    await DeleteAsync(ts.Id);
+                    await this.TheDbContext.AddAsync(tSheet);
+                    logger.LogInformation($"serial({ts.ProductSerial}) is updated (deleted and addedd)");
+                }
+                else
+                {
+                    await this.TheDbContext.AddAsync(tSheet);
+                }
+            }
             int writtenEntriesCount = await this.TheDbContext.SaveChangesAsync(); //JBH FIXME: use the return value
-            logger.LogInformation($"TSheet created and saved to DB for: Serial({tSheet.ProductSerial}) Inspector({tSheet.InspectorName}) Closer({tSheet.CloserName}) by: UserId({userId})");
+            logger.LogInformation($"TSheet created and saved to DB for: itype:1(add), 2(update)({itype}) Serial({tSheet.ProductSerial}) Inspector({tSheet.InspectorName}) Closer({tSheet.CloserName}) by: UserId({userId})");
 
             return tSheet.Id;
         }

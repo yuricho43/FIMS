@@ -11,7 +11,7 @@ namespace Fims.Services.TSheets
 {
     public interface ITSheetsService : IService
     {
-        Task<int> CreateAsync(TSheet tSheet, string userId);
+        Task<int> CreateAsync(TSheet tSheet, string userId, int itype);
 
         Task<Result> UpdateAsync(int id, TSheet newTSheet, string userId);
 

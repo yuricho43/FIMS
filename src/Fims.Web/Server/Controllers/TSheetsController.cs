@@ -58,9 +58,9 @@ namespace Fims.Web.Server.Controllers
 
         [Authorize]
         [HttpPost(nameof(CreateTSheet))]
-        public async Task<ActionResult> CreateTSheet(TSheet tSheet)
+        public async Task<ActionResult> CreateTSheet([FromBody] TSheet tSheet, [FromQuery] int itype)
         {
-            var id = await this.tSheetsService.CreateAsync(tSheet, this.currentUserService.UserId);
+            var id = await this.tSheetsService.CreateAsync(tSheet, this.currentUserService.UserId, itype);
             return Created(nameof(this.CreateTSheet), id);
         }
 

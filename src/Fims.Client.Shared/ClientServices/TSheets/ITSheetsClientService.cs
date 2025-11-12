@@ -7,7 +7,7 @@ namespace Fims.Client.Shared.ClientServices.TSheets
 {
     public interface ITSheetsClientService
     {
-        Task<int> CreateTSheet(TSheet tSheet);
+        Task<int> CreateTSheet(TSheet tSheet, int itype);
 
         Task<Result> UpdateTSheet(int id, TSheet tSheet);
 

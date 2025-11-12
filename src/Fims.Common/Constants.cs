@@ -2,7 +2,7 @@
 {
     public class Constants
     {
-        public const string FimsVersion = "2.2.1";
+        public const string FimsVersion = "2.3.0";
         public const string FimsTitle   = "FST Inspection Management System (양산검사)";
 
         public const string AdministratorRole = "Admin";

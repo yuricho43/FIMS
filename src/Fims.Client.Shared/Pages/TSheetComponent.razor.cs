@@ -56,7 +56,6 @@ namespace Fims.Client.Shared.Pages
 
         public bool IsSavingUponCompletion { get; set; } = false;
 
-
         protected override void OnInitialized()
         {
             base.OnInitialized();
@@ -285,17 +284,18 @@ namespace Fims.Client.Shared.Pages
             if (MyTSheetSpec.IsInInspecting)
             {
                 await SaveTSheetToClosingRepo();
+                await SaveTSheetToDb(true);
             }
             else
             {
                 // MyTSheetSpec.IsInClosing
-                await SaveTSheetToDb();
+                await SaveTSheetToDb(false);
             }
 
             IsSavingUponCompletion = false;
         }
 
-        public async Task SaveTSheetToDb()
+        public async Task SaveTSheetToDb(bool bCreate)
         {
             int notCompletedCount = GetTItemSpecsNotCompletedCount();
             int invalidCount = GetTItemSpecsInvalidCount();
@@ -334,7 +334,14 @@ namespace Fims.Client.Shared.Pages
             MyTSheetSpec.ClosingEndDateTime = DateTime.Now;
             TSheet tSheet = MakeFromTSheetSpecToTSheet(MyTSheetSpec);
 
-            var idTSheet = await TSheetsClientService.CreateTSheet(tSheet);
+            if (bCreate == true)
+            {
+                var idTSheet = await TSheetsClientService.CreateTSheet(tSheet, 1);      // create
+            }
+            else
+            {
+                var idTSheet = await TSheetsClientService.CreateTSheet(tSheet, 2);      // update
+            }
 
             await TSheetClosingCompleted.InvokeAsync(tSheet.ProductSerial);
 
