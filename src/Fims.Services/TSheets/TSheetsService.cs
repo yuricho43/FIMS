@@ -50,7 +50,7 @@ namespace Fims.Services.TSheets
                     TSheet ts = allTSheetsList.Where(x => x.ProductSerial == tSheet.ProductSerial).LastOrDefault();
                     //await DeleteAsync(ts.Id); 
                     await this.TheDbContext.AddAsync(tSheet);
-                    logger.LogInformation($"serial({ts.ProductSerial}) is updated (deleted and addedd)");
+                    logger.LogInformation($"serial({tSheet.ProductSerial}) is updated (deleted and addedd)");
                 }
                 else
                 {
