@@ -30,11 +30,13 @@ namespace Fims.Services.TSheetSpecsInProgress
         public string FimsTSheetSpecsInProgressFileFullPath { get; set; }
 
         private string FimsTSheetSpecsInProgressRepoPath;
+        private string FimsTSheetSpecsInProgressRepoPathBackup;
         private ILogger logger;
 
         public TSheetSpecsInProgressService(IConfiguration configuration, ILogger logger)
         {
             FimsTSheetSpecsInProgressRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepository");
+            FimsTSheetSpecsInProgressRepoPathBackup = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepositoryBackup");
             this.logger = logger;
         }
 
@@ -109,12 +111,18 @@ namespace Fims.Services.TSheetSpecsInProgress
         public string DeleteTSheetSpecsInProgressByProductSerial(string productSerial)
         {
             string searchPattern = Constants.FimsTSheetSpecsInProgressFileNameBase + "_" + "*" + "_" + productSerial + ".json";
-
             string[] filePaths = Directory.GetFiles(FimsTSheetSpecsInProgressRepoPath, searchPattern);
+
             foreach (var filePath in filePaths)
             {
                 try
                 {
+                    //--- Save To Backup Dirctory
+                    string filename = Path.GetFileName(filePath);
+                    string destFilePath = Path.Combine(FimsTSheetSpecsInProgressRepoPathBackup, filename);
+                    File.Copy(filePath, destFilePath, overwrite: true);
+
+                    //--- Delete for moving into close
                     File.Delete(filePath);
                     logger.Information($"    TSheetProgress-{productSerial} deleted");
                 }

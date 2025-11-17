@@ -30,11 +30,13 @@ namespace Fims.Services.TSheetSpecsInClose
         public string FimsTSheetSpecsInCloseFileFullPath { get; set; }
 
         private string FimsTSheetSpecsClosingRepoPath;
+        private string FimsTSheetSpecsClosingRepoPathBackup;
         private ILogger logger;
 
         public TSheetSpecsInCloseService(IConfiguration configuration, ILogger logger)
         {
             FimsTSheetSpecsClosingRepoPath = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInCloseRepository");
+            FimsTSheetSpecsClosingRepoPathBackup = configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInCloseRepositoryBackup");
             this.logger = logger;
             //logger.Debug("TSheetSpecsInCloseService constructed");
         }
@@ -115,6 +117,11 @@ namespace Fims.Services.TSheetSpecsInClose
             {
                 try
                 {
+                    //--- Save To Backup Dirctory
+                    string filename = Path.GetFileName(filePath);
+                    string destFilePath = Path.Combine(FimsTSheetSpecsClosingRepoPathBackup, filename);
+                    File.Copy(filePath, destFilePath, overwrite: true);
+
                     File.Delete(filePath);
                     logger.Information($"    TSheetClose-{productSerial} deleted");
                 }

@@ -58,6 +58,12 @@ if (!Directory.Exists(fimsTSheetSpecsInProgressRepoPath)) { Directory.CreateDire
 var fimsTSheetSpecsInCloseRepoPath = builder.Configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInCloseRepository");
 if (!Directory.Exists(fimsTSheetSpecsInCloseRepoPath)) { Directory.CreateDirectory(fimsTSheetSpecsInCloseRepoPath); }
 
+var fimsTSheetSpecsInProgressRepoPathBackup = builder.Configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInProgressRepositoryBackup");
+if (!Directory.Exists(fimsTSheetSpecsInProgressRepoPathBackup)) { Directory.CreateDirectory(fimsTSheetSpecsInProgressRepoPathBackup); }
+
+var fimsTSheetSpecsInCloseRepoPathBackup = builder.Configuration.GetValue<string>("FimsRepositories:FimsTSheetSpecsInCloseRepositoryBackup");
+if (!Directory.Exists(fimsTSheetSpecsInCloseRepoPathBackup)) { Directory.CreateDirectory(fimsTSheetSpecsInCloseRepoPathBackup); }
+
 //JBH: Instantiate and AddSingleton TSheetSpecsService here,
 //     so that BuildTSheetSpecsFromFiles() @ TSheetSpecsService will run immediately upon the server startup.
 ITSheetSpecsService tSheetSpecsService = new TSheetSpecsService(builder.Configuration, logger);
