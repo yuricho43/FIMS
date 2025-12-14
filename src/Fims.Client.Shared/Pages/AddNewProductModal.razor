@@ -68,7 +68,7 @@
                         <FormItem Field="@nameof(NewTProductSpec.ProductSerial)">
                             <Template>
                                 <label for="sn" class="k-label k-form-label">제품SN</label>
-                                <TelerikTextBox Id="sn" @bind-Value="@NewTProductSpec.ProductSerial"></TelerikTextBox>
+                                <TelerikTextBox Id="sn" MaxLength="8" @bind-Value="@NewTProductSpec.ProductSerial"></TelerikTextBox>
                             </Template>
                         </FormItem>
                     </FormItems>
